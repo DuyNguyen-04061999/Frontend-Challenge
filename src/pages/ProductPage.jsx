@@ -1,4 +1,4 @@
-import Loading from "@/components/Loading";
+import Pagination from "@/components/Pagination";
 import ProductCard from "@/components/ProductCard";
 import Skeleton from "@/components/Skeleton";
 import Slider from "@/components/Slider";
@@ -8,7 +8,9 @@ import { getCategoryAction } from "@/stores/cateReducer";
 import createArray from "@/utils/createArray";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import qs from "query-string";
 
 const ProductLoadingStyled = styled.div`
   .skeleton {
@@ -16,13 +18,21 @@ const ProductLoadingStyled = styled.div`
   }
 `;
 const ProductPage = () => {
-  const { data: { data: products = [] } = {}, loading } = useQuery({
+  const [searchParam] = useSearchParams();
+
+  const currentPage = Number(searchParam.get("page") || 1);
+
+  const {
+    data: { data: products = [], paginate: { totalPage } = {} } = {},
+    loading,
+  } = useQuery({
+    dependencyList: [currentPage],
     queryFn: () =>
       productService.getProduct(
-        "fields=images,thumbnail_url,discount_rate,categories,name,rating_average, real_price,price,slug,id,review_count"
+        `?fields=images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count${
+          currentPage ? "&page=" + currentPage : ""
+        }`
       ),
-    queryKey: "products",
-    storage: "localStorage",
   });
   const dispatch = useDispatch();
   useEffect(() => {
@@ -584,58 +594,16 @@ const ProductPage = () => {
               </div>
             </div>
             <h4 className="mb-5">Searching for `Clothing`</h4>
-
             {/* Products */}
             <div className="row">
               {loading
-                ? createArray(9).map((_, id) => <ProductCardLoading key={id} />)
+                ? createArray(15).map((_, id) => (
+                    <ProductCardLoading key={id} />
+                  ))
                 : products?.map((e) => <ProductCard key={e?.id} {...e} />)}
             </div>
             {/* Pagination */}
-            <nav className="d-flex justify-content-center justify-content-md-end">
-              <ul className="pagination pagination-sm text-gray-400">
-                <li className="page-item">
-                  <a className="page-link page-link-arrow" href="#">
-                    <i className="fa fa-caret-left" />
-                  </a>
-                </li>
-                <li className="page-item active">
-                  <a className="page-link" href="#">
-                    1
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    2
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    3
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    4
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    5
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link" href="#">
-                    6
-                  </a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link page-link-arrow" href="#">
-                    <i className="fa fa-caret-right" />
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            <Pagination totalPage={totalPage} />
           </div>
         </div>
       </div>
@@ -650,17 +618,15 @@ const ProductCardLoading = () => {
         <div className="card-img">
           <Skeleton className="absolute left-0 top-0" />
         </div>
-        <div className="card-body px-0">
+        <div className="card-body px-0 max-h-[207px] h-full overflow-hidden">
           <div className="font-size-xs">
             <Skeleton width={175} height={20} />
           </div>
-          <div className="font-weight-bold">
-            <Skeleton className="card-product-name" height={66} />
-          </div>
+          <Skeleton className="card-product-name" height={60} />
           <div className="card-product-rating gap-x-2 max-w-[80%] h-6">
+            <Skeleton width="15%" />
             <Skeleton width="30%" />
-            <Skeleton className="flex-grow" />
-            <Skeleton width="30%" />
+            <Skeleton width="15%" />
           </div>
           <div className="card-product-price flex gap-x-2">
             <Skeleton width="60%" />

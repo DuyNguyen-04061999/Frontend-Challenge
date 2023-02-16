@@ -49,8 +49,7 @@
     top: 0;
     animation: db5-1 2s linear infinite, db5-2 0.5s cubic-bezier(0, 200, 0.8, 200) infinite;
 }
-
-@keyframes db5-1 {
+@include keyframes(db5-1) {
     0% {
         left: -16px;
         transform: translateY(-8px);
@@ -61,7 +60,7 @@
     }
 }
 
-@keyframes db5-2 {
+@include keyframes(db5-2) {
     100% {
         top: -0.1px;
     }

@@ -2,7 +2,7 @@ import { getCategoryAction } from "@/stores/cateReducer";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import React, { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import HalfStar from "../HalfStar";
 import Star from "../Star";
 const ProductCard = ({
@@ -20,7 +20,7 @@ const ProductCard = ({
 }) => {
   const { categoryList } = useSelector((state) => state.categoryList);
 
-  const img1 = images?.[0]?.large_url;
+  const img1 = images?.[0]?.large_url || thumbnail_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
   const cate = useMemo(
     () =>
@@ -37,11 +37,11 @@ const ProductCard = ({
       {/* Card */}
       <div className="card mb-7">
         {/* Badge */}
-        {discount_rate && (
+        {discount_rate ? (
           <div className="card-sale badge badge-dark card-badge card-badge-left text-uppercase">
             - {discount_rate}%
           </div>
-        )}
+        ) : null}
 
         {/* Image */}
         <div className="card-img">
@@ -72,9 +72,9 @@ const ProductCard = ({
           </div>
         </div>
         {/* Body */}
-        <div className="card-body px-0">
+        <div className="card-body px-0 max-h-[207px]">
           {/* Category */}
-          <div className="font-size-xs">
+          <div className="font-size-xs min-h-[20px]">
             <a className="text-muted" href="shop.html">
               {cate?.title}
             </a>
@@ -105,7 +105,7 @@ const ProductCard = ({
           <div className="card-product-price">
             {real_price !== price ? (
               <>
-                <span className="text-primary sale">
+                <span className="text-primary sale !text-[20px] mr-[4px]">
                   {currency(real_price)}
                 </span>
                 <span className="font-size-xs text-gray-350 text-decoration-line-through">
