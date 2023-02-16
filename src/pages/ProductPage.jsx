@@ -1,8 +1,33 @@
-import { PATH } from "@/config";
-import React from "react";
-import { Link } from "react-router-dom";
+import Loading from "@/components/Loading";
+import ProductCard from "@/components/ProductCard";
+import Skeleton from "@/components/Skeleton";
+import Slider from "@/components/Slider";
+import useQuery from "@/hooks/useQuery";
+import { productService } from "@/services/product.service";
+import { getCategoryAction } from "@/stores/cateReducer";
+import createArray from "@/utils/createArray";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import styled from "styled-components";
 
+const ProductLoadingStyled = styled.div`
+  .skeleton {
+    border-radius: 4px;
+  }
+`;
 const ProductPage = () => {
+  const { data: { data: products = [] } = {}, loading } = useQuery({
+    queryFn: () =>
+      productService.getProduct(
+        "fields=images,thumbnail_url,discount_rate,categories,name,rating_average, real_price,price,slug,id,review_count"
+      ),
+    queryKey: "products",
+    storage: "localStorage",
+  });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCategoryAction());
+  }, []);
   return (
     <section className="py-11">
       <div className="container">
@@ -424,15 +449,24 @@ const ProductPage = () => {
           </div>
           <div className="col-12 col-md-8 col-lg-9">
             {/* Slider */}
-            <div
-              className="flickity-page-dots-inner mb-9"
-              data-flickity='{"pageDots": true}'
+
+            <Slider
+              className="select-none mb-9"
+              slidesPerView={1}
+              spaceBetween={0}
+              speed={600}
+              pagination={{
+                clickable: true,
+              }}
+              loop
+              grabCursor
             >
-              {/* Item */}
               <div className="w-100">
                 <div
                   className="card bg-h-100 bg-left"
-                  style={{ backgroundImage: "url(./img/covers/cover-24.jpg)" }}
+                  style={{
+                    backgroundImage: "url(./img/covers/cover-24.jpg)",
+                  }}
                 >
                   <div className="row" style={{ minHeight: 400 }}>
                     <div className="col-12 col-md-10 col-lg-8 col-xl-6 align-self-center">
@@ -444,7 +478,7 @@ const ProductPage = () => {
                           className="btn btn-link px-0 text-body"
                           href="shop.html"
                         >
-                          View Collection{" "}
+                          View Collection
                           <i className="fe fe-arrow-right ml-2" />
                         </a>
                       </div>
@@ -462,7 +496,9 @@ const ProductPage = () => {
               <div className="w-100">
                 <div
                   className="card bg-cover"
-                  style={{ backgroundImage: "url(./img/covers/cover-29.jpg)" }}
+                  style={{
+                    backgroundImage: "url(./img/covers/cover-29.jpg)",
+                  }}
                 >
                   <div
                     className="row align-items-center"
@@ -494,7 +530,9 @@ const ProductPage = () => {
               <div className="w-100">
                 <div
                   className="card bg-cover"
-                  style={{ backgroundImage: "url(./img/covers/cover-30.jpg)" }}
+                  style={{
+                    backgroundImage: "url(./img/covers/cover-30.jpg)",
+                  }}
                 >
                   <div
                     className="row align-items-center"
@@ -518,7 +556,8 @@ const ProductPage = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Slider>
+            {/* Item */}
             {/* Header */}
             <div className="row align-items-center mb-7">
               <div className="col-12 col-md">
@@ -537,570 +576,20 @@ const ProductPage = () => {
               <div className="col-12 col-md-auto">
                 {/* Select */}
                 <select className="custom-select custom-select-xs">
-                  <option selected>Giá giảm</option>
-                  <option selected>Giá tăng</option>
-                  <option selected>Mới nhất</option>
-                  <option selected>Giảm giá nhiều nhất</option>
+                  <option>Giá giảm</option>
+                  <option>Giá tăng</option>
+                  <option>Mới nhất</option>
+                  <option>Giảm giá nhiều nhất</option>
                 </select>
               </div>
             </div>
             <h4 className="mb-5">Searching for `Clothing`</h4>
+
             {/* Products */}
             <div className="row">
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Badge */}
-                  <div className="badge badge-white card-badge card-badge-left text-uppercase">
-                    New
-                  </div>
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <Link className="card-img-hover" to={PATH.productDetail}>
-                      <img
-                        className="card-img-top card-img-back"
-                        src="/img/products/product-120.jpg"
-                        alt="..."
-                      />
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-5.jpg"
-                        alt="..."
-                      />
-                    </Link>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Shoes
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a className="text-body" href="product.html">
-                        Leather mid-heel Sandals
-                      </a>
-                    </div>
-                    {/* Price */}
-                    <div className="font-weight-bold text-muted">$129.00</div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <a className="card-img-hover" href="product.html">
-                      <img
-                        className="card-img-top card-img-back"
-                        src="/img/products/product-121.jpg"
-                        alt="..."
-                      />
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-6.jpg"
-                        alt="..."
-                      />
-                    </a>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Dresses
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a
-                        className="text-body card-product-name"
-                        href="product.html"
-                      >
-                        Cotton floral print Dress
-                      </a>
-                    </div>
-                    {/* Price */}
-                    <div className="card-product-price">$40.00</div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Badge */}
-                  <div className="card-sale badge badge-dark card-badge card-badge-left text-uppercase">
-                    - 50%
-                  </div>
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <a className="card-img-hover" href="product.html">
-                      <img
-                        className="card-img-top card-img-back"
-                        src="/img/products/product-122.jpg"
-                        alt="..."
-                      />
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-7.jpg"
-                        alt="..."
-                      />
-                    </a>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Shoes
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a
-                        className="text-body card-product-name"
-                        href="product.html"
-                      >
-                        Leather Sneakers
-                      </a>
-                    </div>
-                    <div className="card-product-rating">
-                      5
-                      <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth={0}
-                        viewBox="0 0 24 24"
-                        size={14}
-                        color="#fdd836"
-                        height={14}
-                        width={14}
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ color: "rgb(253, 216, 54)" }}
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth={0}
-                        viewBox="0 0 24 24"
-                        size={14}
-                        color="#fdd836"
-                        height={14}
-                        width={14}
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ color: "rgb(253, 216, 54)" }}
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth={0}
-                        viewBox="0 0 24 24"
-                        size={14}
-                        color="#fdd836"
-                        height={14}
-                        width={14}
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ color: "rgb(253, 216, 54)" }}
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth={0}
-                        viewBox="0 0 24 24"
-                        size={14}
-                        color="#fdd836"
-                        height={14}
-                        width={14}
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ color: "rgb(253, 216, 54)" }}
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth={0}
-                        viewBox="0 0 24 24"
-                        size={14}
-                        color="#fdd836"
-                        height={14}
-                        width={14}
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ color: "rgb(253, 216, 54)" }}
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                    </div>
-                    {/* Price */}
-                    <div className="card-product-price">
-                      <span className="text-primary sale">$40.00</span>
-                      <span className="font-size-xs text-gray-350 text-decoration-line-through">
-                        $85.00
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <a href="#!">
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-8.jpg"
-                        alt="..."
-                      />
-                    </a>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Tops
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a className="text-body" href="product.html">
-                        Cropped cotton Top
-                      </a>
-                    </div>
-                    {/* Price */}
-                    <div className="font-weight-bold text-muted">$29.00</div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <a href="#!">
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-9.jpg"
-                        alt="..."
-                      />
-                    </a>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Dresses
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a className="text-body" href="product.html">
-                        Floral print midi Dress
-                      </a>
-                    </div>
-                    {/* Price */}
-                    <div className="font-weight-bold text-muted">$50.00</div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Badge */}
-                  <div className="badge badge-dark card-badge card-badge-left text-uppercase">
-                    Sale
-                  </div>
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <a className="card-img-hover" href="product.html">
-                      <img
-                        className="card-img-top card-img-back"
-                        src="/img/products/product-123.jpg"
-                        alt="..."
-                      />
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-10.jpg"
-                        alt="..."
-                      />
-                    </a>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Bags
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a className="text-body" href="product.html">
-                        Suede cross body Bag
-                      </a>
-                    </div>
-                    {/* Price */}
-                    <div className="font-weight-bold">
-                      <span className="font-size-xs text-gray-350 text-decoration-line-through">
-                        $79.00
-                      </span>
-                      <span className="text-primary">$49.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <a className="card-img-hover" href="product.html">
-                      <img
-                        className="card-img-top card-img-back"
-                        src="/img/products/product-124.jpg"
-                        alt="..."
-                      />
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-11.jpg"
-                        alt="..."
-                      />
-                    </a>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Skirts
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a className="text-body" href="product.html">
-                        Printed A-line Skirt
-                      </a>
-                    </div>
-                    {/* Price */}
-                    <div className="font-weight-bold text-muted">$79.00</div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                {/* Card */}
-                <div className="card mb-7">
-                  {/* Badge */}
-                  <div className="badge badge-white card-badge card-badge text-uppercase">
-                    New
-                  </div>
-                  {/* Image */}
-                  <div className="card-img">
-                    {/* Image */}
-                    <a href="#!">
-                      <img
-                        className="card-img-top card-img-front"
-                        src="/img/products/product-12.jpg"
-                        alt="..."
-                      />
-                    </a>
-                    {/* Actions */}
-                    <div className="card-actions">
-                      <span className="card-action"></span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-shopping-cart" />
-                        </button>
-                      </span>
-                      <span className="card-action">
-                        <button
-                          className="btn btn-xs btn-circle btn-white-primary"
-                          data-toggle="button"
-                        >
-                          <i className="fe fe-heart" />
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Body */}
-                  <div className="card-body px-0">
-                    {/* Category */}
-                    <div className="font-size-xs">
-                      <a className="text-muted" href="shop.html">
-                        Shoes
-                      </a>
-                    </div>
-                    {/* Title */}
-                    <div className="font-weight-bold">
-                      <a className="text-body" href="product.html">
-                        Heel strappy Sandals
-                      </a>
-                    </div>
-                    {/* Price */}
-                    <div className="font-weight-bold text-muted">$90.00</div>
-                  </div>
-                </div>
-              </div>
+              {loading
+                ? createArray(9).map((_, id) => <ProductCardLoading key={id} />)
+                : products?.map((e) => <ProductCard key={e?.id} {...e} />)}
             </div>
             {/* Pagination */}
             <nav className="d-flex justify-content-center justify-content-md-end">
@@ -1151,6 +640,35 @@ const ProductPage = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+const ProductCardLoading = () => {
+  return (
+    <ProductLoadingStyled className="col-6 col-md-4 product-loading">
+      <div className="card mb-7">
+        <div className="card-img">
+          <Skeleton className="absolute left-0 top-0" />
+        </div>
+        <div className="card-body px-0">
+          <div className="font-size-xs">
+            <Skeleton width={175} height={20} />
+          </div>
+          <div className="font-weight-bold">
+            <Skeleton className="card-product-name" height={66} />
+          </div>
+          <div className="card-product-rating gap-x-2 max-w-[80%] h-6">
+            <Skeleton width="30%" />
+            <Skeleton className="flex-grow" />
+            <Skeleton width="30%" />
+          </div>
+          <div className="card-product-price flex gap-x-2">
+            <Skeleton width="60%" />
+            <Skeleton width="40%" height={20} className="mt-auto" />
+          </div>
+        </div>
+      </div>
+    </ProductLoadingStyled>
   );
 };
 

@@ -2,7 +2,7 @@ import {
   localStorageCache,
   reduxStorageCache,
   sessionStorageCache,
-} from "@/utils";
+} from "@/utils/storageCache";
 import { useEffect, useReducer, useRef } from "react";
 
 const initialState = {
@@ -88,7 +88,6 @@ const useQuery = ({
         // call api
         res = await queryFn();
       }
-
       dispatch({ type: SET_DATA, payload: res });
       dispatch({ type: SET_STATUS, payload: "success" });
       onSuccess(res);
