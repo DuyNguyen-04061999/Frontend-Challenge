@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 const SkeletonStyled = styled.span`
   display: inline-block;
-
+  width: 100%;
+  height: 100%;
   background-color: #eee;
   background-image: linear-gradient(
     110deg,
@@ -24,7 +25,7 @@ const Skeleton = ({ className = "", ...props }) => {
   return (
     <SkeletonStyled
       className={`skeleton ${className}`}
-      style={{ width: "100%", height: "100%", ...props }}
+      style={{ ...props }}
     ></SkeletonStyled>
   );
 };
