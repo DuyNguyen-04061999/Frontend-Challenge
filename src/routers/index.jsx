@@ -61,11 +61,10 @@ export const routers = [
         element: <ContactPage />,
         path: PATH.contact,
       },
-
-      {
-        element: <Page404 />,
-        path: "*",
-      },
     ],
+  },
+  {
+    element: <Page404 />,
+    path: "*",
   },
 ];

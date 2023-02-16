@@ -70,7 +70,7 @@ export const reduxStorageCache = {
   },
 
   get(queryKey) {
-    const storeData = getState().cache[queryKey];
+    const storeData = store.getState().cache[queryKey];
     const now = Date.now();
     if (storeData) {
       if (storeData.expire && storeData.expire - now < 0) {
