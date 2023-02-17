@@ -1,5 +1,4 @@
 export { default as cn } from "classNames";
-export * from "./cache";
 export * from "./createArray";
 export * from "./currency";
 export * from "./handleError";

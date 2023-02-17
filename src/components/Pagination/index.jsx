@@ -2,7 +2,7 @@ import { cn } from "@/utils";
 import React from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-const Pagination = ({ totalPage, name = "page" }) => {
+const Pagination = ({ totalPage, name = "page", style = {} }) => {
   const [searchParam] = useSearchParams();
   const currentPage = Number(searchParam.get(name) || 1);
   const { pathname } = useLocation();
@@ -49,7 +49,10 @@ const Pagination = ({ totalPage, name = "page" }) => {
   const lastLink = `${pathname}?${fakeParam.toString()}`;
 
   return (
-    <nav className="d-flex justify-content-center justify-content-md-end mb-5 select-none mx-auto w-max">
+    <nav
+      className="d-flex justify-content-center justify-content-md-end mb-5 select-none mx-auto w-max"
+      style={style}
+    >
       <ul className="pagination pagination-sm text-gray-400">
         <li
           className="page-item"

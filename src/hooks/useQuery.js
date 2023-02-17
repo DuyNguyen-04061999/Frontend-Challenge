@@ -2,7 +2,7 @@ import {
   localStorageCache,
   reduxStorageCache,
   sessionStorageCache,
-} from "@/utils/storageCache";
+} from "@/utils";
 import { useEffect, useReducer, useRef } from "react";
 
 const initialState = {
@@ -48,21 +48,20 @@ const useQuery = ({
   queryKey,
   cacheTime,
   dependencyList = [],
-  storage = "localStorage",
+  storage,
   enabled = true,
-  onSuccess = () => {},
-  onError = () => {},
+  keepPreviousData = false,
 }) => {
   const [{ data, loading, error, status }, dispatch] = useReducer(
     queryReducer,
     initialState
   );
-
-  const fetchRef = useRef();
-
+  const reFetchRef = useRef();
+  const _cache = cache[storage];
+  const dataRef = useRef({});
   useEffect(() => {
-    if (typeof fetchRef.current === "boolean") {
-      fetchRef.current = true;
+    if (typeof reFetchRef.current === "boolean") {
+      reFetchRef.current = true;
     }
   }, [...dependencyList]);
 
@@ -72,17 +71,31 @@ const useQuery = ({
     }
   }, [queryKey, enabled, ...dependencyList]);
 
-  const _cache = cache[storage];
+  const getCacheDataOrPreviousData = () => {
+    if (keepPreviousData && dataRef.current[queryKey] && queryKey) {
+      return dataRef.current[queryKey];
+    }
+
+    if (queryKey && !reFetchRef.current && _cache) {
+      return _cache.get(queryKey);
+    }
+  };
+
+  const setCacheDataOrPreviousData = (data) => {
+    if (keepPreviousData && dataRef.current) {
+      dataRef.current[queryKey] = data;
+    }
+    if (queryKey && _cache) {
+      const expire = cacheTime + Date.now() || undefined;
+      _cache.set(queryKey, res, expire);
+    }
+  };
 
   const fetchData = async () => {
     try {
       dispatch({ type: SET_LOADING, payload: true });
       dispatch({ type: SET_STATUS, payload: "pending" });
-      let res;
-
-      if (queryKey && !fetchRef.current) {
-        res = _cache.get(queryKey);
-      }
+      let res = getCacheDataOrPreviousData();
 
       if (!res) {
         // call api
@@ -90,18 +103,12 @@ const useQuery = ({
       }
       dispatch({ type: SET_DATA, payload: res });
       dispatch({ type: SET_STATUS, payload: "success" });
-      onSuccess(res);
+      setCacheDataOrPreviousData(res);
 
-      if (queryKey) {
-        const expire = cacheTime + Date.now();
-        _cache.set(queryKey, res, expire);
-      }
-
-      fetchRef.current = false;
+      reFetchRef.current = false;
     } catch (error) {
       dispatch({ type: SET_ERROR, payload: new Error(error?.message) });
       dispatch({ type: SET_STATUS, payload: "error" });
-      onError(error);
     } finally {
       dispatch({ type: SET_LOADING, payload: false });
     }

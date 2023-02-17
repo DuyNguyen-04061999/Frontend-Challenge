@@ -6,11 +6,12 @@ import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
 import { getCategoryAction } from "@/stores/cateReducer";
 import createArray from "@/utils/createArray";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import qs from "query-string";
+import useScrollTop from "@/hooks/useScrollTop";
 
 const ProductLoadingStyled = styled.div`
   .skeleton {
@@ -19,14 +20,20 @@ const ProductLoadingStyled = styled.div`
 `;
 const ProductPage = () => {
   const [searchParam] = useSearchParams();
+  const topRef = useRef();
 
   const currentPage = Number(searchParam.get("page") || 1);
-
+  
+  useScrollTop(
+    [currentPage],
+    topRef?.current?.getBoundingClientRect().top + window.scrollY
+  );
   const {
     data: { data: products = [], paginate: { totalPage } = {} } = {},
     loading,
   } = useQuery({
-    dependencyList: [currentPage],
+    queryKey: `product-page-${currentPage}`,
+    keepPreviousData: true,
     queryFn: () =>
       productService.getProduct(
         `?fields=images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count${
@@ -572,7 +579,9 @@ const ProductPage = () => {
             <div className="row align-items-center mb-7">
               <div className="col-12 col-md">
                 {/* Heading */}
-                <h3 className="mb-1">Womens' Clothing</h3>
+                <h3 ref={topRef} className="mb-1">
+                  Womens' Clothing
+                </h3>
                 {/* Breadcrumb */}
                 <ol className="breadcrumb mb-md-0 font-size-xs text-gray-400">
                   <li className="breadcrumb-item">
@@ -595,6 +604,7 @@ const ProductPage = () => {
             </div>
             <h4 className="mb-5">Searching for `Clothing`</h4>
             {/* Products */}
+            <Pagination totalPage={totalPage} style={{ marginBottom: 30 }} />
             <div className="row">
               {loading
                 ? createArray(15).map((_, id) => (
