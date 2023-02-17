@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
-const useScrollTop = (dependencyList = []) => {
+const useScrollTop = (dependencyList = [], top = 0) => {
   useEffect(() => {
     window.scroll({
-      top: 0,
+      top: top,
       behavior: "smooth",
     });
   }, [...dependencyList]);

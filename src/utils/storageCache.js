@@ -5,7 +5,7 @@ export const localStorageCache = {
   set(name, data, expire) {
     const storeData = {
       data,
-      expire: expire || undefined,
+      expire,
     };
 
     localStorage && localStorage.setItem(name, JSON.stringify(storeData));
@@ -34,7 +34,7 @@ export const sessionStorageCache = {
   set(name, data, expire) {
     const storeData = {
       data,
-      expire: expire || undefined,
+      expire,
     };
 
     sessionStorage && sessionStorage.setItem(name, JSON.stringify(storeData));
@@ -63,7 +63,7 @@ export const reduxStorageCache = {
   set(name, data, expire) {
     const storeData = {
       data,
-      expire: expire || undefined,
+      expire,
     };
 
     store.dispatch(setCache({ name, data: storeData }));

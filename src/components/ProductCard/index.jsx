@@ -20,7 +20,8 @@ const ProductCard = ({
 }) => {
   const { categoryList } = useSelector((state) => state.categoryList);
 
-  const img1 = images?.[0]?.large_url || thumbnail_url;
+  const img1 =
+    images?.[0]?.large_url || thumbnail_url || images?.[1]?.large_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
   const cate = useMemo(
     () =>
