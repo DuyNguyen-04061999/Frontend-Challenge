@@ -4,13 +4,10 @@ import Skeleton from "@/components/Skeleton";
 import Slider from "@/components/Slider";
 import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
-import { getCategoryAction } from "@/stores/cateReducer";
 import createArray from "@/utils/createArray";
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import qs from "query-string";
 import useScrollTop from "@/hooks/useScrollTop";
 
 const ProductLoadingStyled = styled.div`
@@ -23,7 +20,7 @@ const ProductPage = () => {
   const topRef = useRef();
 
   const currentPage = Number(searchParam.get("page") || 1);
-  
+
   useScrollTop(
     [currentPage],
     topRef?.current?.getBoundingClientRect().top + window.scrollY
@@ -34,17 +31,20 @@ const ProductPage = () => {
   } = useQuery({
     queryKey: `product-page-${currentPage}`,
     keepPreviousData: true,
-    queryFn: () =>
+    queryFn: ({ signal }) =>
       productService.getProduct(
-        `?fields=images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count${
-          currentPage ? "&page=" + currentPage : ""
-        }`
+        `?fields=images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count&page=${currentPage}`,
+        signal
       ),
   });
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getCategoryAction());
-  }, []);
+
+  const { data: { data: categoryList = [] } = {} } = useQuery({
+    queryFn: () => productService.getCategory(),
+    queryKey: "categoryList",
+    storage: "redux",
+    cacheTime: 20000,
+    keepPreviousData: true,
+  });
   return (
     <section className="py-11">
       <div className="container">
@@ -610,7 +610,13 @@ const ProductPage = () => {
                 ? createArray(15).map((_, id) => (
                     <ProductCardLoading key={id} />
                   ))
-                : products?.map((e) => <ProductCard key={e?.id} {...e} />)}
+                : products?.map((e) => (
+                    <ProductCard
+                      key={e?.id}
+                      {...e}
+                      categoryList={categoryList}
+                    />
+                  ))}
             </div>
             {/* Pagination */}
             <Pagination totalPage={totalPage} />

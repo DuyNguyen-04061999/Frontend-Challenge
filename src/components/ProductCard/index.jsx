@@ -1,8 +1,6 @@
-import { getCategoryAction } from "@/stores/cateReducer";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
-import React, { useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { useMemo } from "react";
 import HalfStar from "../HalfStar";
 import Star from "../Star";
 const ProductCard = ({
@@ -17,9 +15,8 @@ const ProductCard = ({
   price,
   slug,
   id,
+  categoryList,
 }) => {
-  const { categoryList } = useSelector((state) => state.categoryList);
-
   const img1 =
     images?.[0]?.large_url || thumbnail_url || images?.[1]?.large_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
