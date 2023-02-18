@@ -12,7 +12,7 @@ export const Home = () => {
           {/* Item */}
           <div
             className="col-12 col-md-6 col-lg-4 d-flex flex-column bg-cover"
-            style={{ backgroundImage: "url(./img/covers/cover-1.jpg)" }}
+            style={{ backgroundImage: "url(/img/covers/cover-1.jpg)" }}
           >
             <div
               className="card bg-dark-5 bg-hover text-white text-center"
@@ -33,7 +33,7 @@ export const Home = () => {
           {/* Card */}
           <div
             className="col-12 col-md-6 col-lg-4 d-flex flex-column bg-cover"
-            style={{ backgroundImage: "url(./img/covers/cover-2.jpg)" }}
+            style={{ backgroundImage: "url(/img/covers/cover-2.jpg)" }}
           >
             <div
               className="card bg-dark-5 bg-hover text-white text-center"
@@ -54,7 +54,7 @@ export const Home = () => {
           {/* Card */}
           <div
             className="col-12 col-md-6 col-lg-4 d-flex flex-column bg-cover"
-            style={{ backgroundImage: "url(./img/covers/cover-3.jpg)" }}
+            style={{ backgroundImage: "url(/img/covers/cover-3.jpg)" }}
           >
             <div
               className="card bg-dark-5 bg-hover text-white text-center"
@@ -168,7 +168,7 @@ export const Home = () => {
                 className="card mb-7 text-white"
                 style={{
                   minHeight: 400,
-                  backgroundImage: "url(./img/products/product-1.jpg)",
+                  backgroundImage: "url(/img/products/product-1.jpg)",
                 }}
               >
                 {/* Background */}
@@ -176,7 +176,7 @@ export const Home = () => {
                   <div
                     className="card-bg-img bg-cover"
                     style={{
-                      backgroundImage: "url(./img/products/product-1.jpg)",
+                      backgroundImage: "url(/img/products/product-1.jpg)",
                     }}
                   />
                 </div>
@@ -202,7 +202,7 @@ export const Home = () => {
                   <div
                     className="card-bg-img bg-cover"
                     style={{
-                      backgroundImage: "url(./img/products/product-2.jpg)",
+                      backgroundImage: "url(/img/products/product-2.jpg)",
                     }}
                   />
                 </div>
@@ -236,7 +236,7 @@ export const Home = () => {
                   <div
                     className="card-bg-img bg-cover"
                     style={{
-                      backgroundImage: "url(./img/products/product-3.jpg)",
+                      backgroundImage: "url(/img/products/product-3.jpg)",
                     }}
                   />
                 </div>
@@ -262,7 +262,7 @@ export const Home = () => {
                   <div
                     className="card-bg-img bg-cover"
                     style={{
-                      backgroundImage: "url(./img/products/product-4.jpg)",
+                      backgroundImage: "url(/img/products/product-4.jpg)",
                     }}
                   />
                 </div>
@@ -804,7 +804,7 @@ export const Home = () => {
       {/* COUNTDOWN */}
       <section
         className="py-13 bg-cover"
-        style={{ backgroundImage: "url(./img/covers/cover-4.jpg)" }}
+        style={{ backgroundImage: "url(/img/covers/cover-4.jpg)" }}
       >
         <div className="container">
           <div className="row justify-content-end">
