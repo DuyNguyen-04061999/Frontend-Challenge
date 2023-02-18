@@ -79,7 +79,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage: "url(./img/products/product-11.jpg)",
+                          backgroundImage: "url(/img/products/product-11.jpg)",
                         }}
                       />
                     </div>
@@ -155,7 +155,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage: "url(./img/products/product-11.jpg)",
+                          backgroundImage: "url(/img/products/product-11.jpg)",
                         }}
                       />
                     </div>
@@ -231,7 +231,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage: "url(./img/products/product-5.jpg)",
+                          backgroundImage: "url(/img/products/product-5.jpg)",
                         }}
                       />
                     </div>
@@ -240,8 +240,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage:
-                            "url(./img/products/product-112.jpg)",
+                          backgroundImage: "url(/img/products/product-112.jpg)",
                         }}
                       />
                     </div>
@@ -250,7 +249,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage: "url(./img/products/product-7.jpg)",
+                          backgroundImage: "url(/img/products/product-7.jpg)",
                         }}
                       />
                     </div>
@@ -337,7 +336,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage: "url(./img/products/product-5.jpg)",
+                          backgroundImage: "url(/img/products/product-5.jpg)",
                         }}
                       />
                     </div>
@@ -346,8 +345,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage:
-                            "url(./img/products/product-112.jpg)",
+                          backgroundImage: "url(/img/products/product-112.jpg)",
                         }}
                       />
                     </div>
@@ -356,7 +354,7 @@ const OrderPage = () => {
                       <div
                         className="embed-responsive embed-responsive-1by1 bg-cover"
                         style={{
-                          backgroundImage: "url(./img/products/product-7.jpg)",
+                          backgroundImage: "url(/img/products/product-7.jpg)",
                         }}
                       />
                     </div>

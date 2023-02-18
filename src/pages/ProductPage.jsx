@@ -6,10 +6,14 @@ import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
 import createArray from "@/utils/createArray";
 import React, { useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import useScrollTop from "@/hooks/useScrollTop";
-
+import CategoryLink from "@/components/CategoryLink";
+import { PATH } from "@/config";
+import { cn } from "@/utils";
+import queryString from "query-string";
+import { useCategories } from "@/hooks/useCategories";
 const ProductLoadingStyled = styled.div`
   .skeleton {
     border-radius: 4px;
@@ -19,37 +23,35 @@ const ProductPage = () => {
   const [searchParam] = useSearchParams();
   const topRef = useRef();
 
-  const currentPage = Number(searchParam.get("page") || 1);
+  const { id } = useParams();
+  const page = Number(searchParam.get("page") || 1);
 
+  const _qs = queryString.stringify({
+    fields:
+      "images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count",
+    categories: id,
+    page,
+  });
   useScrollTop(
-    [currentPage],
+    [page, id],
     topRef?.current?.getBoundingClientRect().top + window.scrollY
   );
   const {
     data: { data: products = [], paginate: { totalPage } = {} } = {},
     loading,
   } = useQuery({
-    queryKey: `product-page-${currentPage}`,
+    queryKey: `product-page-${page}${id}`,
     keepPreviousData: true,
-    queryFn: ({ signal }) =>
-      productService.getProduct(
-        `?fields=images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count&page=${currentPage}`,
-        signal
-      ),
+    queryFn: ({ signal }) => productService.getProducts(`?${_qs}`, signal),
   });
 
-  const { data: { data: categoryList = [] } = {} } = useQuery({
-    queryFn: () => productService.getCategory(),
-    queryKey: "categoryList",
-    storage: "redux",
-    cacheTime: 20000,
-    keepPreviousData: true,
-  });
+  const { categoryList, loadingCategory } = useCategories() || [];
+
   return (
     <section className="py-11">
       <div className="container">
         <div className="row">
-          <div className="col-12 col-md-4 col-lg-3">
+          <div className="col-12 col-md-4 col-lg-3 sticky top-0 self-start">
             {/* Filters */}
             <form className="mb-10 mb-md-0">
               <ul className="nav nav-vertical" id="filterNav">
@@ -65,75 +67,34 @@ const ProductPage = () => {
                   <div>
                     <div className="form-group">
                       <ul className="list-styled mb-0" id="productsNav">
-                        <li className="list-styled-item">
-                          <a className="list-styled-link" href="#">
-                            All Products
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a
-                            className="list-styled-link"
-                            href="#blousesCollapse"
-                          >
-                            Blouses and Shirts
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a className="list-styled-link" href="#coatsCollapse">
-                            Coats and Jackets
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a
-                            className="list-styled-link"
-                            href="#dressesCollapse"
-                            aria-expanded="true"
-                          >
-                            Dresses
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a
-                            className="list-styled-link"
-                            href="#hoodiesCollapse"
-                          >
-                            Hoodies and Sweats
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a className="list-styled-link" href="#denimCollapse">
-                            Denim
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a className="list-styled-link" href="#jeansCollapse">
-                            Jeans
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a
-                            className="list-styled-link"
-                            href="#jumpersCollapse"
-                          >
-                            Jumpers and Cardigans
-                          </a>
-                        </li>
-                        <li className="list-styled-item">
-                          {/* Toggle */}
-                          <a
-                            className="list-styled-link"
-                            href="#legginsCollapse"
-                          >
-                            Leggings
-                          </a>
-                        </li>
+                        {loadingCategory ? (
+                          createArray(16).map((_, id) => (
+                            <Skeleton key={id} height={24} />
+                          ))
+                        ) : (
+                          <>
+                            {" "}
+                            <li className="list-styled-item">
+                              <NavLink
+                                className={cn(
+                                  "list-styled-link",
+                                  ({ isActive }) => ({ active: isActive })
+                                )}
+                                to={PATH.products}
+                              >
+                                Tất cả sản phẩm
+                              </NavLink>
+                            </li>
+                            {categoryList.map((e) => (
+                              <li className="list-styled-item" key={e?.id}>
+                                <CategoryLink
+                                  {...e}
+                                  className={cn({ active: e?.id === +id })}
+                                />
+                              </li>
+                            ))}
+                          </>
+                        )}
                       </ul>
                     </div>
                   </div>
@@ -482,7 +443,7 @@ const ProductPage = () => {
                 <div
                   className="card bg-h-100 bg-left"
                   style={{
-                    backgroundImage: "url(./img/covers/cover-24.jpg)",
+                    backgroundImage: "url(/img/covers/cover-24.jpg)",
                   }}
                 >
                   <div className="row" style={{ minHeight: 400 }}>
@@ -503,7 +464,7 @@ const ProductPage = () => {
                     <div
                       className="col-12 col-md-2 col-lg-4 col-xl-6 d-none d-md-block bg-cover"
                       style={{
-                        backgroundImage: "url(./img/covers/cover-16.jpg)",
+                        backgroundImage: "url(/img/covers/cover-16.jpg)",
                       }}
                     />
                   </div>
@@ -514,7 +475,7 @@ const ProductPage = () => {
                 <div
                   className="card bg-cover"
                   style={{
-                    backgroundImage: "url(./img/covers/cover-29.jpg)",
+                    backgroundImage: "url(/img/covers/cover-29.jpg)",
                   }}
                 >
                   <div
@@ -548,7 +509,7 @@ const ProductPage = () => {
                 <div
                   className="card bg-cover"
                   style={{
-                    backgroundImage: "url(./img/covers/cover-30.jpg)",
+                    backgroundImage: "url(/img/covers/cover-30.jpg)",
                   }}
                 >
                   <div
@@ -610,13 +571,7 @@ const ProductPage = () => {
                 ? createArray(15).map((_, id) => (
                     <ProductCardLoading key={id} />
                   ))
-                : products?.map((e) => (
-                    <ProductCard
-                      key={e?.id}
-                      {...e}
-                      categoryList={categoryList}
-                    />
-                  ))}
+                : products?.map((e) => <ProductCard key={e?.id} {...e} />)}
             </div>
             {/* Pagination */}
             <Pagination totalPage={totalPage} />

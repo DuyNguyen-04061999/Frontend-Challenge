@@ -1,3 +1,4 @@
+import { useCategory } from "@/hooks/useCategories";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import React, { useMemo } from "react";
@@ -15,20 +16,20 @@ const ProductCard = ({
   price,
   slug,
   id,
-  categoryList,
 }) => {
   const img1 =
     images?.[0]?.large_url || thumbnail_url || images?.[1]?.large_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
-  const cate = useMemo(
-    () =>
-      Array.isArray(categoryList) &&
-      categoryList.length > 0 &&
-      categoryList?.find((e) => {
-        return e?.id === categories ? e?.title : "";
-      }),
-    [categoryList.length]
-  );
+  // const cate = useMemo(
+  //   () =>
+  //     Array.isArray(categoryList) &&
+  //     categoryList.length > 0 &&
+  //     categoryList?.find((e) => {
+  //       return e?.id === categories ? e?.title : "";
+  //     }),
+  //   [categoryList.length]
+  // );
+  const categoryItem = useCategory(categories);
 
   return (
     <div className="col-6 col-md-4">
@@ -73,9 +74,11 @@ const ProductCard = ({
         <div className="card-body px-0 max-h-[207px]">
           {/* Category */}
           <div className="font-size-xs min-h-[20px]">
-            <a className="text-muted" href="shop.html">
-              {cate?.title}
-            </a>
+            {categoryItem && (
+              <a className="text-muted" href="shop.html">
+                {categoryItem?.title}
+              </a>
+            )}
           </div>
           {/* Title */}
           <div className="font-weight-bold">

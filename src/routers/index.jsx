@@ -41,10 +41,10 @@ export const routers = [
         element: <ProductPage />,
         path: PATH.products,
       },
-      // {
-      //   element: <ProductPage />,
-      //   path: PATH.category,
-      // },
+      {
+        element: <ProductPage />,
+        path: PATH.category,
+      },
       {
         element: <ProductDetailPage />,
         path: PATH.productDetail,
