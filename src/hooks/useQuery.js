@@ -91,13 +91,12 @@ const useQuery = ({
       return dataRef.current[queryKey];
     }
 
-      if (_asyncFunction[queryKey]) {
-        return _asyncFunction[queryKey];
-      }
+    if (_asyncFunction[queryKey]) {
+      return _asyncFunction[queryKey];
+    }
 
-      if (_cache) {
-        return _cache.get(queryKey);
-      }
+    if (_cache) {
+      return _cache.get(queryKey);
     }
     return;
   };

@@ -9,7 +9,11 @@ import React, { useRef } from "react";
 import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import useScrollTop from "@/hooks/useScrollTop";
-
+import { useCategories } from "@/hooks/useCategories";
+import queryString from "query-string";
+import CategoryLink from "@/components/CategoryLink";
+import { cn } from "@/utils";
+import { PATH } from "@/config";
 const ProductLoadingStyled = styled.div`
   .skeleton {
     border-radius: 4px;
@@ -38,20 +42,17 @@ const ProductPage = () => {
   } = useQuery({
     queryKey: `product-page-${page}${id}`,
     keepPreviousData: true,
-    queryFn: ({ signal }) =>
-      productService.getProduct(
-        `?fields=images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count&page=${currentPage}`,
-        signal
-      ),
+    queryFn: ({ signal }) => productService.getProducts(`?${_qs}`, signal),
   });
 
-  const { data: { data: categoryList = [] } = {} } = useQuery({
-    queryFn: () => productService.getCategory(),
-    queryKey: "categoryList",
-    storage: "redux",
-    cacheTime: 20000,
-    keepPreviousData: true,
-  });
+  // const { data: { data: categoryList = [] } = {} } = useQuery({
+  //   queryFn: () => productService.getCategories(),
+  //   queryKey: "categoryList",
+  //   storage: "redux",
+  //   cacheTime: 20000,
+  //   keepPreviousData: true,
+  // });
+  const { categoryList, loadingCategory } = useCategories();
   return (
     <section className="py-11">
       <div className="container">
