@@ -1,7 +1,7 @@
 import { api, PRODUCT_API } from "@/config";
 
 export const productService = {
-  getProduct: (query = "", signal) =>
+  getProducts: (query = "", signal) =>
     api.get(`${PRODUCT_API}${query}`, { signal }),
-  getCategory: () => api.get(`${PRODUCT_API}/categories`),
+  getCategories: () => api.get(`${PRODUCT_API}/categories`),
 };

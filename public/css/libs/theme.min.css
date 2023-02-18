@@ -13923,7 +13923,11 @@ ul {
   background-clip: content-box !important;
 }
 .bg-pattern {
+<<<<<<< HEAD
+  background-image: url(/img/patterns/pattern-1.svg) !important;
+=======
   background-image: url(./img/patterns/pattern-1.svg) !important;
+>>>>>>> master
 }
 .bg-white-90 {
   background-color: rgba(255, 255, 255, 0.9) !important;
@@ -14989,9 +14993,15 @@ a.text-decoration-underline:hover {
   position: absolute;
   width: 0;
   height: 0;
+<<<<<<< HEAD
+  background-image: url(/img/masks/avatar-status.svg),
+    url(/img/masks/avatar-group.svg), url(/img/masks/avatar-group-hover.svg),
+    url(/img/masks/avatar-group-hover-last.svg);
+=======
   background-image: url(./img/masks/avatar-status.svg),
     url(./img/masks/avatar-group.svg), url(./img/masks/avatar-group-hover.svg),
     url(./img/masks/avatar-group-hover-last.svg);
+>>>>>>> master
 }
 .avatar-img {
   width: 100%;
@@ -15020,8 +15030,13 @@ a.text-decoration-underline:hover {
 }
 .avatar-offline .avatar-img,
 .avatar-online .avatar-img {
+<<<<<<< HEAD
+  -webkit-mask-image: url(/img/masks/avatar-status.svg);
+  mask-image: url(/img/masks/avatar-status.svg);
+=======
   -webkit-mask-image: url(./img/masks/avatar-status.svg);
   mask-image: url(./img/masks/avatar-status.svg);
+>>>>>>> master
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -15103,8 +15118,13 @@ a.text-decoration-underline:hover {
   margin-left: -1.5625rem;
 }
 .avatar-group .avatar:not(:last-child) {
+<<<<<<< HEAD
+  -webkit-mask-image: url(/img/masks/avatar-group.svg);
+  mask-image: url(/img/masks/avatar-group.svg);
+=======
   -webkit-mask-image: url(./img/masks/avatar-group.svg);
   mask-image: url(./img/masks/avatar-group.svg);
+>>>>>>> master
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -15114,14 +15134,24 @@ a.text-decoration-underline:hover {
   z-index: 1;
 }
 .avatar-group .avatar:hover + .avatar {
+<<<<<<< HEAD
+  -webkit-mask-image: url(/img/masks/avatar-group-hover.svg);
+  mask-image: url(/img/masks/avatar-group-hover.svg);
+=======
   -webkit-mask-image: url(./img/masks/avatar-group-hover.svg);
   mask-image: url(./img/masks/avatar-group-hover.svg);
+>>>>>>> master
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
 .avatar-group .avatar:hover + .avatar:last-child {
+<<<<<<< HEAD
+  -webkit-mask-image: url(/img/masks/avatar-group-hover-last.svg);
+  mask-image: url(/img/masks/avatar-group-hover-last.svg);
+=======
   -webkit-mask-image: url(./img/masks/avatar-group-hover-last.svg);
   mask-image: url(./img/masks/avatar-group-hover-last.svg);
+>>>>>>> master
 }
 .rate-item {
   color: #111;

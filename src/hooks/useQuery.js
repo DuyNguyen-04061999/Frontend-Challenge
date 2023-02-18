@@ -44,6 +44,10 @@ const cache = {
   redux: reduxStorageCache,
 };
 
+const _asyncFunction = {
+  // key: Promise
+};
+
 const useQuery = ({
   queryFn,
   queryKey,
@@ -57,10 +61,11 @@ const useQuery = ({
     queryReducer,
     initialState
   );
-  const reFetchRef = useRef();
-  const _cache = cache[storage];
-  const dataRef = useRef({});
-  const controllerRef = useRef(new AbortController());
+
+  const reFetchRef = useRef(); //call api
+  const _cache = cache[storage]; //storage
+  const dataRef = useRef({}); //keepPreviousData
+  const controllerRef = useRef(new AbortController()); //cancelRequest axios
 
   useEffect(() => {
     // cancel when out the page
@@ -82,23 +87,31 @@ const useQuery = ({
   }, [queryKey, enabled, ...dependencyList]);
 
   const getCacheDataOrPreviousData = () => {
-    if (reFetchRef.current) return;
     if (keepPreviousData && dataRef.current[queryKey] && queryKey) {
       return dataRef.current[queryKey];
     }
 
-    if (queryKey && _cache) {
-      return _cache.get(queryKey);
+      if (_asyncFunction[queryKey]) {
+        return _asyncFunction[queryKey];
+      }
+
+      if (_cache) {
+        return _cache.get(queryKey);
+      }
     }
+    return;
   };
 
   const setCacheDataOrPreviousData = (data) => {
-    if (keepPreviousData && dataRef.current) {
-      dataRef.current[queryKey] = data;
-    }
-    if (queryKey && _cache && cacheTime) {
-      const expire = cacheTime + Date.now();
-      _cache.set(queryKey, data, expire);
+    if (queryKey && data) {
+      if (keepPreviousData && dataRef.current) {
+        dataRef.current[queryKey] = data;
+      }
+      if (_cache && cacheTime) {
+        const expire = cacheTime + Date.now();
+        _cache.set(queryKey, data, expire);
+      }
+      _asyncFunction[queryKey] = data;
     }
   };
 
@@ -114,7 +127,11 @@ const useQuery = ({
 
       if (!res) {
         // call api
-        res = await queryFn({ signal: controllerRef.current.signal });
+        res = queryFn({ signal: controllerRef.current.signal });
+      }
+
+      if (res instanceof Promise) {
+        res = await res;
       }
 
       dispatch({ type: SET_DATA, payload: res });
