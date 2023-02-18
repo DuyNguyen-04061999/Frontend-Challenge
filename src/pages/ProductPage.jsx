@@ -9,11 +9,7 @@ import React, { useRef } from "react";
 import { NavLink, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import useScrollTop from "@/hooks/useScrollTop";
-import CategoryLink from "@/components/CategoryLink";
-import { PATH } from "@/config";
-import { cn } from "@/utils";
-import queryString from "query-string";
-import { useCategories } from "@/hooks/useCategories";
+
 const ProductLoadingStyled = styled.div`
   .skeleton {
     border-radius: 4px;
@@ -42,11 +38,20 @@ const ProductPage = () => {
   } = useQuery({
     queryKey: `product-page-${page}${id}`,
     keepPreviousData: true,
-    queryFn: ({ signal }) => productService.getProducts(`?${_qs}`, signal),
+    queryFn: ({ signal }) =>
+      productService.getProduct(
+        `?fields=images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count&page=${currentPage}`,
+        signal
+      ),
   });
 
-  const { categoryList, loadingCategory } = useCategories() || [];
-
+  const { data: { data: categoryList = [] } = {} } = useQuery({
+    queryFn: () => productService.getCategory(),
+    queryKey: "categoryList",
+    storage: "redux",
+    cacheTime: 20000,
+    keepPreviousData: true,
+  });
   return (
     <section className="py-11">
       <div className="container">
