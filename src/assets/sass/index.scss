@@ -11,6 +11,18 @@
         background: #ff6f61 !important;
     }
 }
+
+.list-styled-link {
+    &:hover {
+        color: #000;
+    }
+    &.active {
+        transition: unset;
+        color: #000;
+        font-weight: 700;
+    }
+}
+
 .card-img {
     height: 0;
     width: 100%;

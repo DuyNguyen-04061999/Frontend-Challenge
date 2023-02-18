@@ -82,6 +82,7 @@ const useQuery = ({
   }, [queryKey, enabled, ...dependencyList]);
 
   const getCacheDataOrPreviousData = () => {
+    if (reFetchRef.current) return;
     if (keepPreviousData && dataRef.current[queryKey] && queryKey) {
       return dataRef.current[queryKey];
     }
