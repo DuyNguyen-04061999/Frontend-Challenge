@@ -27,24 +27,3 @@ export function interceptorsResponse(api) {
     }
   );
 }
-// async (error) => {
-//   console.log("error :>> ", error);
-//   try {
-//     if (
-//       error?.response.status === 403 &&
-//       error?.response?.data?.error_code === "TOKEN_EXPIRED"
-//     ) {
-//       //refresh token
-//       const token = getToken();
-//       //post
-//       const res = await authService.refreshToken({
-//         refreshToken: token?.refreshToken,
-//       });
-//       setToken(res?.data);
-//       //thuc thi lai api bi loi
-
-//       return api(error?.config);
-//     }
-//   } catch (err) {}
-//   throw error;
-// }

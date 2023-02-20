@@ -67,6 +67,12 @@ const useQuery = ({
   const dataRef = useRef({}); //keepPreviousData
   const controllerRef = useRef(new AbortController()); //cancelRequest axios
 
+  const _queryKey = Array.isArray(queryKey)
+    ? queryKey?.[0]
+    : typeof queryKey === "string"
+    ? queryKey
+    : undefined;
+
   useEffect(() => {
     // cancel when out the page
     return () => {
@@ -84,35 +90,35 @@ const useQuery = ({
     if (enabled) {
       fetchData();
     }
-  }, [queryKey, enabled, ...dependencyList]);
+  }, [enabled].concat(_queryKey, dependencyList));
 
   const getCacheDataOrPreviousData = () => {
     if (reFetchRef.current) return;
     //======= keep old data =======
-    if (keepPreviousData && dataRef.current[queryKey] && queryKey) {
-      return dataRef.current[queryKey];
+    if (keepPreviousData && dataRef.current[_queryKey] && _queryKey) {
+      return dataRef.current[_queryKey];
     }
     // =====
-    if (_asyncFunction[queryKey]) {
-      return _asyncFunction[queryKey];
+    if (_asyncFunction[_queryKey]) {
+      return _asyncFunction[_queryKey];
     }
 
     if (_cache) {
-      return _cache.get(queryKey);
+      return _cache.get(_queryKey);
     }
     return;
   };
 
   const setCacheDataOrPreviousData = (data) => {
-    if (queryKey && data) {
+    if (_queryKey && data) {
       if (keepPreviousData && dataRef.current) {
-        dataRef.current[queryKey] = data;
+        dataRef.current[_queryKey] = data;
       }
       if (_cache) {
         const expire = cacheTime || 0 + Date.now();
-        _cache.set(queryKey, data, expire);
+        _cache.set(_queryKey, data, expire);
       }
-      _asyncFunction[queryKey] = data;
+      _asyncFunction[_queryKey] = data;
     }
   };
 
@@ -122,7 +128,7 @@ const useQuery = ({
     //tạo signal api mới
     controllerRef.current = new AbortController();
     try {
-      dispatch({ type: SET_LOADING, payload: true });
+      dispatch({ type: SET_LOADING, payload: enabled });
       dispatch({ type: SET_STATUS, payload: "pending" });
       let res = getCacheDataOrPreviousData();
 

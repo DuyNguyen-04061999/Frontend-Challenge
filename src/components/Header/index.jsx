@@ -212,7 +212,7 @@ const Header = () => {
               {/* Nav */}
               <ul className="navbar-nav mx-auto">
                 {HeaderNavs.map((e, id) => (
-                  <li className="nav-item" key={e.nav}>
+                  <li className="nav-item" key={id}>
                     <NavLink
                       className={({ isActive }) =>
                         cn("nav-link", { "!text-[#ff6f61]": isActive })
@@ -227,17 +227,16 @@ const Header = () => {
               {/* Nav */}
               <ul className="navbar-nav flex-row">
                 <li className="nav-item">
-                  <a
-                    className="nav-link"
+                  <span
+                    className="nav-link cursor-pointer"
                     data-toggle="modal"
-                    href="#modalSearch"
                     onClick={(e) => {
                       e.preventDefault();
                       dispatch(onOpenDrawer({ name: "search" }));
                     }}
                   >
                     <i className="fe fe-search" />
-                  </a>
+                  </span>
                 </li>
                 <li className="nav-item ml-lg-n4">
                   <Link className="nav-link" to={PATH.profile.index}>

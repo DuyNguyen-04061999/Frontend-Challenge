@@ -16,6 +16,7 @@ body {
         @include br(10px);
     }
     &.hide {
+        overflow: hidden;
         &::-webkit-scrollbar {
             z-index: -1;
             visibility: hidden;

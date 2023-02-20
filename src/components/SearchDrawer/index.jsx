@@ -1,5 +1,5 @@
 import { PATH } from "@/config";
-import { useCategories } from "@/hooks/useCategories";
+import { useCategories, useCategory } from "@/hooks/useCategories";
 import useDebounce from "@/hooks/useDebounce";
 import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
@@ -19,7 +19,7 @@ import { generatePath, Link } from "react-router-dom";
 import styled from "styled-components";
 import EmptyText from "../EmptyText";
 import Portal from "../Portal";
-import ProductCart from "../ProductCart";
+import SearchProduct from "../SearchProduct";
 import Skeleton from "../Skeleton";
 
 const ContentStyle = styled.div`
@@ -67,47 +67,51 @@ const SearchDrawer = () => {
   const [size, setSize] = useState([0, 0]);
   const dispatch = useDispatch();
   const onClose = () => dispatch(onCloseDrawer({ name: "search" }));
-  const [id, setID] = useState();
+  const [idCategory, setIDCategory] = useState();
   const [search, setSearch] = useState();
   const searchDebounce = useDebounce(search, 500);
   const [heightBody, setHeightBody] = useState();
   const { categoryList = [] } = useCategories([], open);
+  const category = useCategory(+idCategory);
 
   const topRef = useRef();
   const buttonRef = useRef();
 
   const slug = useMemo(() => {
-    const { title } = categoryList?.find((e) => e.id === +id) || {};
-    if (title) {
-      return toSlug(title);
+    if (category) {
+      return toSlug(category?.title);
     }
     return;
-  }, [id]);
+  }, [category]);
+
   const _qs = queryString.stringify({
-    fields:
-      "images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count",
+    fields: "thumbnail_url,name,real_price,price,slug,id",
     name: searchDebounce,
     page: 1,
-    limit: 15,
-    categories: id || undefined,
+    limit: 10,
+    categories: idCategory || undefined,
   });
 
   const { data: { data: products = [] } = {}, loading } = useQuery({
     enabled: open,
-    queryKey: `product-page-${_qs}`,
+    queryKey: `product-search-${_qs}`,
     keepPreviousData: true,
     queryFn: ({ signal }) => productService.getProducts(`?${_qs}`, signal),
   });
 
-  const viewAllLink = useMemo(() => {
-    return slug
-      ? generatePath(PATH.category, {
-          slug,
-          id,
-        }) + `${searchDebounce ? `?search=${searchDebounce}` : ""}`
-      : generatePath(PATH.products) +
-          `${searchDebounce ? `?search=${searchDebounce}` : ""}`;
-  }, [slug, searchDebounce]);
+  const querySearchString = queryString.stringify({
+    search: searchDebounce || undefined,
+  });
+  const viewAllLink = useMemo(
+    () =>
+      (slug
+        ? generatePath(PATH.category, {
+            slug,
+            id: idCategory,
+          })
+        : generatePath(PATH.products)) + `?${querySearchString}`,
+    [slug, querySearchString]
+  );
 
   useEffect(() => {
     if (open) {
@@ -172,43 +176,42 @@ const SearchDrawer = () => {
             </div>
             {/* Body: Form */}
             <div className="modal-body">
-              <div>
-                <div className="form-group">
-                  <label className="sr-only" htmlFor="modalSearchCategories">
-                    Categories:
-                  </label>
-                  <select
-                    className="custom-select"
-                    id="modalSearchCategories"
-                    value={id}
-                    onChange={(e) => setID(e.target.value)}
-                  >
-                    <option value="">All Categories</option>
-                    {categoryList.map((e) => (
-                      <option key={e?.id} value={e.id}>
-                        {e.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="input-group input-group-merge">
-                  <input
-                    className="form-control"
-                    type="search"
-                    placeholder="Search"
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                  <div className="input-group-append">
-                    <button className="btn btn-outline-border" type="submit">
-                      <i className="fe fe-search" />
-                    </button>
-                  </div>
+              <div className="form-group">
+                <label className="sr-only" htmlFor="modalSearchCategories">
+                  Categories:
+                </label>
+                <select
+                  className="custom-select"
+                  id="modalSearchCategories"
+                  value={idCategory}
+                  onChange={(e) => setIDCategory(e.target.value)}
+                >
+                  <option value="" key={0}>
+                    All Categories
+                  </option>
+
+                  {categoryList?.map((e) => (
+                    <option key={e?.id} value={e.id}>
+                      {e.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="input-group input-group-merge">
+                <input
+                  className="form-control"
+                  type="search"
+                  placeholder="Search"
+                  onChange={(e) => setSearch(e.target.value.trim())}
+                />
+                <div className="input-group-append">
+                  <button className="btn btn-outline-border" type="submit">
+                    <i className="fe fe-search" />
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Body: Results (add `.d-none` to disable it) */}
 
           <BodyStyled
             className="modal-body border-top font-size-sm"
@@ -219,7 +222,7 @@ const SearchDrawer = () => {
             ) : products.length === 0 ? (
               <EmptyText />
             ) : (
-              products?.map((e) => <ProductCart key={e?.id} {...e} />)
+              products?.map((e) => <SearchProduct key={e?.id} {...e} />)
             )}
           </BodyStyled>
 
@@ -244,14 +247,14 @@ const ProductCardLoading = () => {
     <div className="row align-items-center position-relative mb-5">
       <div className="col-4 col-md-3 img-cate">
         {/* Image */}
-        <Skeleton />
+        <Skeleton className="rounded" />
       </div>
       <div className="col position-static">
         {/* Text */}
         <p className="mb-0 font-weight-bold">
-          <Skeleton height={10} />
-          <Skeleton height={10} />
-          <Skeleton height={20} marginTop={20} width={80} />
+          <Skeleton height={10} className="rounded" />
+          <Skeleton height={10} className="rounded" />
+          <Skeleton height={20} marginTop={20} width={80} className="rounded" />
         </p>
       </div>
     </div>
