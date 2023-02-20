@@ -4,6 +4,29 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    &::-webkit-scrollbar {
+        // @include transition(0.5s);
+        width: 10px;
+        background-color: #eee;
+    }
+    &::-webkit-scrollbar-thumb {
+        width: 10px;
+        background-color: #ccc;
+        @include br(10px);
+    }
+    &.hide {
+        &::-webkit-scrollbar {
+            z-index: -1;
+            visibility: hidden;
+        }
+        &::-webkit-scrollbar-thumb {
+            z-index: -1;
+            visibility: hidden;
+        }
+    }
+}
+
 .swiper-pagination-bullet {
     background: #d8d8d8 !important;
     opacity: 1 !important;
@@ -36,7 +59,7 @@
 
 .loading-spin {
     @include mid();
-    @include size(500px);
+    @include size(100vw, 100vh);
     margin: 0 auto;
     @include mid(true);
 }
@@ -76,4 +99,12 @@
     100% {
         top: -0.1px;
     }
+}
+
+.img-cate {
+    @include size(74px, 90px);
+    @include imgFit;
+}
+.text-cate {
+    @include overtext(2);
 }

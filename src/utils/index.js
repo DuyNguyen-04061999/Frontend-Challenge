@@ -9,3 +9,4 @@ export * from "./token";
 export * from "./validate";
 export * from "./storageCache";
 export * from "./toSlug";
+export * from "./toTitle";

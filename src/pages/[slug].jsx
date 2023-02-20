@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 const ProductDetailPage = () => {
   const { slug } = useParams();
   const [_, id] = slug.split("-p");
-  console.log("id :>> ", id);
   return (
     <div>
       {/* BREADCRUMB */}

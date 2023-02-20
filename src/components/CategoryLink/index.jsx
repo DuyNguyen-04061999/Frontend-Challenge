@@ -1,7 +1,7 @@
 import { PATH } from "@/config";
 import { cn, toSlug } from "@/utils";
 import React from "react";
-import { generatePath, Link, NavLink } from "react-router-dom";
+import { generatePath, NavLink } from "react-router-dom";
 
 const CategoryLink = ({ title, id, className = "" }) => {
   const slug = toSlug(title);

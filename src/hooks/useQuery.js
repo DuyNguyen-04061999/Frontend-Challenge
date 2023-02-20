@@ -87,10 +87,12 @@ const useQuery = ({
   }, [queryKey, enabled, ...dependencyList]);
 
   const getCacheDataOrPreviousData = () => {
+    if (reFetchRef.current) return;
+    //======= keep old data =======
     if (keepPreviousData && dataRef.current[queryKey] && queryKey) {
       return dataRef.current[queryKey];
     }
-
+    // =====
     if (_asyncFunction[queryKey]) {
       return _asyncFunction[queryKey];
     }
@@ -106,8 +108,8 @@ const useQuery = ({
       if (keepPreviousData && dataRef.current) {
         dataRef.current[queryKey] = data;
       }
-      if (_cache && cacheTime) {
-        const expire = cacheTime + Date.now();
+      if (_cache) {
+        const expire = cacheTime || 0 + Date.now();
         _cache.set(queryKey, data, expire);
       }
       _asyncFunction[queryKey] = data;

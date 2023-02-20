@@ -1,6 +1,8 @@
+import useScrollTop from "@/hooks/useScrollTop";
 import React from "react";
 
 export const Home = () => {
+  useScrollTop();
   return (
     <div>
       {/* CATEGORIES */}
