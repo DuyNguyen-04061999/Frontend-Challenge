@@ -1,7 +1,9 @@
+import { PATH } from "@/config";
 import { useCategory } from "@/hooks/useCategories";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import React, { useMemo } from "react";
+import { generatePath, Link } from "react-router-dom";
 import HalfStar from "../HalfStar";
 import Star from "../Star";
 const ProductCard = ({
@@ -15,22 +17,15 @@ const ProductCard = ({
   review_count,
   price,
   slug,
-  id,
 }) => {
   const img1 =
     images?.[0]?.large_url || thumbnail_url || images?.[1]?.large_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
-  // const cate = useMemo(
-  //   () =>
-  //     Array.isArray(categoryList) &&
-  //     categoryList.length > 0 &&
-  //     categoryList?.find((e) => {
-  //       return e?.id === categories ? e?.title : "";
-  //     }),
-  //   [categoryList.length]
-  // );
   const categoryItem = useCategory(categories);
 
+  const linkDetail = generatePath(PATH.productDetail, {
+    slug,
+  });
   return (
     <div className="col-6 col-md-4">
       {/* Card */}
@@ -45,10 +40,10 @@ const ProductCard = ({
         {/* Image */}
         <div className="card-img">
           {/* Image */}
-          <a className="card-img-hover" href="product.html">
+          <Link className="card-img-hover" to={linkDetail}>
             <img className="card-img-top card-img-back" src={img2} alt="..." />
             <img className="card-img-top card-img-front" src={img1} alt="..." />
-          </a>
+          </Link>
           {/* Actions */}
           <div className="card-actions">
             <span className="card-action"></span>

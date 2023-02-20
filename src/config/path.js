@@ -3,7 +3,7 @@ const PROFILE = "/ca-nhan";
 export const PATH = {
   home: "/",
   products: "/san-pham",
-  productDetail: "/san-pham/:slug",
+  productDetail: "/:slug",
   category: "/:slug/:id",
   profile: {
     index: PROFILE,

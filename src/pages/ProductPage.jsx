@@ -5,15 +5,16 @@ import Slider from "@/components/Slider";
 import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
 import createArray from "@/utils/createArray";
-import React, { useRef } from "react";
-import { NavLink, useParams, useSearchParams } from "react-router-dom";
+import React, { useMemo, useRef } from "react";
+import { Link, NavLink, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import useScrollTop from "@/hooks/useScrollTop";
 import { useCategories } from "@/hooks/useCategories";
 import queryString from "query-string";
 import CategoryLink from "@/components/CategoryLink";
-import { cn } from "@/utils";
+import { cn, toTitle } from "@/utils";
 import { PATH } from "@/config";
+import EmptyText from "@/components/EmptyText";
 const ProductLoadingStyled = styled.div`
   .skeleton {
     border-radius: 4px;
@@ -21,14 +22,15 @@ const ProductLoadingStyled = styled.div`
 `;
 const ProductPage = () => {
   const [searchParam] = useSearchParams();
+  const name = searchParam.get("search") || undefined;
   const topRef = useRef();
 
   const { id } = useParams();
   const page = Number(searchParam.get("page") || 1);
-
   const _qs = queryString.stringify({
     fields:
       "images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count",
+    name,
     categories: id,
     page,
   });
@@ -40,19 +42,16 @@ const ProductPage = () => {
     data: { data: products = [], paginate: { totalPage } = {} } = {},
     loading,
   } = useQuery({
-    queryKey: `product-page-${page}${id}`,
+    queryKey: `product-page-${_qs}`,
     keepPreviousData: true,
     queryFn: ({ signal }) => productService.getProducts(`?${_qs}`, signal),
   });
 
-  // const { data: { data: categoryList = [] } = {} } = useQuery({
-  //   queryFn: () => productService.getCategories(),
-  //   queryKey: "categoryList",
-  //   storage: "redux",
-  //   cacheTime: 20000,
-  //   keepPreviousData: true,
-  // });
   const { categoryList, loadingCategory } = useCategories();
+  const slug = useMemo(() => {
+    const { title } = categoryList?.find((e) => e.id === +id) || {};
+    return title;
+  }, [id, categoryList.length]);
   return (
     <section className="py-11">
       <div className="container">
@@ -547,16 +546,19 @@ const ProductPage = () => {
               <div className="col-12 col-md">
                 {/* Heading */}
                 <h3 ref={topRef} className="mb-1">
-                  Womens' Clothing
+                  {slug ? slug : "Tất cả sản phẩm"}
                 </h3>
                 {/* Breadcrumb */}
                 <ol className="breadcrumb mb-md-0 font-size-xs text-gray-400">
                   <li className="breadcrumb-item">
-                    <a className="text-gray-400" href="index.html">
-                      Home
-                    </a>
+                    <Link className="text-gray-400" to={PATH.home}>
+                      Trang chủ
+                    </Link>
                   </li>
-                  <li className="breadcrumb-item active">Women's Clothing</li>
+
+                  <li className="breadcrumb-item active">
+                    {slug ? slug : "Tất cả sản phẩm"}
+                  </li>
                 </ol>
               </div>
               <div className="col-12 col-md-auto">
@@ -569,15 +571,17 @@ const ProductPage = () => {
                 </select>
               </div>
             </div>
-            <h4 className="mb-5">Searching for `Clothing`</h4>
+            {name ? <h4 className="mb-5">Tìm kiếm `{name}`</h4> : ""}
             {/* Products */}
             <Pagination totalPage={totalPage} style={{ marginBottom: 30 }} />
             <div className="row">
-              {loading
-                ? createArray(15).map((_, id) => (
-                    <ProductCardLoading key={id} />
-                  ))
-                : products?.map((e) => <ProductCard key={e?.id} {...e} />)}
+              {loading ? (
+                createArray(15).map((_, id) => <ProductCardLoading key={id} />)
+              ) : products.length === 0 ? (
+                <EmptyText />
+              ) : (
+                products?.map((e) => <ProductCard key={e?.id} {...e} />)
+              )}
             </div>
             {/* Pagination */}
             <Pagination totalPage={totalPage} />

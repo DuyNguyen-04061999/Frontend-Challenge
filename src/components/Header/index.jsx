@@ -1,7 +1,10 @@
 import { PATH } from "@/config";
+import { onOpenDrawer } from "@/stores/drawerReducer";
 import { cn } from "@/utils";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
+import SearchDrawer from "../SearchDrawer";
 
 const HeaderNavs = [
   {
@@ -27,8 +30,10 @@ const HeaderNavs = [
 ];
 
 const Header = () => {
+  const dispatch = useDispatch();
   return (
     <>
+      <SearchDrawer />
       <div>
         {/* NAVBAR */}
         <div className="navbar navbar-topbar navbar-expand-xl navbar-light bg-light">
@@ -226,6 +231,10 @@ const Header = () => {
                     className="nav-link"
                     data-toggle="modal"
                     href="#modalSearch"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(onOpenDrawer({ name: "search" }));
+                    }}
                   >
                     <i className="fe fe-search" />
                   </a>
