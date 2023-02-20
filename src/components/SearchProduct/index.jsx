@@ -5,16 +5,17 @@ import { useDispatch } from "react-redux";
 import { generatePath, Link } from "react-router-dom";
 import { onCloseDrawer } from "@/stores/drawerReducer";
 
-const ProductCart = ({ images, real_price, price, name, link, slug }) => {
+const SearchProduct = ({ thumbnail_url, real_price, price, name, slug }) => {
   const dispatch = useDispatch();
   const detailLink = generatePath(PATH.productDetail, {
     slug,
   });
+
   return (
     <div className="row align-items-center position-relative mb-5 product-cart-item pt-4">
       <div className="col-4 col-md-3 img-cate">
         {/* Image */}
-        <img className="img-fluid" src={images[0].large_url} alt="cate" />
+        <img className="img-fluid" src={thumbnail_url} alt="cate" />
       </div>
       <div className="col position-static">
         {/* Text */}
@@ -34,4 +35,4 @@ const ProductCart = ({ images, real_price, price, name, link, slug }) => {
   );
 };
 
-export default ProductCart;
+export default SearchProduct;

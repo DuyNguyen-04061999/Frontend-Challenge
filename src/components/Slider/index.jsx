@@ -15,8 +15,8 @@ const Slider = ({ children, className, ...props }) => {
       
       {...props}
     >
-      {Children.map(children, (child) => (
-        <SwiperSlide>{child}</SwiperSlide>
+      {Children.map(children, (child, id) => (
+        <SwiperSlide key={id}>{child}</SwiperSlide>
       ))}
     </Swiper>
   );

@@ -69,9 +69,9 @@ const ProfileLayout = () => {
                 {/* Nav */}
                 <nav className="mb-10 mb-md-0">
                   <div className="list-group list-group-sm list-group-strong list-group-flush-x">
-                    {ProfileNav.map((e) => (
+                    {ProfileNav.map((e, id) => (
                       <NavLink
-                        key={e.nav}
+                        key={id}
                         className={cn(
                           "list-group-item list-group-item-action dropright-toggle",
                           ({ isActive }) => ({ active: isActive })

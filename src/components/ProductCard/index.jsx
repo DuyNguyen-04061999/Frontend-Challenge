@@ -1,5 +1,6 @@
 import { PATH } from "@/config";
 import { useCategory } from "@/hooks/useCategories";
+import { toSlug } from "@/utils";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import React, { useMemo } from "react";
@@ -26,6 +27,14 @@ const ProductCard = ({
   const linkDetail = generatePath(PATH.productDetail, {
     slug,
   });
+  const linkCategory = useMemo(() => {
+    if (categoryItem) {
+      return generatePath(PATH.category, {
+        slug: toSlug(categoryItem?.title),
+        id: categories,
+      });
+    }
+  }, [categoryItem]);
   return (
     <div className="col-6 col-md-4">
       {/* Card */}
@@ -70,9 +79,9 @@ const ProductCard = ({
           {/* Category */}
           <div className="font-size-xs min-h-[20px]">
             {categoryItem && (
-              <a className="text-muted" href="shop.html">
+              <Link className="text-muted" to={linkCategory}>
                 {categoryItem?.title}
-              </a>
+              </Link>
             )}
           </div>
           {/* Title */}

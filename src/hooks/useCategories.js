@@ -5,7 +5,7 @@ export const useCategories = (dependencyList = [], enabled = true) => {
   const { data: { data: categoryList = [] } = {}, loading: loadingCategory } =
     useQuery({
       queryFn: () => productService.getCategories(),
-      queryKey: "categories",
+      queryKey: ["categories"],
       storage: "redux",
       enabled: enabled,
       dependencyList: dependencyList,
