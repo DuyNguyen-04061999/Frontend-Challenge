@@ -73,16 +73,8 @@ const SearchDrawer = () => {
   const [heightBody, setHeightBody] = useState();
   const { categoryList = [] } = useCategories([], open);
   const category = useCategory(+idCategory);
-
   const topRef = useRef();
   const buttonRef = useRef();
-
-  const slug = useMemo(() => {
-    if (category) {
-      return toSlug(category?.title);
-    }
-    return;
-  }, [category]);
 
   const _qs = queryString.stringify({
     fields: "thumbnail_url,name,real_price,price,slug,id",
@@ -104,22 +96,14 @@ const SearchDrawer = () => {
   });
   const viewAllLink = useMemo(
     () =>
-      (slug
+      (category
         ? generatePath(PATH.category, {
-            slug,
+            slug: toSlug(category?.title),
             id: idCategory,
           })
         : generatePath(PATH.products)) + `?${querySearchString}`,
-    [slug, querySearchString]
+    [category, querySearchString, idCategory]
   );
-
-  useEffect(() => {
-    if (open) {
-      document.body.classList.add("hide");
-    } else {
-      document.body.classList.remove("hide");
-    }
-  }, [open]);
 
   useEffect(() => {
     const topHeight = topRef.current?.scrollHeight;
@@ -140,6 +124,13 @@ const SearchDrawer = () => {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add("hide");
+    } else {
+      document.body.classList.remove("hide");
+    }
+  }, [open]);
   return (
     <Portal
       open={open}
