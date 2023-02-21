@@ -99,7 +99,12 @@ const ProductCard = ({
                   <Star key={id} />
                 ))
               : ""}
-            {rating_average < 5 && rating_average - 4 > 0 ? <HalfStar /> : ""}
+            {rating_average < 5 &&
+            rating_average - Math.floor(rating_average) > 0 ? (
+              <HalfStar />
+            ) : (
+              ""
+            )}
             {review_count ? (
               <span className="ml-2">{`(${review_count} reviews)`}</span>
             ) : (

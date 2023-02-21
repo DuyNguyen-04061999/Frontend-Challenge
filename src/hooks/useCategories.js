@@ -4,7 +4,7 @@ import useQuery from "./useQuery";
 export const useCategories = (dependencyList = [], enabled = true) => {
   const { data: { data: categoryList = [] } = {}, loading: loadingCategory } =
     useQuery({
-      queryFn: () => productService.getCategories(),
+      queryFn: ({ signal }) => productService.getCategories(signal),
       queryKey: ["categories"],
       storage: "redux",
       enabled: enabled,
@@ -15,8 +15,9 @@ export const useCategories = (dependencyList = [], enabled = true) => {
   return { categoryList, loadingCategory };
 };
 
-export const useCategory = (id) => {
-  const { categoryList } = useCategories();
+export const useCategory = (id, ...rest) => {
+  // ==== rest gồm dependencyList và enabled ====
+  const { categoryList } = useCategories(...rest);
 
   return categoryList.find((e) => e?.id === id);
 };

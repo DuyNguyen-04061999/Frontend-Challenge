@@ -57,6 +57,7 @@ const BodyStyled = styled.div`
     background: #ccc;
     border-radius: 10px;
   }
+  -webkit-overflow-scrolling: touch;
   .product-cart-item {
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -71,8 +72,10 @@ const SearchDrawer = () => {
   const [search, setSearch] = useState();
   const searchDebounce = useDebounce(search, 500);
   const [heightBody, setHeightBody] = useState();
+
   const { categoryList = [] } = useCategories([], open);
-  const category = useCategory(+idCategory);
+  const category = useCategory(+idCategory, [], open);
+
   const topRef = useRef();
   const buttonRef = useRef();
 
@@ -131,6 +134,7 @@ const SearchDrawer = () => {
       document.body.classList.remove("hide");
     }
   }, [open]);
+  
   return (
     <Portal
       open={open}
