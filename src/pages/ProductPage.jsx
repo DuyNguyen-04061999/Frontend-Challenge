@@ -6,38 +6,70 @@ import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
 import createArray from "@/utils/createArray";
 import React, { useMemo, useRef } from "react";
-import { Link, NavLink, useParams, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import styled from "styled-components";
 import useScrollTop from "@/hooks/useScrollTop";
 import { useCategories } from "@/hooks/useCategories";
 import queryString from "query-string";
 import CategoryLink from "@/components/CategoryLink";
-import { cn, toTitle } from "@/utils";
+import { cn } from "@/utils";
 import { PATH } from "@/config";
 import EmptyText from "@/components/EmptyText";
+import useQueryParams from "@/hooks/useQueryParams";
 const ProductLoadingStyled = styled.div`
   .skeleton {
     border-radius: 4px;
   }
 `;
+
+const options = [
+  {
+    value: "real_price.desc",
+    title: "Giá giảm",
+  },
+  {
+    value: "real_price.asc",
+    title: "Giá tăng",
+  },
+  {
+    value: "discount_rate.desc",
+    title: "Giảm giá nhiều nhất",
+  },
+  {
+    value: "rating_average.desc",
+    title: "Được đánh giá cao",
+  },
+  {
+    value: "top_seller",
+    title: "Mua nhiều nhất",
+  },
+  {
+    value: "newest",
+    title: "Sản phẩm mới nhất",
+  },
+];
 const ProductPage = () => {
-  const [searchParam] = useSearchParams();
-  const name = searchParam.get("search") || undefined;
+  const [queryParams, setQueryParams] = useQueryParams({
+    page: 1,
+    sort: "newest",
+  });
   const topRef = useRef();
 
   const { id } = useParams();
-  const page = Number(searchParam.get("page") || 1);
+  useScrollTop(
+    [queryParams.page, id],
+    topRef?.current?.getBoundingClientRect().top + window.scrollY
+  );
+
   const _qs = queryString.stringify({
     fields:
       "images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count",
-    name,
+    name: queryParams.search,
     categories: id,
-    page,
+    page: queryParams.page,
+    sort: queryParams.sort,
   });
-  useScrollTop(
-    [page, id],
-    topRef?.current?.getBoundingClientRect().top + window.scrollY
-  );
+
   const {
     data: { data: products = [], paginate: { totalPage } = {} } = {},
     loading,
@@ -52,6 +84,7 @@ const ProductPage = () => {
     const { title } = categoryList?.find((e) => e.id === +id) || {};
     return title;
   }, [id, categoryList.length]);
+
   return (
     <section className="py-11">
       <div className="container">
@@ -563,15 +596,30 @@ const ProductPage = () => {
               </div>
               <div className="col-12 col-md-auto">
                 {/* Select */}
-                <select className="custom-select custom-select-xs">
-                  <option>Giá giảm</option>
-                  <option>Giá tăng</option>
-                  <option>Mới nhất</option>
-                  <option>Giảm giá nhiều nhất</option>
+                <select
+                  className="custom-select custom-select-xs"
+                  value={queryParams.sort}
+                  onChange={(e) => {
+                    setQueryParams({
+                      sort: e.target.value,
+                      search: queryParams.search,
+                      page: undefined,
+                    });
+                  }}
+                >
+                  {options.map((e) => (
+                    <option value={e?.value} key={e.value}>
+                      {e.title}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
-            {name ? <h4 className="mb-5">Tìm kiếm `{name}`</h4> : ""}
+            {queryParams.search ? (
+              <h4 className="mb-5">Tìm kiếm `{queryParams.search}`</h4>
+            ) : (
+              ""
+            )}
             {/* Products */}
             <Pagination totalPage={totalPage} style={{ marginBottom: 30 }} />
             <div className="row">
