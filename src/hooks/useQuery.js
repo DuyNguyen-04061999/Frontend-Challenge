@@ -114,11 +114,13 @@ const useQuery = ({
       if (keepPreviousData && dataRef.current) {
         dataRef.current[_queryKey] = data;
       }
+      
+      _asyncFunction[_queryKey] = data;
+
       if (_cache) {
         const expire = cacheTime || 0 + Date.now();
         _cache.set(_queryKey, data, expire);
       }
-      _asyncFunction[_queryKey] = data;
     }
   };
 
