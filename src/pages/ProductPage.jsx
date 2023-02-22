@@ -5,8 +5,8 @@ import Slider from "@/components/Slider";
 import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
 import createArray from "@/utils/createArray";
-import React, { useMemo, useRef } from "react";
-import { Link, NavLink, useParams } from "react-router-dom";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link, NavLink, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import useScrollTop from "@/hooks/useScrollTop";
 import { useCategories } from "@/hooks/useCategories";
@@ -16,6 +16,7 @@ import { cn } from "@/utils";
 import { PATH } from "@/config";
 import EmptyText from "@/components/EmptyText";
 import useQueryParams from "@/hooks/useQueryParams";
+import useEffectDidMount from "@/hooks/useEffectDidMount";
 const ProductLoadingStyled = styled.div`
   .skeleton {
     border-radius: 4px;
@@ -55,9 +56,27 @@ const ProductPage = () => {
   });
   const topRef = useRef();
 
-  const { id } = useParams();
+  const [minPrice, setMinPrice] = useState(queryParams.minPrice || "");
+  const [maxPrice, setMaxPrice] = useState(queryParams.maxPrice || "");
+  const match = useMatch(PATH.category);
+
+  useEffectDidMount(() => {
+    setMinPrice("");
+    setMaxPrice("");
+  }, [match?.params.id]);
+
+  useEffect(() => {
+    setMinPrice(queryParams.minPrice || "");
+    setMaxPrice(queryParams.maxPrice || "");
+  }, [match?.params.id]);
+
   useScrollTop(
-    [queryParams.page, id],
+    [
+      queryParams.page,
+      match?.params.id,
+      queryParams.minPrice,
+      queryParams.maxPrice,
+    ],
     topRef?.current?.getBoundingClientRect().top + window.scrollY
   );
 
@@ -65,9 +84,11 @@ const ProductPage = () => {
     fields:
       "images,thumbnail_url,discount_rate,categories,name,rating_average,real_price,price,slug,id,review_count",
     name: queryParams.search,
-    categories: id,
+    categories: match?.params.id,
     page: queryParams.page,
     sort: queryParams.sort,
+    minPrice: queryParams.minPrice,
+    maxPrice: queryParams.maxPrice,
   });
 
   const {
@@ -80,18 +101,28 @@ const ProductPage = () => {
   });
 
   const { categoryList, loadingCategory } = useCategories();
-  const slug = useMemo(() => {
-    const { title } = categoryList?.find((e) => e.id === +id) || {};
-    return title;
-  }, [id, categoryList.length]);
 
+  const categoryTitle = useMemo(() => {
+    const { title } =
+      categoryList?.find((e) => e.id === +match?.params.id) || {};
+    return title || "Tất cả sản phẩm";
+  }, [match?.params.id, categoryList.length]);
+
+  const onSubmitPrice = (e) => {
+    e.preventDefault();
+
+    setQueryParams({
+      minPrice: minPrice || undefined,
+      maxPrice: maxPrice || undefined,
+    });
+  };
   return (
     <section className="py-11">
       <div className="container">
         <div className="row">
           <div className="col-12 col-md-4 col-lg-3 sticky top-0 self-start">
             {/* Filters */}
-            <form className="mb-10 mb-md-0">
+            <form className="mb-10 mb-md-0" onSubmit={onSubmitPrice}>
               <ul className="nav nav-vertical" id="filterNav">
                 <li className="nav-item">
                   {/* Toggle */}
@@ -127,7 +158,9 @@ const ProductPage = () => {
                               <li className="list-styled-item" key={e?.id}>
                                 <CategoryLink
                                   {...e}
-                                  className={cn({ active: e?.id === +id })}
+                                  className={cn({
+                                    active: e?.id === +match?.params.id,
+                                  })}
                                 />
                               </li>
                             ))}
@@ -427,13 +460,12 @@ const ProductPage = () => {
                 </li>
                 <li className="nav-item">
                   {/* Toggle */}
-                  <a
+                  <span
                     className="nav-link font-size-lg text-reset border-bottom mb-6"
                     data-toggle="collapse"
-                    href="#priceCollapse"
                   >
                     Price
-                  </a>
+                  </span>
                   {/* Collapse */}
                   <div>
                     {/* Range */}
@@ -441,9 +473,16 @@ const ProductPage = () => {
                       {/* Input */}
                       <input
                         type="number"
+                        min="0"
                         className="form-control form-control-xs"
-                        placeholder="$10.00"
-                        min={10}
+                        placeholder="Thấp nhất"
+                        pattern="[1-9]*"
+                        value={minPrice}
+                        onChange={(e) =>
+                          +e.target.value > 0
+                            ? setMinPrice(e.target.value)
+                            : setMinPrice("")
+                        }
                       />
                       {/* Divider */}
                       <div className="text-gray-350 mx-2">‒</div>
@@ -451,8 +490,11 @@ const ProductPage = () => {
                       <input
                         type="number"
                         className="form-control form-control-xs"
-                        placeholder="$350.00"
-                        max={350}
+                        placeholder="Cao nhất"
+                        value={maxPrice}
+                        onChange={(e) =>
+                          setMaxPrice(+e.target.value > 0 ? e.target.value : "")
+                        }
                       />
                     </div>
                     <button className="btn btn-outline-dark btn-block mt-5">
@@ -579,7 +621,7 @@ const ProductPage = () => {
               <div className="col-12 col-md">
                 {/* Heading */}
                 <h3 ref={topRef} className="mb-1">
-                  {slug ? slug : "Tất cả sản phẩm"}
+                  {categoryTitle}
                 </h3>
                 {/* Breadcrumb */}
                 <ol className="breadcrumb mb-md-0 font-size-xs text-gray-400">
@@ -589,9 +631,7 @@ const ProductPage = () => {
                     </Link>
                   </li>
 
-                  <li className="breadcrumb-item active">
-                    {slug ? slug : "Tất cả sản phẩm"}
-                  </li>
+                  <li className="breadcrumb-item active">{categoryTitle}</li>
                 </ol>
               </div>
               <div className="col-12 col-md-auto">

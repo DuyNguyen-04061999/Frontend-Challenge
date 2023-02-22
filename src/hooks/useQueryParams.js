@@ -7,9 +7,9 @@ const useQueryParams = (defaultParams = {}) => {
 
   for (const [key, val] of searchParam.entries()) {
     try {
-      params[key] = JSON.parse(val);
+      params[key] = JSON.parse(val || defaultParams[key]);
     } catch (error) {
-      params[key] = val;
+      params[key] = val || defaultParams[key];
     }
   }
 
