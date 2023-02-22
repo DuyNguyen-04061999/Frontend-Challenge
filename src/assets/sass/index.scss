@@ -118,3 +118,39 @@ body {
 .text-cate {
     @include overtext(2);
 }
+.custom {
+    &-control {
+        width: max-content;
+        cursor: pointer;
+        &-input:checked ~ &-label {
+            &::after {
+                background: $white-cl;
+            }
+        }
+        &-label {
+            display: flex;
+            align-items: center;
+
+            &::before {
+                display: block;
+                @include size(20px !important);
+                border-radius: 50% !important;
+            }
+            &::after {
+                display: block;
+                @include size(8px !important);
+                @include br(50% !important);
+                background-image: unset !important;
+                background: #e5e5e5;
+                transform: translateY(-50%) !important;
+                top: 50% !important;
+                left: 6px !important;
+                @include transition(0.2s);
+            }
+        }
+    }
+
+    &-control + &-control {
+        margin-top: 12px;
+    }
+}

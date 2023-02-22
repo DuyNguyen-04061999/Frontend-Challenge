@@ -9678,12 +9678,12 @@ input[type="submit"].btn-block {
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'%3e%3cpath fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M9 1L3.5 7L1 4.27273'/%3e%3c/svg%3e");
 }
-.custom-checkbox
+/* .custom-checkbox
   .custom-control-input:indeterminate
   ~ .custom-control-label::before {
   border-color: #ff6f61;
   background-color: #ff6f61;
-}
+} */
 .custom-checkbox
   .custom-control-input:disabled:checked
   ~ .custom-control-label::before,
