@@ -2,9 +2,9 @@ import { cn } from "@/utils";
 import React from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-const Pagination = ({ totalPage, name = "page", style = {} }) => {
+const Pagination = ({ totalPage, page = "page", style = {} }) => {
   const [searchParam] = useSearchParams();
-  const currentPage = Number(searchParam.get(name) || 1);
+  const currentPage = Number(searchParam.get(page) || 1);
   const { pathname } = useLocation();
   const fakeParam = new URLSearchParams(searchParam);
 
@@ -23,7 +23,7 @@ const Pagination = ({ totalPage, name = "page", style = {} }) => {
       startPage = endPage - 6 > 0 ? endPage - 6 : 1;
     }
     for (let i = startPage; i <= endPage; i++) {
-      fakeParam.set(name, i);
+      fakeParam.set(page, i);
       const link = `${pathname}?${fakeParam.toString()}`;
       list.push(
         <li className={cn("page-item", { active: currentPage === i })} key={i}>
@@ -36,16 +36,16 @@ const Pagination = ({ totalPage, name = "page", style = {} }) => {
 
     return list;
   };
-  fakeParam.set(name, currentPage - 1);
+  fakeParam.set(page, currentPage - 1);
   const prevLink = `${pathname}?${fakeParam.toString()}`;
 
-  fakeParam.set(name, currentPage + 1);
+  fakeParam.set(page, currentPage + 1);
   const nextLink = `${pathname}?${fakeParam.toString()}`;
 
-  fakeParam.set(name, 1);
+  fakeParam.set(page, 1);
   const firstLink = `${pathname}?${fakeParam.toString()}`;
 
-  fakeParam.set(name, totalPage);
+  fakeParam.set(page, totalPage);
   const lastLink = `${pathname}?${fakeParam.toString()}`;
 
   return (
