@@ -1,4 +1,5 @@
 import {
+  delay,
   localStorageCache,
   reduxStorageCache,
   sessionStorageCache,
@@ -8,7 +9,7 @@ import { useEffect, useReducer, useRef } from "react";
 
 const initialState = {
   data: {},
-  loading: true,
+  loading: false,
   error: new Error(""),
   status: "idle",
 };
@@ -54,6 +55,7 @@ const useQuery = ({
   cacheTime,
   dependencyList = [],
   storage,
+  limitDuration,
   enabled = true,
   keepPreviousData = false,
 }) => {
@@ -98,7 +100,7 @@ const useQuery = ({
     if (keepPreviousData && dataRef.current[_queryKey] && _queryKey) {
       return dataRef.current[_queryKey];
     }
-    // =====
+    // ===== tránh call lại api khi trùng queryKey ====
     if (_asyncFunction[_queryKey]) {
       return _asyncFunction[_queryKey];
     }
@@ -114,7 +116,7 @@ const useQuery = ({
       if (keepPreviousData && dataRef.current) {
         dataRef.current[_queryKey] = data;
       }
-      
+
       _asyncFunction[_queryKey] = data;
 
       if (_cache) {
@@ -124,15 +126,28 @@ const useQuery = ({
     }
   };
 
+  const onDelayDuration = async (startTime) => {
+    const endTime = Date.now();
+    if (!!limitDuration) {
+      const timeout = endTime - startTime;
+      if (timeout < limitDuration) {
+        await delay(limitDuration - timeout);
+      }
+    }
+  };
   const fetchData = async () => {
     //hủy api cũ
     controllerRef.current.abort();
     //tạo signal api mới
     controllerRef.current = new AbortController();
+    const startTime = Date.now();
+
     try {
-      dispatch({ type: SET_LOADING, payload: enabled });
+      dispatch({ type: SET_LOADING, payload: true });
       dispatch({ type: SET_STATUS, payload: "pending" });
-      let res = getCacheDataOrPreviousData();
+      let res;
+
+      res = getCacheDataOrPreviousData();
 
       if (!res) {
         // call api
@@ -142,19 +157,29 @@ const useQuery = ({
       if (res instanceof Promise) {
         res = await res;
       }
-
-      dispatch({ type: SET_DATA, payload: res });
-      dispatch({ type: SET_STATUS, payload: "success" });
-      setCacheDataOrPreviousData(res);
-
-      reFetchRef.current = false;
-      dispatch({ type: SET_LOADING, payload: false });
-    } catch (error) {
-      if (error instanceof CanceledError) {
+      await onDelayDuration(startTime);
+      if (res) {
+        dispatch({ type: SET_DATA, payload: res });
+        dispatch({ type: SET_STATUS, payload: "success" });
+        setCacheDataOrPreviousData(res);
+        reFetchRef.current = false;
+        dispatch({ type: SET_LOADING, payload: false });
+        return res;
+      }
+    } catch (err) {
+      // error = err;
+      await onDelayDuration(startTime);
+      if (err instanceof CanceledError) {
       } else {
-        dispatch({ type: SET_ERROR, payload: new Error(error?.message) });
+        dispatch({ type: SET_ERROR, payload: new Error(err?.message) });
         dispatch({ type: SET_STATUS, payload: "error" });
         dispatch({ type: SET_LOADING, payload: false });
+        console.log(
+          "%cerror useQuery.js line:153 ",
+          "color: red; display: block; width: 100%;",
+          err
+        );
+        throw err;
       }
     }
   };
@@ -164,6 +189,7 @@ const useQuery = ({
     loading,
     error,
     status,
+    fetchData,
   };
 };
 export default useQuery;

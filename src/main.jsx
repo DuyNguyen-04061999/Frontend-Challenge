@@ -13,7 +13,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>
       <App />
-      <ToastContainer style={{ fontSize: "16px" }} pauseOnHover={false} />
+      <ToastContainer
+        style={{ fontSize: "16px" }}
+        pauseOnHover={false}
+        limit={3}
+        containerId="toast-id"
+        
+      />
     </Provider>
   </BrowserRouter>
   // </React.StrictMode>

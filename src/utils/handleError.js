@@ -1,12 +1,14 @@
 import { toast } from "react-toastify";
-
-const handleErrorSubmit = (errors) => {
-  const arrErrors = Object.values(errors);
-  if (arrErrors.length === 1 && arrErrors[0]) {
-    toast.error(arrErrors[0], {
-      pauseOnHover: false,
-      autoClose: 1000,
-    });
-  }
+const handleError = (error) => {
+  console.log(
+    "%cerror handleError.js line:3 ",
+    "color: red; display: block; width: 100%;",
+    error
+  );
+  toast.error(error?.response?.data?.message, {
+    style: {
+      fontSize: 14,
+    },
+  });
 };
-export default handleErrorSubmit;
+export default handleError;

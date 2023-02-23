@@ -184,7 +184,7 @@ const ProductPage = () => {
                   </a>
                   {/* Collapse */}
                   <div
-                    className="form-group form-group-overflow mb-6 select-none"
+                    className="form-group form-group-overflow mb-6 select-none form-rating"
                     id="seasonGroup"
                   >
                     <Rating.Group

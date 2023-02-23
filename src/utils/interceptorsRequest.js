@@ -7,7 +7,6 @@ export function interceptorsRequest(api) {
       if (token) {
         config.headers.Authorization = `Bearer ${token.accessToken}`;
       }
-
       return config;
     },
     (error) => {
@@ -15,4 +14,3 @@ export function interceptorsRequest(api) {
     }
   );
 }
-
