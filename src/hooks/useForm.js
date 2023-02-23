@@ -1,7 +1,13 @@
 import validate from "@/utils/validate";
 import { useRef, useState } from "react";
 
-export const useForm = (rules = {}, initialValue = {}) => {
+export const useForm = (
+  rules = {},
+  { initialValue = {}, dependencies = {} } = {}
+) => {
+  //   dependencies: {
+  // password: ["confirmPassword"],
+  // },
   const [form, setForm] = useState(initialValue);
   const [errors, setErrors] = useState({});
   const formRef = useRef();
@@ -11,19 +17,34 @@ export const useForm = (rules = {}, initialValue = {}) => {
       value: form[name] || "",
       id: name,
       name,
-      onChange: (e) => {
-        let _value = { [name]: e.target.value };
+      onChange: (value) => {
+        let _form = { ...form, [name]: value }; //cập nhật giá trị mới nhất
         if (Array.isArray(rules[name]) && rules[name].length > 0) {
-          const errObj = validate(
+          const errObj = {};
+          errObj[name] = validate(
             {
               [name]: rules[name],
             },
-            _value
-          );
+            _form
+          )[name]; //validate trong lúc nhập data
+          setErrors((error) => ({ ...error, [name]: "" })); //mất error khi nhập
 
-          setErrors((error) => ({ ...error, [name]: "" }));
+          if (dependencies[name]) {
+            for (const dependency of dependencies[name]) {
+              if (_form[dependency]?.trim()) {
+                errObj[dependency] = validate(
+                  { [dependency]: rules[dependency] },
+                  _form
+                )[dependency];
+                setErrors((error) => ({
+                  ...error,
+                  [dependency]: errObj[dependency],
+                }));
+              }
+            }
+          }
         }
-        setForm((form) => ({ ...form, [name]: e.target.value }));
+        setForm((form) => ({ ...form, [name]: value }));
       },
     };
   };

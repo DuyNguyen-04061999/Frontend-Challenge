@@ -34,7 +34,6 @@ export default function validate(rules = {}, form = {}) {
         if (typeof rule === "function") {
           const message = rule(form[name], form);
           message && (errObj[name] = message);
-          break;
         }
 
         if (rule.regex) {
