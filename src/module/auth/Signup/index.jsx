@@ -48,7 +48,9 @@ const Signup = () => {
       try {
         const res = await registerService();
         if (res.success) {
-          toast.success(res.message);
+          toast.success(res.message, {
+            autoClose: 2000,
+          });
         }
       } catch (error) {
         console.log(
@@ -56,7 +58,7 @@ const Signup = () => {
           "color: red; display: block; width: 100%;",
           error
         );
-        handleError(error);
+        handleError(error?.message);
       }
     }
   };

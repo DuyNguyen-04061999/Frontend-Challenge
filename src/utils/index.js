@@ -11,3 +11,6 @@ export * from "./storageCache";
 export * from "./toSlug";
 export * from "./clearWaititngQueue";
 export * from "./delay";
+export * from "./delayDuration";
+export * from "./toFixed";
+export * from "./copyToClipBoard";

@@ -21,4 +21,5 @@ export const PATH = {
   faq: "faq",
   contact: "lien-he",
   auth: "/signin",
+  resetPassword: "/reset-password",
 };
