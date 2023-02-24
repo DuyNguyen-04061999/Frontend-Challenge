@@ -1,6 +1,6 @@
 import { PATH } from "@/config";
 import { useCategory } from "@/hooks/useCategories";
-import { toSlug } from "@/utils";
+import { toFixed, toSlug } from "@/utils";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import React, { useMemo } from "react";
@@ -92,7 +92,7 @@ const ProductCard = ({
           </div>
           <div className="card-product-rating !items-baseline">
             <span className="mr-2">
-              {+rating_average ? rating_average : ""}
+              {+rating_average ? toFixed(+rating_average) : ""}
             </span>
             {rating_average
               ? createArray(Math.floor(rating_average)).map((_, id) => (
@@ -100,7 +100,8 @@ const ProductCard = ({
                 ))
               : ""}
             {rating_average < 5 &&
-            rating_average - Math.floor(rating_average) > 0 ? (
+            toFixed(+rating_average) - Math.floor(toFixed(+rating_average)) >
+              0 ? (
               <HalfStar />
             ) : (
               ""

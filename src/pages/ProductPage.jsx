@@ -193,6 +193,7 @@ const ProductPage = () => {
                       onSetFilter={(value) => {
                         setQueryParams({
                           filterRating: value,
+                          page: undefined,
                         });
                       }}
                     >
@@ -255,6 +256,7 @@ const ProductPage = () => {
                         className="form-control form-control-xs"
                         placeholder="Cao nhất"
                         value={maxPrice}
+                        pattern="[1-9]*"
                         onChange={(e) =>
                           setMaxPrice(+e.target.value > 0 ? e.target.value : "")
                         }
@@ -405,7 +407,6 @@ const ProductPage = () => {
                   onChange={(e) => {
                     setQueryParams({
                       sort: e.target.value,
-                      search: queryParams.search,
                       page: undefined,
                     });
                   }}

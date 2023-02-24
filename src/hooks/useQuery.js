@@ -1,11 +1,11 @@
 import {
-  delay,
   localStorageCache,
   reduxStorageCache,
   sessionStorageCache,
 } from "@/utils";
 import { CanceledError } from "axios";
 import { useEffect, useReducer, useRef } from "react";
+import { delayDuration } from "@/utils";
 
 const initialState = {
   data: {},
@@ -126,15 +126,6 @@ const useQuery = ({
     }
   };
 
-  const onDelayDuration = async (startTime) => {
-    const endTime = Date.now();
-    if (!!limitDuration) {
-      const timeout = endTime - startTime;
-      if (timeout < limitDuration) {
-        await delay(limitDuration - timeout);
-      }
-    }
-  };
   const fetchData = async () => {
     //hủy api cũ
     controllerRef.current.abort();
@@ -157,7 +148,7 @@ const useQuery = ({
       if (res instanceof Promise) {
         res = await res;
       }
-      await onDelayDuration(startTime);
+      await delayDuration(startTime, limitDuration);
       if (res) {
         dispatch({ type: SET_DATA, payload: res });
         dispatch({ type: SET_STATUS, payload: "success" });
@@ -168,7 +159,7 @@ const useQuery = ({
       }
     } catch (err) {
       // error = err;
-      await onDelayDuration(startTime);
+      await delayDuration(startTime, limitDuration);
       if (err instanceof CanceledError) {
       } else {
         dispatch({ type: SET_ERROR, payload: new Error(err?.message) });
@@ -179,7 +170,7 @@ const useQuery = ({
           "color: red; display: block; width: 100%;",
           err
         );
-        throw err;
+        throw err?.response?.data;
       }
     }
   };

@@ -1,7 +1,7 @@
 const TOKEN_KEY = "token";
 const USER_KEY = "user";
 const PASSWORD_KEY = "password";
-
+const REMEMBER_KEY = "remember";
 export const setToken = (data) => {
   localStorage.setItem(TOKEN_KEY, JSON.stringify(data));
 };
@@ -32,4 +32,14 @@ export const getPassword = () => {
 };
 export const clearPassword = () => {
   localStorage && localStorage.removeItem(PASSWORD_KEY);
+};
+
+export const setRemember = (data) => {
+  localStorage.setItem(REMEMBER_KEY, JSON.stringify(data));
+};
+export const getRemember = () => {
+  return JSON.parse(localStorage.getItem(REMEMBER_KEY)) || null;
+};
+export const clearRemember = () => {
+  localStorage.removeItem(REMEMBER_KEY);
 };

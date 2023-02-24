@@ -2,6 +2,7 @@ import { GuestRoute } from "@/components/GuestRoute";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { PATH } from "@/config";
 import { MainLayout } from "@/layouts/MainLayout";
+import ResetPasswordPage from "@/pages/reset-password";
 
 import { lazy } from "react";
 import profile from "./profile";
@@ -34,6 +35,10 @@ export const routers = [
           {
             element: <AuthPage />,
             path: PATH.auth,
+          },
+          {
+            element: <ResetPasswordPage />,
+            path: PATH.resetPassword,
           },
         ],
       },

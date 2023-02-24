@@ -1,7 +1,11 @@
 import { PATH } from "@/config";
-import { cn } from "@/utils";
+import store from "@/stores";
+import { logoutAction } from "@/stores/authReducer";
+import { cn, delay } from "@/utils";
+import handleError from "@/utils/handleError";
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ProfileNav = [
   {
@@ -28,8 +32,17 @@ const ProfileNav = [
   {
     nav: "Đăng xuất",
     to: "/",
-    onClick: (e) => {
+    onClick: async (e) => {
       e.preventDefault();
+      try {
+        await delay(1500);
+        await store.dispatch(logoutAction());
+        toast.warning("Bạn đã đăng xuất tài khoản", {
+          autoClose: 2000,
+        });
+      } catch (error) {
+        handleError(error?.message);
+      }
     },
   },
 ];
@@ -78,6 +91,7 @@ const ProfileLayout = () => {
                         )}
                         end={e?.end}
                         to={e?.to || ""}
+                        onClick={e?.onClick}
                       >
                         {e.nav}
                       </NavLink>
