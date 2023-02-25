@@ -10,6 +10,7 @@ export const useForm = (
   // },
   const [form, setForm] = useState(initialValue);
   const [errors, setErrors] = useState({});
+
   const formRef = useRef();
   const register = (name) => {
     return {
@@ -31,6 +32,7 @@ export const useForm = (
 
           if (dependencies[name]) {
             for (const dependency of dependencies[name]) {
+              // ===== validate lúc đang nhập data =====
               if (_form[dependency]?.trim()) {
                 errObj[dependency] = validate(
                   { [dependency]: rules[dependency] },

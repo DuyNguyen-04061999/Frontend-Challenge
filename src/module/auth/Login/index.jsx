@@ -8,6 +8,7 @@ import {
   min,
   regex,
   require,
+  setPassword,
   setRemember,
 } from "@/utils";
 import React, { memo, useEffect, useState } from "react";
@@ -61,6 +62,7 @@ const Login = () => {
         } else {
           clearRemember();
         }
+        setPassword(form.password);
         toast.success(
           <p>
             Chúc mừng{" "}
@@ -73,7 +75,7 @@ const Login = () => {
           }
         );
       } catch (error) {
-        handleError(error?.message);
+        handleError(error);
       } finally {
         setLoading(false);
       }
@@ -96,7 +98,7 @@ const Login = () => {
             }
           );
         } catch (error) {
-          handleError(error.message);
+          handleError(error);
         }
       }
     })();
@@ -186,7 +188,7 @@ const Login = () => {
                     Tài khoản demo:
                     <b className="text-black">
                       <span
-                        className="cursor-pointer"
+                        className="cursor-pointer underline underline-offset-1"
                         title="email"
                         onClick={_copyToClipBoard}
                       >
@@ -194,7 +196,7 @@ const Login = () => {
                       </span>{" "}
                       /{" "}
                       <span
-                        className="cursor-pointer"
+                        className="cursor-pointer underline underline-offset-1"
                         title="password"
                         onClick={_copyToClipBoard}
                       >

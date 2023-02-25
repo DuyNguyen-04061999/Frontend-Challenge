@@ -1,10 +1,13 @@
-import { api, USER_API } from "@/config";
-
+import { http } from "@/utils";
+import { USER_API } from "@/config";
 export const userService = {
-  register: (data) => api.post(`${USER_API}/register`, data),
-  getProfile: () => api.get(`${USER_API}`),
-
-  resetPassword: (data) => api.post(`${USER_API}/reset-password`, data),
+  getProfile: () => {
+    return http.get(`${USER_API}`);
+  },
+  register: (data) => http.post(`${USER_API}/register`, data),
+  updateInfo: (data) => http.patch(`${USER_API}`, data),
+  resetPassword: (data) => http.post(`${USER_API}/reset-password`, data),
+  changePassword: (data) => http.post(`${USER_API}/change-password`, data),
   changePasswordByCode: (data) =>
-    api.post(`${USER_API}/change-password-by-code`, data),
+    http.post(`${USER_API}/change-password-by-code`, data),
 };

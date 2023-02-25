@@ -18,7 +18,7 @@ const Field = ({
         {label}
       </label>
       {renderInput ? (
-        renderInput(props)
+        renderInput({ onChange, ...props })
       ) : (
         <input
           type={type}

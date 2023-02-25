@@ -34,14 +34,15 @@ const ProfileNav = [
     to: "/",
     onClick: async (e) => {
       e.preventDefault();
+      toast.dismiss();
       try {
-        await delay(1500);
+        // await delay(1500);
         await store.dispatch(logoutAction());
-        toast.warning("Bạn đã đăng xuất tài khoản", {
+        toast.warning("Bạn đã đăng xuất khỏi tài khoản", {
           autoClose: 2000,
         });
       } catch (error) {
-        handleError(error?.message);
+        handleError(error);
       }
     },
   },

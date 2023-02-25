@@ -75,8 +75,8 @@ const useQuery = ({
     ? queryKey
     : undefined;
 
+  //====== cancel when out the page ====
   useEffect(() => {
-    // cancel when out the page
     return () => {
       controllerRef.current.abort();
     };
@@ -87,12 +87,6 @@ const useQuery = ({
       reFetchRef.current = true;
     }
   }, [...dependencyList]);
-
-  useEffect(() => {
-    if (enabled) {
-      fetchData();
-    }
-  }, [enabled].concat(_queryKey, dependencyList));
 
   const getCacheDataOrPreviousData = () => {
     if (reFetchRef.current) return;
@@ -126,7 +120,13 @@ const useQuery = ({
     }
   };
 
-  const fetchData = async () => {
+  useEffect(() => {
+    if (enabled) {
+      fetchData();
+    }
+  }, [enabled].concat(_queryKey, dependencyList));
+
+  const fetchData = async (...args) => {
     //hủy api cũ
     controllerRef.current.abort();
     //tạo signal api mới
@@ -142,7 +142,7 @@ const useQuery = ({
 
       if (!res) {
         // call api
-        res = queryFn({ signal: controllerRef.current.signal });
+        res = queryFn({ signal: controllerRef.current.signal, params: args });
       }
 
       if (res instanceof Promise) {
@@ -170,7 +170,7 @@ const useQuery = ({
           "color: red; display: block; width: 100%;",
           err
         );
-        throw err?.response?.data;
+        throw err;
       }
     }
   };

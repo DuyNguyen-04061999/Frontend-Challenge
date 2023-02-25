@@ -14,3 +14,4 @@ export * from "./delay";
 export * from "./delayDuration";
 export * from "./toFixed";
 export * from "./copyToClipBoard";
+export * from "./http";
