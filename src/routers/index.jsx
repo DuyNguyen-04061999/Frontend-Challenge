@@ -2,7 +2,6 @@ import { GuestRoute } from "@/components/GuestRoute";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { PATH } from "@/config";
 import { MainLayout } from "@/layouts/MainLayout";
-import ResetPasswordPage from "@/pages/reset-password";
 
 import { lazy } from "react";
 import profile from "./profile";
@@ -14,7 +13,7 @@ const ProductDetailPage = lazy(() => import("@/pages/[slug]"));
 const AuthPage = lazy(() => import("@/pages/auth"));
 const ContactPage = lazy(() => import("@/pages/contact"));
 const FaqPage = lazy(() => import("@/pages/faq"));
-
+const ResetPasswordPage = lazy(() => import("@/pages/reset-password"));
 const ShippingPage = lazy(() => import("@/pages/shipping"));
 
 export const routers = [

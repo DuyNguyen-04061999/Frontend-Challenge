@@ -1,9 +1,12 @@
 import { authService } from "@/services/auth.service";
 import { userService } from "@/services/user.service";
 import { delayDuration } from "@/utils";
+import handleError from "@/utils/handleError";
 import {
+  clearPassword,
   clearToken,
   clearUser,
+  getToken,
   getUser,
   setToken,
   setUser,
@@ -13,17 +16,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const loginAction = createAsyncThunk(
   "auth/login",
   async (data, thunkApi) => {
-    const startTime = Date.now();
     try {
       const res = await authService.login(data);
       setToken(res?.data);
       const user = await userService.getProfile();
       setUser(user?.data);
-      await delayDuration(startTime, 1000);
       return thunkApi.fulfillWithValue(user.data);
     } catch (error) {
-      await delayDuration(startTime, 1000);
-      return thunkApi.rejectWithValue(error?.response?.data);
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -31,34 +31,28 @@ export const loginAction = createAsyncThunk(
 export const loginByCodeAction = createAsyncThunk(
   "auth/login-by-code",
   async (code, thunkApi) => {
-    const startTime = Date.now();
     try {
       const res = await authService.loginByCode(code);
       setToken(res?.data);
       const user = await userService.getProfile();
       setUser(user?.data);
-      await delayDuration(startTime, 1000);
       return thunkApi.fulfillWithValue(user.data);
     } catch (error) {
-      await delayDuration(startTime, 1000);
-      return thunkApi.rejectWithValue(error?.response?.data);
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
 export const changePasswordByCodeAction = createAsyncThunk(
   "auth/change-password-by-code",
   async (data, thunkApi) => {
-    const startTime = Date.now();
     try {
       const res = await userService.changePasswordByCode(data);
       setToken(res?.data);
       const user = await userService.getProfile();
       setUser(user?.data);
-      await delayDuration(startTime, 1000);
       return thunkApi.fulfillWithValue(user.data);
     } catch (error) {
-      await delayDuration(startTime, 1000);
-      return thunkApi.rejectWithValue(error?.response?.data);
+      return thunkApi.rejectWithValue(error);
     }
   }
 );
@@ -66,12 +60,32 @@ export const changePasswordByCodeAction = createAsyncThunk(
 export const logoutAction = createAsyncThunk(
   "auth/logout",
   async (_, thunkApi) => {
-    try {
-      clearToken();
-      clearUser();
-      thunkApi.dispatch(onLogout());
-    } catch (error) {
-      return thunkApi.rejectWithValue(error?.response?.data);
+    clearToken();
+    clearUser();
+    clearPassword();
+    thunkApi.dispatch(onLogout());
+  }
+);
+
+export const setUserAction = createAsyncThunk(
+  "auth/setUser",
+  async (data, thunkApi) => {
+    setUser(data);
+    thunkApi.dispatch(onSetUser(data));
+  }
+);
+
+export const getUserAction = createAsyncThunk(
+  "auth/getUser",
+  async (_, thunkApi) => {
+    if (getToken()) {
+      try {
+        const user = await userService.getProfile();
+        setUser(user?.data);
+        thunkApi.dispatch(onSetUser(user?.data));
+      } catch (error) {
+        handleError(error);
+      }
     }
   }
 );
@@ -85,6 +99,9 @@ const authSlice = createSlice({
   reducers: {
     onLogout: (state) => {
       state.user = null;
+    },
+    onSetUser: (state, { payload }) => {
+      state.user = payload;
     },
   },
   extraReducers: (builder) => {
@@ -110,4 +127,4 @@ const authSlice = createSlice({
   },
 });
 export default authSlice.reducer;
-export const { onLogout } = authSlice.actions;
+export const { onLogout, onSetUser } = authSlice.actions;

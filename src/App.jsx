@@ -3,6 +3,7 @@ import { routers } from "./routers";
 import { Suspense } from "react";
 import Loading from "./components/Loading";
 import { message } from "antd";
+import { toast } from "react-toastify";
 
 function App() {
   const element = useRoutes(routers);

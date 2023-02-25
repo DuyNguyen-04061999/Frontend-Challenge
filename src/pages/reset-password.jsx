@@ -53,7 +53,7 @@ const ResetPasswordPage = () => {
           }
         );
       } catch (error) {
-        handleError(error?.message);
+        handleError(error);
       } finally {
         setLoading(false);
       }

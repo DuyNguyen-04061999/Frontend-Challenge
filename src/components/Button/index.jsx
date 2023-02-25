@@ -5,7 +5,7 @@ const Button = ({ children, className = "", style = {}, loading = false }) => {
   return (
     <button
       className={cn(
-        `btn btn-sm btn-dark flex items-center justify-center w-[90px] ${className}`,
+        `btn btn-sm btn-dark flex items-center justify-center min-w-[100px] ${className}`,
         { "cursor-not-allowed": loading }
       )}
       type="submit"

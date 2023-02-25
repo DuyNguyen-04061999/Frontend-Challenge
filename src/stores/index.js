@@ -1,7 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authReducer";
+import authReducer, { getUserAction } from "./authReducer";
 import cacheReducer from "./cacheReducer";
 import drawerReducer from "./drawerReducer";
+import { configureStore } from "@reduxjs/toolkit";
 
 const reducer = {
   auth: authReducer,
@@ -14,4 +14,5 @@ const store = configureStore({
   devTools: import.meta.env.VITE_ENV === "development",
 });
 
+store.dispatch(getUserAction());
 export default store;

@@ -14,6 +14,7 @@ const REGEXP = {
     /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
   facebook:
     /(?:https?:\/\/)?(?:www\.)?(mbasic.facebook|m\.facebook|facebook|fb)\.(com|me)\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/,
+  phone: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
 };
 
 export default function validate(rules = {}, form = {}) {
