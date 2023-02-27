@@ -9,14 +9,16 @@ import { setUserAction } from "@/stores/authReducer";
 import {
   clearWaititngQueue,
   confirm,
+  getRemember,
   min,
   object,
   regex,
   require,
+  setRemember,
   validate,
 } from "@/utils";
 import handleError from "@/utils/handleError";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import _ from "lodash";
@@ -25,6 +27,11 @@ const ProfilePage = () => {
   const genderList = ["Male", "Female"];
   const { user } = useAuth();
   const dispatch = useDispatch();
+  const [initialForm, setInitialForm] = useState({
+    ...user,
+    gender: genderList[0] || user?.gender,
+  });
+
   const {
     register,
     validate: validateForm,
@@ -99,7 +106,7 @@ const ProfilePage = () => {
       ],
     },
     {
-      initialValue: { ...user, gender: user?.gender || genderList[0] },
+      initialValue: initialForm,
 
       dependencies: {
         currentPassword: ["newPassword"],
@@ -108,6 +115,10 @@ const ProfilePage = () => {
       },
     }
   );
+
+  useEffect(() => {
+    setInitialForm((prev) => ({ ...prev, ...form }));
+  }, [form]);
   const { loading, fetchData: updateService } = useQuery({
     enabled: false,
     queryFn: ({ params }) => userService.updateInfo(...params),
@@ -151,6 +162,7 @@ const ProfilePage = () => {
           newPassword: form.newPassword,
         })
           .then((res) => {
+            setRemember({ ...getRemember(), password: form.newPassword });
             setForm({
               ...form,
               currentPassword: "",
