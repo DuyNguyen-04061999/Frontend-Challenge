@@ -21,6 +21,7 @@ import useQueryParams from "@/hooks/useQueryParams";
 import { message } from "antd";
 import ResetPasswordModal from "@/components/ResetPasswordModal";
 import { useOpenModal } from "@/hooks/useOpenModal";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -52,7 +53,7 @@ const Login = () => {
     if (validate()) {
       setLoading(true);
       try {
-        await dispatch(loginAction(form)).unwrap();
+        const res = await dispatch(loginAction(form)).unwrap();
         if (checkRemember) {
           setRemember({
             email: form.username,
@@ -66,8 +67,8 @@ const Login = () => {
         toast.success(
           <p>
             Chúc mừng{" "}
-            <span className="text-[#34d399] font-bold">{getUser().name}</span>{" "}
-            đã đăng nhập thành công!
+            <span className="text-[#34d399] font-bold">{res?.name}</span> đã
+            đăng nhập thành công!
           </p>,
           {
             position: "top-center",
@@ -86,11 +87,13 @@ const Login = () => {
     (async () => {
       if (code) {
         try {
-          await dispatch(loginByCodeAction({ code }));
+          const res = await dispatch(loginByCodeAction({ code }));
           toast.success(
             <p>
               Chúc mừng{" "}
-              <span className="text-[#34d399] font-bold">{getUser().name}</span>{" "}
+              <span className="text-[#34d399] font-bold">
+                {res?.payload?.name}
+              </span>{" "}
               đã đăng nhập thành công!
             </p>,
             {
@@ -132,7 +135,6 @@ const Login = () => {
                     className="form-control form-control-sm"
                     id="loginEmail"
                     placeholder="Email Address *"
-                    label="Email Address *"
                     {...register("username")}
                   />
                 </div>
@@ -143,7 +145,6 @@ const Login = () => {
                     id="loginPassword"
                     type="password"
                     placeholder="Password *"
-                    label="Password *"
                     {...register("password")}
                   />
                 </div>

@@ -21,7 +21,7 @@ export const loginAction = createAsyncThunk(
       setToken(res?.data);
       const user = await userService.getProfile();
       setUser(user?.data);
-      return thunkApi.fulfillWithValue(user.data);
+      return thunkApi.fulfillWithValue(user?.data);
     } catch (error) {
       return thunkApi.rejectWithValue(error);
     }
@@ -36,7 +36,7 @@ export const loginByCodeAction = createAsyncThunk(
       setToken(res?.data);
       const user = await userService.getProfile();
       setUser(user?.data);
-      return thunkApi.fulfillWithValue(user.data);
+      return thunkApi.fulfillWithValue(user?.data);
     } catch (error) {
       return thunkApi.rejectWithValue(error);
     }
@@ -70,7 +70,7 @@ export const logoutAction = createAsyncThunk(
 export const setUserAction = createAsyncThunk(
   "auth/setUser",
   async (data, thunkApi) => {
-    setUser(data);
+    setUser(data); //====localStorage
     thunkApi.dispatch(onSetUser(data));
   }
 );

@@ -19,7 +19,7 @@ const Gender = ({ options, onChange, genderActive }) => {
           key={e.id}
           onClick={onClick(id)}
         >
-          <input type="radio" name="gender" defaultChecked /> {e.value}
+          <input type="radio" name="gender" /> {e.value}
         </label>
       ))}
     </div>

@@ -61,11 +61,6 @@ const Signup = () => {
           });
         }
       } catch (error) {
-        console.log(
-          "%cerror Signup.jsx line:36 ",
-          "color: red; display: block; width: 100%;",
-          error
-        );
         handleError(error);
       }
     }
@@ -88,7 +83,6 @@ const Signup = () => {
                   id="registerFirstName"
                   type="text"
                   placeholder="Họ và tên *"
-                  label="Họ và tên *"
                   {...register("name")}
                 />
               </div>
@@ -99,7 +93,6 @@ const Signup = () => {
                   id="registerEmail"
                   type="text"
                   placeholder="Địa chỉ email *"
-                  label="Địa chỉ email *"
                   {...register("username")}
                 />
               </div>
@@ -110,7 +103,6 @@ const Signup = () => {
                   id="registerPassword"
                   type="password"
                   placeholder="Mật khẩu"
-                  label="Mật khẩu"
                   {...register("password")}
                 />
               </div>
@@ -121,7 +113,6 @@ const Signup = () => {
                   id="registerPasswordConfirm"
                   type="password"
                   placeholder="Xác nhận lại mật khẩu"
-                  label="Xác nhận lại mật khẩu"
                   {...register("confirmPassword")}
                 />
               </div>

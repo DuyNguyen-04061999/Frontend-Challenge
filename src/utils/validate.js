@@ -17,28 +17,31 @@ const REGEXP = {
   phone: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
 };
 
-export default function validate(rules = {}, form = {}) {
+export function validate(rules = {}, form = {}) {
   const errObj = {};
 
   for (const name in rules) {
     for (const rule of rules[name]) {
-      if (rule.require) {
+      if (typeof rule === "function") {
+        const message = rule(form[name], form);
+        if (message) {
+          errObj[name] = message;
+          break;
+        }
+      }
+      if (rule?.require) {
         if (
           (typeof form[name] === "boolean" && !form[name]) ||
           (typeof form[name] !== "boolean" && !form[name]?.trim())
         ) {
           errObj[name] = rule.message || ERROR_MESSAGE.require;
+          break;
         }
       }
 
       if (typeof form[name] !== "boolean" && form[name]?.trim()) {
-        if (typeof rule === "function") {
-          const message = rule(form[name], form);
-          message && (errObj[name] = message);
-        }
-
-        if (rule.regex) {
-          let regex = rule.regex;
+        if (rule?.regex) {
+          let regex = rule?.regex;
 
           if (regex in REGEXP) {
             regex = REGEXP[regex];
@@ -48,25 +51,29 @@ export default function validate(rules = {}, form = {}) {
 
           if (!regex.test(form[name]?.trim())) {
             errObj[name] = rule.message || ERROR_MESSAGE.regex;
+            break;
           }
         }
 
-        if (rule.min && rule.max) {
+        if (rule?.min && rule?.max) {
           if (form[name].length < min || form[name].length > max) {
             errObj[name] =
               rule.message || ERROR_MESSAGE.minMax(rule.min, rule.max);
+            break;
           }
         }
 
-        if (rule.min) {
+        if (rule?.min) {
           if (form[name].length < rule.min) {
             errObj[name] = rule.message || ERROR_MESSAGE.min(rule.min);
+            break;
           }
         }
 
-        if (rule.confirm) {
-          if (form[rule.confirm] !== form[name]) {
+        if (rule?.confirm) {
+          if (form[rule.confirm]?.trim() !== form[name]) {
             errObj[name] = rule.message || ERROR_MESSAGE.confirm;
+            break;
           }
         }
       }
