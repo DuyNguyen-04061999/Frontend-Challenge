@@ -1,5 +1,5 @@
-import validate from "@/utils/validate";
-import { useRef, useState } from "react";
+import { validate } from "@/utils";
+import { useEffect, useRef, useState } from "react";
 
 export const useForm = (
   rules = {},
@@ -9,13 +9,16 @@ export const useForm = (
   // password: ["confirmPassword"],
   // },
   const [form, setForm] = useState(initialValue);
+  useEffect(() => {
+    setForm(initialValue);
+  }, [JSON.stringify(initialValue)]);
   const [errors, setErrors] = useState({});
 
   const formRef = useRef();
   const register = (name) => {
     return {
-      error: errors[name],
-      value: form[name] || "",
+      error: errors?.[name] || "",
+      value: form?.[name] || "",
       id: name,
       name,
       onChange: (value) => {
@@ -30,10 +33,14 @@ export const useForm = (
           )[name]; //validate trong lúc nhập data
           setErrors((error) => ({ ...error, [name]: "" })); //mất error khi nhập
 
-          if (dependencies[name]) {
+          if (
+            Array.isArray(dependencies[name]) &&
+            dependencies[name].length > 0
+          ) {
             for (const dependency of dependencies[name]) {
               // ===== validate lúc đang nhập data =====
               if (_form[dependency]?.trim()) {
+                //===chỉ validate khi có dữ liệu===
                 errObj[dependency] = validate(
                   { [dependency]: rules[dependency] },
                   _form
@@ -53,13 +60,15 @@ export const useForm = (
 
   const _validate = () => {
     const errorObject = validate(rules, form);
-    setErrors(errorObject);
-    if (formRef.current && Object.keys(errorObject).length > 0) {
-      const fieldName = Object.keys(errorObject);
-      formRef.current.querySelector(`input[name=${fieldName[0]}]`)?.focus();
-    }
+    if (errorObject) {
+      setErrors(errorObject);
+      if (formRef.current && Object.keys(errorObject).length > 0) {
+        const fieldName = Object.keys(errorObject);
+        formRef.current.querySelector(`input[name=${fieldName[0]}]`)?.focus();
+      }
 
-    return Object.keys(errorObject).length === 0;
+      return Object.keys(errorObject).length === 0;
+    }
   };
 
   const reset = () => {
@@ -73,5 +82,6 @@ export const useForm = (
     validate: _validate,
     reset,
     formRef,
+    setForm,
   };
 };

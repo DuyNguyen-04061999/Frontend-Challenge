@@ -5,7 +5,7 @@ const handleError = (error) => {
     "color: red; display: block; width: 100%;",
     error
   );
-  toast.dismiss();
+  // toast.dismiss();
   if (error?.response?.data?.message === "Username or Password incorrect!") {
     return toast.error(
       () => (

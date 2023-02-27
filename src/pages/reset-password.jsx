@@ -40,11 +40,15 @@ const ResetPasswordPage = () => {
     if (validate()) {
       try {
         setLoading(true);
-        await dispatch(changePasswordByCodeAction({ ...form, code }));
+        const res = await dispatch(
+          changePasswordByCodeAction({ ...form, code })
+        );
         toast.success(
           <p>
             Chúc mừng{" "}
-            <span className="text-[#34d399] font-bold">{getUser().name}</span>{" "}
+            <span className="text-[#34d399] font-bold">
+              {res?.payload?.name}
+            </span>{" "}
             đã đăng nhập thành công!
           </p>,
           {

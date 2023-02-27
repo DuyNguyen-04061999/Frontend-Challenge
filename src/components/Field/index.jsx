@@ -14,9 +14,8 @@ const Field = ({
   };
   return (
     <div className="form-group relative">
-      <label className="sr-only" htmlFor={props.id}>
-        {label}
-      </label>
+      {label && <label htmlFor={props.id}>{label}</label>}
+
       {renderInput ? (
         renderInput({ onChange, ...props })
       ) : (
