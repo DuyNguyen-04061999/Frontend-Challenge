@@ -1,6 +1,5 @@
 import Button from "@/components/Button";
 import Field from "@/components/Field";
-import Gender from "@/components/Gender";
 import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
