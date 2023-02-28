@@ -22,18 +22,6 @@ export const clearUser = () => {
   localStorage.removeItem(USER_KEY);
 };
 
-export const setPassword = (data) => {
-  localStorage && localStorage.setItem(PASSWORD_KEY, JSON.stringify(data));
-};
-export const getPassword = () => {
-  return (
-    (localStorage && JSON.parse(localStorage.getItem(PASSWORD_KEY))) || null
-  );
-};
-export const clearPassword = () => {
-  localStorage && localStorage.removeItem(PASSWORD_KEY);
-};
-
 export const setRemember = (data) => {
   localStorage.setItem(REMEMBER_KEY, JSON.stringify(data));
 };

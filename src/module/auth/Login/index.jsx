@@ -8,12 +8,10 @@ import {
   min,
   regex,
   require,
-  setPassword,
   setRemember,
 } from "@/utils";
 import React, { memo, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getUser } from "@/utils";
 import Button from "@/components/Button";
 import { useDispatch } from "react-redux";
 import handleError from "@/utils/handleError";
@@ -21,7 +19,6 @@ import useQueryParams from "@/hooks/useQueryParams";
 import { message } from "antd";
 import ResetPasswordModal from "@/components/ResetPasswordModal";
 import { useOpenModal } from "@/hooks/useOpenModal";
-import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -63,7 +60,6 @@ const Login = () => {
         } else {
           clearRemember();
         }
-        setPassword(form.password);
         toast.success(
           <p>
             Chúc mừng{" "}

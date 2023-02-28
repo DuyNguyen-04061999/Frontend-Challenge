@@ -7,7 +7,9 @@ import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
 import { setUserAction } from "@/stores/authReducer";
 import {
+  avatarDefault,
   clearWaititngQueue,
+  cn,
   confirm,
   getRemember,
   min,
@@ -18,20 +20,28 @@ import {
   validate,
 } from "@/utils";
 import handleError from "@/utils/handleError";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import _ from "lodash";
+import { fileService } from "@/services/file.service";
+import UploadImage from "@/components/UploadImage";
+import { Spin } from "antd";
+import DateField from "@/components/DateField";
+import Radio from "@/components/Radio";
+
+// =====
 const ProfilePage = () => {
   const minLength = 6;
-  const genderList = ["Male", "Female"];
+  const genderList = ["male", "female"];
   const { user } = useAuth();
+  const fileRef = useRef();
   const dispatch = useDispatch();
   const [initialForm, setInitialForm] = useState({
     ...user,
     gender: genderList[0] || user?.gender,
+    avatar: user?.avatar || avatarDefault,
   });
-
   const {
     register,
     validate: validateForm,
@@ -83,7 +93,6 @@ const ProfilePage = () => {
           }
         },
       ],
-
       confirmPassword: [
         (_, form) => {
           if (
@@ -104,6 +113,9 @@ const ProfilePage = () => {
         },
         confirm("newPassword", "Mật khẩu nhập lại chưa chính xác"),
       ],
+      birthday: [
+        regex("date", "thời gian phải đúng format DD/MM/YYYY (15/02/2023)"),
+      ],
     },
     {
       initialValue: initialForm,
@@ -116,9 +128,6 @@ const ProfilePage = () => {
     }
   );
 
-  useEffect(() => {
-    setInitialForm((prev) => ({ ...prev, ...form }));
-  }, [form]);
   const { loading, fetchData: updateService } = useQuery({
     enabled: false,
     queryFn: ({ params }) => userService.updateInfo(...params),
@@ -131,9 +140,27 @@ const ProfilePage = () => {
       queryFn: ({ params }) => userService.changePassword(...params),
       limitDuration: 1000,
     });
+
+  const { fetchData: uploadService, loading: loadingUpload } = useQuery({
+    enabled: false,
+    queryFn: ({ params }) => fileService.uploadFile(...params),
+    limitDuration: 1000,
+  });
+
   const onSubmit = async (e) => {
     e.preventDefault();
     clearWaititngQueue();
+
+    //=== upload image ===
+    let avatar;
+    if (fileRef?.current) {
+      const res = await uploadService(fileRef?.current);
+      if (res.success) {
+        avatar = res.link;
+        fileRef.current = null;
+      }
+    }
+
     const checkSubmit = object.isEqual(
       user,
       form,
@@ -143,14 +170,15 @@ const ProfilePage = () => {
       "gender"
     );
     if (validateForm()) {
-      if (!form.currentPassword?.trim() && checkSubmit) {
+      if (!form.currentPassword?.trim() && checkSubmit && !avatar) {
         return toast.warn("Nhập thông tin mới để cập nhật");
       }
 
-      if (!checkSubmit) {
-        updateService(form)
+      if (!checkSubmit || avatar) {
+        updateService({ ...form, avatar: avatar || form?.avatar })
           .then((res) => {
             dispatch(setUserAction(res?.data));
+            setInitialForm({ ...form, ...res?.data });
             toast.success("Bạn đã cập nhật thông tin thành công");
           })
           .catch(handleError);
@@ -162,7 +190,9 @@ const ProfilePage = () => {
           newPassword: form.newPassword,
         })
           .then((res) => {
-            setRemember({ ...getRemember(), password: form.newPassword });
+            if (getRemember()?.checked) {
+              setRemember({ ...getRemember(), password: form.newPassword });
+            }
             setForm({
               ...form,
               currentPassword: "",
@@ -187,12 +217,31 @@ const ProfilePage = () => {
         <div className="row">
           <div className="col-12">
             <div className="profile-avatar">
-              <div className="wrap">
-                <img src="/img/avt.png" />
-                <i className="icon">
-                  <img src="/img/icons/icon-camera.svg" />
-                </i>
-              </div>
+              <UploadImage ref={fileRef}>
+                {(previewLink, trigger) => (
+                  <div className="wrap" onClick={trigger}>
+                    <Spin
+                      className={cn(
+                        "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 spin-avatar z-40 transition-all",
+                        {
+                          visible: loadingUpload,
+                          invisible: !loadingUpload,
+                        }
+                      )}
+                      size="large"
+                    />
+                    <img
+                      src={previewLink || form.avatar}
+                      className={cn("transition-all", {
+                        "grayscale-[50%]": loadingUpload,
+                      })}
+                    />
+                    <i className="icon">
+                      <img src="/img/icons/icon-camera.svg" />
+                    </i>
+                  </div>
+                )}
+              </UploadImage>
             </div>
           </div>
           <div className="col-12">
@@ -263,10 +312,10 @@ const ProfilePage = () => {
           <div className="col-12 col-lg-6">
             <Field
               className="form-control form-control-sm"
-              type="date"
-              placeholder="dd/mm/yyyy"
               label="Date of Birth"
+              type="date"
               {...register("birthday")}
+              renderInput={(props) => <DateField {...props} />}
             />
           </div>
           <div className="col-12 col-lg-6">
@@ -274,23 +323,26 @@ const ProfilePage = () => {
             <Field
               label="Gender"
               {...register("gender")}
-              options={[
-                {
-                  id: 0,
-                  value: "Male",
-                },
-                {
-                  id: 1,
-                  value: "Female",
-                },
-              ]}
               genderActive={user?.gender || genderList?.[0]}
-              renderInput={(props) => <Gender {...props} />}
+              renderInput={({ onChange, ...props }) => (
+                <Radio.Group
+                  defaultValue={form?.gender || genderList[0]}
+                  onSetFilter={onChange}
+                >
+                  <div className="btn-group-toggle" data-toggle="buttons">
+                    <Radio.Gender gender="male">Male</Radio.Gender>
+                    <Radio.Gender gender="female">Female</Radio.Gender>
+                  </div>
+                </Radio.Group>
+              )}
             />
           </div>
           <div className="col-12">
             {/* Button */}
-            <Button loading={loading || loadingPassword} className="mt-6">
+            <Button
+              loading={loading || loadingPassword || loadingUpload}
+              className="mt-6"
+            >
               Save Changes
             </Button>
           </div>

@@ -4,19 +4,24 @@ import { LoadingOutlined } from "@ant-design/icons";
 const Button = ({ children, className = "", style = {}, loading = false }) => {
   return (
     <button
-      className={cn(
-        `btn btn-sm btn-dark flex items-center justify-center min-w-[100px] ${className}`,
-        { "cursor-not-allowed": loading }
-      )}
+      className={cn(`btn btn-sm btn-dark relative ${className}`, {
+        "cursor-not-allowed": loading,
+      })}
       type="submit"
       style={style}
       disabled={loading}
     >
-      {loading ? (
-        <LoadingOutlined style={{ marginRight: 10, fontSize: 30 }} />
-      ) : (
-        children
-      )}
+      <LoadingOutlined
+        style={{ fontSize: 30 }}
+        className={cn(
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+          { visible: loading },
+          { invisible: !loading }
+        )}
+      />
+      <span className={cn({ visible: !loading }, { invisible: loading })}>
+        {children}
+      </span>
     </button>
   );
 };

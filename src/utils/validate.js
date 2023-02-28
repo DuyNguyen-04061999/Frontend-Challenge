@@ -15,6 +15,7 @@ const REGEXP = {
   facebook:
     /(?:https?:\/\/)?(?:www\.)?(mbasic.facebook|m\.facebook|facebook|fb)\.(com|me)\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/,
   phone: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
+  date: /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/,
 };
 
 export function validate(rules = {}, form = {}) {
@@ -32,7 +33,7 @@ export function validate(rules = {}, form = {}) {
       if (rule?.require) {
         if (
           (typeof form[name] === "boolean" && !form[name]) ||
-          (typeof form[name] !== "boolean" && !form[name]?.trim())
+          (typeof form[name] !== "boolean" && !form?.[name]?.trim())
         ) {
           errObj[name] = rule.message || ERROR_MESSAGE.require;
           break;

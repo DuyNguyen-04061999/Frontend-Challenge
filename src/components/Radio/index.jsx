@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { cn } from "@/utils";
 const Context = createContext();
 
-const Rating = ({ children, rating }) => {
+const Radio = ({ children, rating }) => {
   const { value, onChange } = useContext(Context);
+
   return (
     <div
       className="custom-control custom-checkbox flex"
@@ -21,7 +23,27 @@ const Rating = ({ children, rating }) => {
   );
 };
 
-Rating.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
+Radio.Gender = ({ children, gender }) => {
+  const { value, onChange } = useContext(Context);
+
+  return (
+    <label
+      className={cn("btn btn-sm btn-outline-border", {
+        active: value === gender,
+      })}
+    >
+      <input
+        type="radio"
+        name="gender"
+        checked={value === gender}
+        onChange={() => onChange(gender)}
+      />
+      {children}
+    </label>
+  );
+};
+
+Radio.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
   const [value, setValue] = useState(defaultValue); //=== dùng để checked ====
   useEffect(() => {
     setValue(defaultValue);
@@ -41,15 +63,14 @@ Rating.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
     <Context.Provider value={{ value, onChange }}>{children}</Context.Provider>
   );
 };
-Rating.propTypes = {
+Radio.propTypes = {
   children: PropTypes.node.isRequired,
   rating: PropTypes.number.isRequired,
 };
 
-Rating.Group.propTypes = {
+Radio.Group.propTypes = {
   children: PropTypes.node.isRequired,
-  defaultValue: PropTypes.number,
   toggle: PropTypes.bool,
   onSetFilter: PropTypes.func,
 };
-export default Rating;
+export default Radio;

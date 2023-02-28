@@ -3,14 +3,7 @@ import Field from "@/components/Field";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
-import {
-  clearWaititngQueue,
-  confirm,
-  min,
-  regex,
-  require,
-  setPassword,
-} from "@/utils";
+import { clearWaititngQueue, confirm, min, regex, require } from "@/utils";
 import handleError from "@/utils/handleError";
 import React, { memo } from "react";
 import { toast } from "react-toastify";
@@ -55,7 +48,6 @@ const Signup = () => {
       try {
         const res = await registerService();
         if (res.success) {
-          setPassword(form.password);
           toast.success(res.message, {
             autoClose: 2000,
           });

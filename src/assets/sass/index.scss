@@ -202,3 +202,17 @@ body {
 .ant-modal-close-x {
     display: none !important;
 }
+
+.spin-avatar {
+    .ant-spin-dot-item {
+        background-color: #ededed;
+        font-size: 30px;
+        margin: 20px;
+        @include size(25px !important);
+    }
+}
+@keyframes loadingCircle {
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
