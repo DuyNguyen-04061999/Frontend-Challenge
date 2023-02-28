@@ -1,9 +1,7 @@
 import { authService } from "@/services/auth.service";
 import { userService } from "@/services/user.service";
-import { delayDuration } from "@/utils";
 import handleError from "@/utils/handleError";
 import {
-  clearPassword,
   clearToken,
   clearUser,
   getToken,
@@ -62,7 +60,6 @@ export const logoutAction = createAsyncThunk(
   async (_, thunkApi) => {
     clearToken();
     clearUser();
-    clearPassword();
     thunkApi.dispatch(onLogout());
   }
 );
