@@ -16,3 +16,4 @@ export * from "./delayDuration";
 export * from "./toFixed";
 export * from "./copyToClipBoard";
 export * from "./object";
+export * from "./assets";

@@ -18,7 +18,7 @@ import EmptyText from "@/components/EmptyText";
 import useQueryParams from "@/hooks/useQueryParams";
 import useEffectDidMount from "@/hooks/useEffectDidMount";
 import StarRating from "@/components/StarRating";
-import Rating from "@/components/Rating";
+import Radio from "@/components/Radio";
 const ProductLoadingStyled = styled.div`
   .skeleton {
     border-radius: 4px;
@@ -187,7 +187,7 @@ const ProductPage = () => {
                     className="form-group form-group-overflow mb-6 select-none form-rating"
                     id="seasonGroup"
                   >
-                    <Rating.Group
+                    <Radio.Group
                       defaultValue={queryParams.filterRating}
                       toggle
                       onSetFilter={(value) => {
@@ -197,31 +197,31 @@ const ProductPage = () => {
                         });
                       }}
                     >
-                      <Rating rating={5}>
+                      <Radio rating={5}>
                         <StarRating />
                         <StarRating />
                         <StarRating />
                         <StarRating />
                         <StarRating />
                         <span className="text-small ml-2">from 5 star</span>
-                      </Rating>
-                      <Rating rating={4}>
+                      </Radio>
+                      <Radio rating={4}>
                         <StarRating />
                         <StarRating />
                         <StarRating />
                         <StarRating />
                         <StarRating color="#b8b8b8" />
                         <span className="text-small ml-2">from 4 star</span>
-                      </Rating>
-                      <Rating rating={3}>
+                      </Radio>
+                      <Radio rating={3}>
                         <StarRating />
                         <StarRating />
                         <StarRating />
                         <StarRating color="#b8b8b8" />
                         <StarRating color="#b8b8b8" />
                         <span className="text-small ml-2">from 3 star</span>
-                      </Rating>
-                    </Rating.Group>
+                      </Radio>
+                    </Radio.Group>
                   </div>
                 </li>
 
