@@ -48,6 +48,7 @@ const Pagination = ({ totalPage, page = "page", style = {} }) => {
   fakeParam.set(page, totalPage);
   const lastLink = `${pathname}?${fakeParam.toString()}`;
 
+  if (totalPage <= 1) return null;
   return (
     <nav
       className="d-flex justify-content-center justify-content-md-end mb-5 select-none mx-auto w-max"

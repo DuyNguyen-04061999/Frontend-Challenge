@@ -2,6 +2,7 @@ import queryString from "query-string";
 import { useSearchParams } from "react-router-dom";
 
 const useQueryParams = (defaultParams = {}) => {
+  //===== đưa tất cả searchParam vào params =====
   const params = { ...defaultParams };
   const [searchParam, setSearchParam] = useSearchParams();
 

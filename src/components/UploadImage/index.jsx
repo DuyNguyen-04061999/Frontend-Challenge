@@ -17,7 +17,7 @@ const UploadImage = forwardRef(({ children }, ref) => {
       setImagePreview(previewLink);
     }
   };
-  
+
   const removeImage = () => setImagePreview();
 
   useEffect(() => {

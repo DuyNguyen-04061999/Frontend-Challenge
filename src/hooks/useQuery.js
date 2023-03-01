@@ -58,17 +58,16 @@ const useQuery = ({
   limitDuration,
   enabled = true,
   keepPreviousData = false,
+  keepStorage = true,
 }) => {
   const [{ data, loading, error, status }, dispatch] = useReducer(
     queryReducer,
     initialState
   );
-
   const reFetchRef = useRef(); //call api
   const _cache = cache[storage]; //storage
   const dataRef = useRef({}); //keepPreviousData
   const controllerRef = useRef(new AbortController()); //cancelRequest axios
-
   const _queryKey = Array.isArray(queryKey)
     ? queryKey?.[0]
     : typeof queryKey === "string"
@@ -111,8 +110,6 @@ const useQuery = ({
         dataRef.current[_queryKey] = data;
       }
 
-      _asyncFunction[_queryKey] = data;
-
       if (_cache) {
         const expire = cacheTime || 0 + Date.now();
         _cache.set(_queryKey, data, expire);
@@ -124,9 +121,9 @@ const useQuery = ({
     if (enabled) {
       fetchData();
     }
-  }, [enabled].concat(_queryKey, dependencyList));
+  }, [enabled].concat(queryKey, dependencyList));
 
-  const fetchData = async (...args) => {
+  const fetchData = async (...params) => {
     //hủy api cũ
     controllerRef.current.abort();
     //tạo signal api mới
@@ -142,7 +139,12 @@ const useQuery = ({
 
       if (!res) {
         // call api
-        res = queryFn({ signal: controllerRef.current.signal, params: args });
+        res = queryFn({ signal: controllerRef.current.signal, params });
+
+        //==== gán dữ liệu cho _asyncFunction
+        if (_queryKey && _asyncFunction) {
+          _asyncFunction[_queryKey] = res;
+        }
       }
 
       if (res instanceof Promise) {
@@ -155,6 +157,9 @@ const useQuery = ({
         setCacheDataOrPreviousData(res);
         reFetchRef.current = false;
         dispatch({ type: SET_LOADING, payload: false });
+        if (!keepStorage) {
+          delete _asyncFunction[_queryKey];
+        }
         return res;
       }
     } catch (err) {

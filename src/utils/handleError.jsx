@@ -1,11 +1,18 @@
+import { message } from "antd";
 import { toast } from "react-toastify";
-const handleError = (error) => {
+const handleError = (error, antd, key) => {
   console.log(
     "%cerror handleError.js line:3 ",
     "color: red; display: block; width: 100%;",
     error
   );
   // toast.dismiss();
+  if (antd) {
+    return message.error({
+      key,
+      content: error?.response?.data?.message,
+    });
+  }
   if (error?.response?.data?.message === "Username or Password incorrect!") {
     return toast.error(
       () => (

@@ -1,7 +1,7 @@
 import { PATH } from "@/config";
 import store from "@/stores";
 import { logoutAction } from "@/stores/authReducer";
-import { cn, delay } from "@/utils";
+import { cn } from "@/utils";
 import handleError from "@/utils/handleError";
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
@@ -36,7 +36,6 @@ const ProfileNav = [
       e.preventDefault();
       toast.dismiss();
       try {
-        // await delay(1500);
         await store.dispatch(logoutAction());
         toast.warning("Bạn đã đăng xuất khỏi tài khoản", {
           autoClose: 2000,
@@ -75,7 +74,7 @@ const ProfileLayout = () => {
             <div className="row">
               <div className="col-12 text-center">
                 {/* Heading */}
-                <h3 className="mb-10">Thông tin cá nhân</h3>
+                <h3 className="mb-10" id="profile-title"></h3>
               </div>
             </div>
             <div className="row">
@@ -87,8 +86,8 @@ const ProfileLayout = () => {
                       <NavLink
                         key={id}
                         className={cn(
-                          "list-group-item list-group-item-action dropright-toggle",
-                          ({ isActive }) => ({ active: isActive })
+                          "list-group-item list-group-item-action dropright-toggle"
+                          // ({ isActive }) => ({ active: isActive })
                         )}
                         end={e?.end}
                         to={e?.to || ""}
