@@ -74,7 +74,7 @@ const SearchDrawer = () => {
   const [heightBody, setHeightBody] = useState();
 
   const { categoryList = [] } = useCategories([], open);
-  const category = useCategory(+idCategory, [], open);
+  const category = categoryList.find((e) => e.id === +idCategory);
 
   const topRef = useRef();
   const buttonRef = useRef();
@@ -134,7 +134,7 @@ const SearchDrawer = () => {
       document.body.classList.remove("hide");
     }
   }, [open]);
-  
+
   return (
     <Portal
       open={open}
@@ -215,7 +215,9 @@ const SearchDrawer = () => {
             {loading ? (
               createArray(6).map((_, id) => <ProductCardLoading key={id} />)
             ) : products.length === 0 ? (
-              <EmptyText />
+              <EmptyText>
+                Rất tiếc, không tìm thấy sản phẩm phù hợp với lựa chọn của bạn
+              </EmptyText>
             ) : (
               products?.map((e) => <SearchProduct key={e?.id} {...e} />)
             )}

@@ -1,6 +1,6 @@
 import React from "react";
 
-const EmptyText = () => {
+const EmptyText = ({ children }) => {
   return (
     <div className="modal-body border bg-[#fffffb] text-[#dfbd15] border-[#fdd835]">
       <svg
@@ -16,9 +16,7 @@ const EmptyText = () => {
           fillRule="evenodd"
         />
       </svg>
-      <span className="ml-2">
-        Rất tiếc, không tìm thấy sản phẩm phù hợp với lựa chọn của bạn
-      </span>
+      <span className="ml-2">{children}</span>
     </div>
   );
 };

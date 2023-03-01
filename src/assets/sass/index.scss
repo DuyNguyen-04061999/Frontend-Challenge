@@ -211,7 +211,13 @@ body {
         @include size(25px !important);
     }
 }
-@keyframes loadingCircle {
+
+.product-card-loading {
+    .skeleton {
+        border-radius: 4px;
+    }
+}
+@keyframes loadingCircle2 {
     100% {
         transform: translate(-50%, -50%) rotate(360deg);
     }

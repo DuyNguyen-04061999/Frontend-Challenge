@@ -1,20 +1,30 @@
 import { cn } from "@/utils";
 import React from "react";
 import { LoadingOutlined } from "@ant-design/icons";
-const Button = ({ children, className = "", style = {}, loading = false }) => {
+const Button = ({
+  outline,
+  children,
+  className = "",
+  style = {},
+  loading = false,
+  onClick,
+}) => {
   return (
     <button
-      className={cn(`btn btn-sm btn-dark relative ${className}`, {
+      className={cn("btn btn-sm relative", className, {
         "cursor-not-allowed": loading,
+        "btn-dark": !outline,
+        "btn-outline-dark": outline,
       })}
       type="submit"
       style={style}
       disabled={loading}
+      onClick={onClick}
     >
       <LoadingOutlined
         style={{ fontSize: 30 }}
         className={cn(
-          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-[loadingCircle2_1s_infinite_linear]",
           { visible: loading },
           { invisible: !loading }
         )}

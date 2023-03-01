@@ -1,10 +1,12 @@
-import { PATH } from "@/config";
+import PortalTitle from "@/components/PortalTitle";
+import { PATH, PROFILE_TITLE_ID } from "@/config";
 import React from "react";
 import { Link } from "react-router-dom";
 
 const OrderPage = () => {
   return (
     <>
+      <PortalTitle selector={PROFILE_TITLE_ID}>Theo dõi đơn hàng</PortalTitle>
       <div className="nav mb-10">
         <a className="nav-link active" href="#tab1" data-toggle="tab">
           Tất cả đơn

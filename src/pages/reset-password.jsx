@@ -4,7 +4,7 @@ import useBodyClass from "@/hooks/useBodyClass";
 import { useForm } from "@/hooks/useForm";
 import useQueryParams from "@/hooks/useQueryParams";
 import { changePasswordByCodeAction } from "@/stores/authReducer";
-import { confirm, getUser, min, require } from "@/utils";
+import { confirm, min, require } from "@/utils";
 import handleError from "@/utils/handleError";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
