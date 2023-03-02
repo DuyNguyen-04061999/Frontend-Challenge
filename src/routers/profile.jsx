@@ -3,8 +3,10 @@ import ProfileLayout from "@/layouts/ProfileLayout";
 import { PATH } from "@/config";
 
 const ProfilePage = lazy(() => import("@/pages/profile"));
-const AddressPage = lazy(() => import("@/pages/profile/address"));
-const AddressEditPage = lazy(() => import("@/pages/profile/addressEdit"));
+const AddressPage = lazy(() => import("@/pages/profile/so-dia-chi"));
+const AddressActionPage = lazy(() =>
+  import("@/pages/profile/so-dia-chi/action")
+);
 const OrderPage = lazy(() => import("@/pages/profile/order"));
 const OrderDetailPage = lazy(() => import("@/pages/profile/orderDetail"));
 const PaymentPage = lazy(() => import("@/pages/profile/payment"));
@@ -36,7 +38,11 @@ const profile = {
       path: PATH.profile.address,
     },
     {
-      element: <AddressEditPage />,
+      element: <AddressActionPage />,
+      path: PATH.profile.newAddress,
+    },
+    {
+      element: <AddressActionPage />,
       path: PATH.profile.editAddress,
     },
     {

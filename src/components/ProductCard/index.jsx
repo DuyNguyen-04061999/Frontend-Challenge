@@ -7,12 +7,14 @@ import { clearWaititngQueue, cn, toFixed, toSlug } from "@/utils";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import handleError from "@/utils/handleError";
+import withListLoading from "@/utils/withListLoading";
 import { message, Popconfirm } from "antd";
 import React, { useMemo } from "react";
 import { generatePath, Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import HalfStar from "../HalfStar";
 import PopConfirm from "../PopConfirm";
+import ProductCardLoading from "../ProductCardLoading";
 import Star from "../Star";
 
 const ProductCard = ({
@@ -267,4 +269,4 @@ const ProductCard = ({
   );
 };
 
-export default ProductCard;
+export default withListLoading(ProductCard, ProductCardLoading);

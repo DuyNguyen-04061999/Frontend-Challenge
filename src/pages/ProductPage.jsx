@@ -18,7 +18,6 @@ import useQueryParams from "@/hooks/useQueryParams";
 import useEffectDidMount from "@/hooks/useEffectDidMount";
 import StarRating from "@/components/StarRating";
 import Radio from "@/components/Radio";
-import ProductCardLoading from "@/components/ProductCardLoading";
 
 const options = [
   {
@@ -115,7 +114,7 @@ const ProductPage = () => {
     <section className="py-11">
       <div className="container">
         <div className="row">
-          <div className="col-12 col-md-4 col-lg-3 sticky top-0 self-start">
+          <div className="col-12 col-md-4 col-lg-3 self-start category-col">
             {/* Filters */}
             <form className="mb-10 mb-md-0" onSubmit={onSubmitPrice}>
               <ul className="nav nav-vertical" id="filterNav">
@@ -419,15 +418,22 @@ const ProductPage = () => {
             {products.length > 0 && (
               <Pagination totalPage={totalPage} style={{ marginBottom: 30 }} />
             )}
+
             <div className="row">
-              {loading ? (
-                createArray(15).map((_, id) => <ProductCardLoading key={id} />)
-              ) : products.length === 0 ? (
-                <EmptyText />
-              ) : (
-                products?.map((e) => <ProductCard key={e?.id} {...e} />)
-              )}
+              <ProductCard
+                data={products}
+                loading={loading}
+                loadingCount={9}
+                empty={
+                  <div className="col-12">
+                    <EmptyText>
+                      Rất tiếc không có sản phẩm bạn tìm kiếm
+                    </EmptyText>
+                  </div>
+                }
+              />
             </div>
+
             {/* Pagination */}
             {products.length > 0 && <Pagination totalPage={totalPage} />}
           </div>

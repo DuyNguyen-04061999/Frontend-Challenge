@@ -45,9 +45,6 @@ Radio.Gender = ({ children, gender }) => {
 
 Radio.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
   const [value, setValue] = useState(defaultValue); //=== dùng để checked ====
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
   const onChange = (_value) => {
     if (toggle && _value === value) {
       setValue();

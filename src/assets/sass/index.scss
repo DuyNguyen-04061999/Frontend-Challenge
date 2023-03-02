@@ -222,3 +222,12 @@ body {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
+
+.category-col {
+    position: sticky;
+    top: 0;
+
+    @include xs {
+        position: static;
+    }
+}
