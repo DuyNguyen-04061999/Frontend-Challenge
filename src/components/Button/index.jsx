@@ -11,7 +11,7 @@ const Button = ({
 }) => {
   return (
     <button
-      className={cn("btn btn-sm relative", className, {
+      className={cn("btn btn-sm relative uppercase", className, {
         "cursor-not-allowed": loading,
         "btn-dark": !outline,
         "btn-outline-dark": outline,

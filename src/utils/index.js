@@ -17,3 +17,4 @@ export * from "./toFixed";
 export * from "./copyToClipBoard";
 export * from "./object";
 export * from "./assets";
+export * from "./handleToastMessage";

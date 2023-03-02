@@ -7,13 +7,6 @@ import { CanceledError } from "axios";
 import { useEffect, useReducer, useRef } from "react";
 import { delayDuration } from "@/utils";
 
-const initialState = {
-  data: {},
-  loading: false,
-  error: new Error(""),
-  status: "idle",
-};
-
 const SET_DATA = "setData";
 const SET_LOADING = "setLoading";
 const SET_ERROR = "setError";
@@ -56,13 +49,20 @@ const useQuery = ({
   dependencyList = [],
   storage,
   limitDuration,
+  onSuccess,
+  onError,
   enabled = true,
   keepPreviousData = false,
   keepStorage = true,
 }) => {
   const [{ data, loading, error, status }, dispatch] = useReducer(
     queryReducer,
-    initialState
+    {
+      data: {},
+      loading: enabled,
+      error: new Error(""),
+      status: "idle",
+    }
   );
   const reFetchRef = useRef(); //call api
   const _cache = cache[storage]; //storage
@@ -129,10 +129,9 @@ const useQuery = ({
     //tạo signal api mới
     controllerRef.current = new AbortController();
     const startTime = Date.now();
-
+    dispatch({ type: SET_LOADING, payload: true });
+    dispatch({ type: SET_STATUS, payload: "pending" });
     try {
-      dispatch({ type: SET_LOADING, payload: true });
-      dispatch({ type: SET_STATUS, payload: "pending" });
       let res;
 
       res = getCacheDataOrPreviousData();
@@ -152,6 +151,7 @@ const useQuery = ({
       }
       await delayDuration(startTime, limitDuration);
       if (res) {
+        onSuccess?.(res);
         dispatch({ type: SET_DATA, payload: res });
         dispatch({ type: SET_STATUS, payload: "success" });
         setCacheDataOrPreviousData(res);
@@ -167,6 +167,7 @@ const useQuery = ({
       await delayDuration(startTime, limitDuration);
       if (err instanceof CanceledError) {
       } else {
+        onError?.(err);
         dispatch({ type: SET_ERROR, payload: new Error(err?.message) });
         dispatch({ type: SET_STATUS, payload: "error" });
         dispatch({ type: SET_LOADING, payload: false });

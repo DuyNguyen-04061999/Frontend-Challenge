@@ -5,7 +5,6 @@ const useQueryParams = (defaultParams = {}) => {
   //===== đưa tất cả searchParam vào params =====
   const params = { ...defaultParams };
   const [searchParam, setSearchParam] = useSearchParams();
-
   for (const [key, val] of searchParam.entries()) {
     try {
       params[key] = JSON.parse(val || defaultParams[key]);

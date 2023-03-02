@@ -84,7 +84,10 @@ export function validate(rules = {}, form = {}) {
   return errObj;
 }
 
-export const require = ({ require = true, message } = {}) => ({
+export const require = ({
+  require = true,
+  message = ERROR_MESSAGE.require,
+} = {}) => ({
   require,
   message,
 });

@@ -1,8 +1,14 @@
+import { cn } from "@/utils";
 import React from "react";
 
-const EmptyText = ({ children }) => {
+const EmptyText = ({ children, className = "" }) => {
   return (
-    <div className="modal-body border bg-[#fffffb] text-[#dfbd15] border-[#fdd835]">
+    <div
+      className={cn(
+        "modal-body border bg-[#fffffb] text-[#dfbd15] border-[#fdd835]",
+        className
+      )}
+    >
       <svg
         width={16}
         height={17}

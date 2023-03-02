@@ -10,9 +10,11 @@ export const PATH = {
     order: PROFILE + "/don-hang",
     orderDetail: PROFILE + "/don-hang/:id",
     wishList: PROFILE + "/san-pham-yeu-thich",
+    
     address: PROFILE + "/so-dia-chi",
     editAddress: PROFILE + "/so-dia-chi/edit/:id",
     newAddress: PROFILE + "/so-dia-chi/new",
+
     payment: PROFILE + "/so-thanh-toan",
     editPayment: PROFILE + "/so-thanh-toan/edit/:id",
     newPayment: PROFILE + "/so-thanh-toan/new",
