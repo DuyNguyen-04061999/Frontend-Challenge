@@ -6,7 +6,7 @@ import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
 import createArray from "@/utils/createArray";
 import React, { useMemo, useRef, useState } from "react";
-import { Link, NavLink, useMatch } from "react-router-dom";
+import { Link, NavLink, useLocation, useMatch } from "react-router-dom";
 import useScrollTop from "@/hooks/useScrollTop";
 import { useCategories } from "@/hooks/useCategories";
 import queryString from "query-string";
@@ -51,7 +51,6 @@ const ProductPage = () => {
     sort: "newest",
   });
   const topRef = useRef();
-
   const [minPrice, setMinPrice] = useState(queryParams.minPrice || "");
   const [maxPrice, setMaxPrice] = useState(queryParams.maxPrice || "");
   const match = useMatch(PATH.category);

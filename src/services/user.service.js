@@ -14,6 +14,7 @@ export const userService = {
   changePasswordByCode: (data) =>
     http.post(`${USER_API}/change-password-by-code`, data),
 
+  // ==== address ====
   getAddress: (query = "") => http.get(`${USER_API}/address${query}`),
 
   getAddressDetail: (_id) => http.get(`${USER_API}/address/${_id}`),
@@ -23,4 +24,15 @@ export const userService = {
   editAddress: (_id, data) => http.patch(`${USER_API}/address/${_id}`, data),
 
   deleteAddress: (_id) => http.delete(`${USER_API}/address/${_id}`),
+
+  // =====payment====
+  getPayment: (query = "") => http.get(`${USER_API}/payment${query}`),
+
+  getPaymentDetail: (_id) => http.get(`${USER_API}/payment/${_id}`),
+
+  addPayment: (data) => http.post(`${USER_API}/payment`, data),
+
+  editPayment: (_id, data) => http.patch(`${USER_API}/payment/${_id}`, data),
+
+  deletePayment: (_id) => http.delete(`${USER_API}/payment/${_id}`),
 };

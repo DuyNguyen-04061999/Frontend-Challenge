@@ -9,8 +9,10 @@ const AddressActionPage = lazy(() =>
 );
 const OrderPage = lazy(() => import("@/pages/profile/order"));
 const OrderDetailPage = lazy(() => import("@/pages/profile/orderDetail"));
-const PaymentPage = lazy(() => import("@/pages/profile/payment"));
-const PaymentEditPage = lazy(() => import("@/pages/profile/paymentEdit"));
+const PaymentPage = lazy(() => import("@/pages/profile/so-thanh-toan"));
+const PaymentActionPage = lazy(() =>
+  import("@/pages/profile/so-thanh-toan/action")
+);
 const WishlistPage = lazy(() => import("@/pages/profile/wishlist"));
 
 const profile = {
@@ -45,12 +47,17 @@ const profile = {
       element: <AddressActionPage />,
       path: PATH.profile.editAddress,
     },
+
     {
       element: <PaymentPage />,
       path: PATH.profile.payment,
     },
     {
-      element: <PaymentEditPage />,
+      element: <PaymentActionPage />,
+      path: PATH.profile.newPayment,
+    },
+    {
+      element: <PaymentActionPage />,
       path: PATH.profile.editPayment,
     },
   ],

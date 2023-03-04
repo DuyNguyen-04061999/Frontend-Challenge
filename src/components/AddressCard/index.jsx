@@ -7,7 +7,7 @@ import withListLoading from "@/utils/withListLoading";
 import { message } from "antd";
 import React from "react";
 import { generatePath, useNavigate } from "react-router-dom";
-import AddressCardLoading from "../AddressCardLoading";
+import AddressPaymentCardLoading from "../AddressCardLoading";
 import Button from "../Button";
 
 const AddressCard = withListLoading(
@@ -112,7 +112,7 @@ const AddressCard = withListLoading(
       </div>
     );
   },
-  AddressCardLoading
+  AddressPaymentCardLoading
 );
 
 export default AddressCard;

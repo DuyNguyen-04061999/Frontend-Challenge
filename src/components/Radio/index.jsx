@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { cn } from "@/utils";
+import useEffectDidMount from "@/hooks/useEffectDidMount";
 const Context = createContext();
 
 const Radio = ({ children, rating }) => {
@@ -43,8 +44,41 @@ Radio.Gender = ({ children, gender }) => {
   );
 };
 
+Radio.Payment = ({ children, imgSrc, type }) => {
+  const { value, onChange } = useContext(Context);
+
+  return (
+    <div className="form-group card card-sm border">
+      <div className="card-body">
+        {/* Radio */}
+        <div className="custom-control custom-radio">
+          {/* Input */}
+          <input
+            className="custom-control-input collapsed"
+            id={type}
+            name="payment"
+            type="radio"
+            checked={value === type}
+            onChange={() => onChange(type)}
+          />
+          {/* Label */}
+          <label
+            className="custom-control-label d-flex justify-content-between font-size-sm text-body text-nowrap"
+            htmlFor={type}
+          >
+            {children}
+            <img className="ml-2" src={imgSrc} alt="..." />
+          </label>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 Radio.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
   const [value, setValue] = useState(defaultValue); //=== dùng để checked ====
+
+  useEffectDidMount(() => setValue(defaultValue), [defaultValue]);
   const onChange = (_value) => {
     if (toggle && _value === value) {
       setValue();
