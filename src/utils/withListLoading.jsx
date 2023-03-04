@@ -3,9 +3,19 @@ import React, { Fragment } from "react";
 import createArray from "./createArray";
 
 const withListLoading = (Component, LoadingComponent = Component) => {
-  return ({ loadingCount = 3, data, loading, empty, emptyText, ...props }) => {
+  return ({
+    loadingCount = 3,
+    data,
+    loading,
+    empty,
+    emptyText,
+    heightLoading,
+    ...props
+  }) => {
     return loading
-      ? createArray(loadingCount).map((_, id) => <LoadingComponent key={id} />)
+      ? createArray(loadingCount).map((_, id) => (
+          <LoadingComponent key={id} height={heightLoading} />
+        ))
       : data?.length > 0
       ? data?.map((e) => (
           <Fragment key={e?._id || e?.id}>

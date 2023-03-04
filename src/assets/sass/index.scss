@@ -231,3 +231,25 @@ body {
         position: static;
     }
 }
+
+.tooltip-white {
+    .ant-tooltip-arrow {
+        &::before {
+            content: "";
+            background-color: #fff !important;
+        }
+    }
+}
+
+.date-picker {
+    &.error {
+        input {
+            @include placeHolder {
+                color: red;
+            }
+        }
+        svg {
+            color: red;
+        }
+    }
+}

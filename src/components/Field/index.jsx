@@ -23,6 +23,7 @@ const Field = ({
           type={type}
           {...props}
           onChange={_onChange}
+          
           style={{ border: error ? "1px solid red" : "" }}
           className={cn(props.className, { "placeholder-red-500": !!error })}
         />

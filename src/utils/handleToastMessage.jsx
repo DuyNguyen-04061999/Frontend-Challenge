@@ -18,7 +18,6 @@ export const handleToastMessage = ({ promise, pending, success, error }) => {
     error: {
       render({ data }) {
         // When the promise reject, data will contains the error
-        console.log("data :>> ", data);
         return error || data.response.data.message;
       },
     },

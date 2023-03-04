@@ -40,7 +40,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const [initialForm, setInitialForm] = useState({
     ...user,
-    gender: genderList[0] || user?.gender,
+    gender: user?.gender || genderList[0],
     avatar: user?.avatar || avatarDefault,
   });
   const {
