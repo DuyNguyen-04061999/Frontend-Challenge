@@ -1,21 +1,20 @@
 import { PATH } from "@/config";
+import useAction from "@/hooks/useAction";
 import { useAuth } from "@/hooks/useAuth";
 import { useCategory } from "@/hooks/useCategories";
 import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
-import { clearWaititngQueue, cn, toFixed, toSlug } from "@/utils";
+import { cn, toFixed, toSlug } from "@/utils";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
-import handleError from "@/utils/handleError";
 import withListLoading from "@/utils/withListLoading";
-import { message, Popconfirm } from "antd";
 import React, { useMemo } from "react";
 import { generatePath, Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import HalfStar from "../HalfStar";
 import PopConfirm from "../PopConfirm";
 import ProductCardLoading from "../ProductCardLoading";
-import Star from "../Star";
+import Rating from "../Rating";
 
 const ProductCard = ({
   showWishList = true,
@@ -50,93 +49,54 @@ const ProductCard = ({
   }, [categoryItem]);
 
   //====add wishlist====
-  const { fetchData: addWishlistService, loading } = useQuery({
+  const { fetchData: addWishlistService } = useQuery({
     enabled: false,
     queryFn: ({ params }) => productService.addWishlist(...params),
     limitDuration: 1000,
   });
 
-  const { fetchData: removeWishlistService, loadingRemove } = useQuery({
+  const { fetchData: removeWishlistService } = useQuery({
     enabled: false,
     queryFn: ({ params }) => productService.removeWishlist(...params),
   });
-  const onAddWishList = async () => {
-    clearWaititngQueue();
-    toast.dismiss();
-    toast.promise(addWishlistService(id), {
-      pending: {
-        render() {
-          return (
-            <p>
-              Đang thêm sản phẩm
-              <span className="font-semibold italic">{`"${name}"`}</span> vào
-              danh sách yêu thích
-            </p>
-          );
-        },
-      },
-      success: {
-        render() {
-          return (
-            <p>
-              Đã thêm sản phẩm
-              <span className="font-semibold italic">{`"${name}"`}</span> vào
-              danh sách yêu thích
-            </p>
-          );
-        },
-      },
-      error: {
-        render() {
-          // When the promise reject, data will contains the error
-          return (
-            <p className="text-red-500">
-              <span className="font-semibold italic">{name}</span> đã được thêm
-              vào danh sách yêu thích trước đó
-            </p>
-          );
-        },
-      },
-    });
-  };
+  const onAddWishList = useAction({
+    promise: addWishlistService,
+    pendingMessage: (
+      <p>
+        Đang thêm sản phẩm
+        <span className="font-semibold italic">{`"${name}"`}</span> vào danh
+        sách yêu thích
+      </p>
+    ),
+    successMessage: (
+      <p>
+        Đã thêm sản phẩm
+        <span className="font-semibold italic">{`"${name}"`}</span> vào danh
+        sách yêu thích
+      </p>
+    ),
+  });
 
-  const onRemoveWishList = async () => {
-    clearWaititngQueue();
-    toast.dismiss();
-    await toast.promise(removeWishlistService(id), {
-      pending: {
-        render() {
-          return (
-            <p>
-              Đang xóa
-              <span className="font-semibold italic">{`"${name}"`}</span> khỏi
-              danh sách yêu thích
-            </p>
-          );
-        },
-      },
-      success: {
-        render() {
-          return (
-            <p>
-              Đã xóa
-              <span className="font-semibold italic">{`"${name}"`}</span> khỏi
-              danh sách yêu thích
-            </p>
-          );
-        },
-      },
-      error: {
-        render({ data }) {
-          // When the promise reject, data will contains the error
-          return (
-            <p className="text-red-500">{data?.response?.data?.message}</p>
-          );
-        },
-      },
-    });
-    await fetchWishList();
-  };
+  const onRemoveWishList = useAction({
+    promise: removeWishlistService,
+    onSuccess: async () => {
+      await fetchWishList();
+    },
+    pendingMessage: (
+      <p>
+        Đang xóa
+        <span className="font-semibold italic">{`"${name}"`}</span> khỏi danh
+        sách yêu thích
+      </p>
+    ),
+    successMessage: (
+      <p>
+        Đã xóa
+        <span className="font-semibold italic">{`"${name}"`}</span> khỏi danh
+        sách yêu thích
+      </p>
+    ),
+  });
   const { user } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -183,12 +143,11 @@ const ProductCard = ({
               >
                 <span className="card-action">
                   <button
-                    className={cn("btn btn-xs btn-circle btn-white-primary", {
-                      "!cursor-not-allowed": loading,
-                    })}
+                    className={cn("btn btn-xs btn-circle btn-white-primary")}
                     data-toggle="button"
-                    disabled={loading}
-                    onClick={user && onAddWishList}
+                    onClick={() => {
+                      user && onAddWishList(id);
+                    }}
                   >
                     <i className="fe fe-heart" />
                   </button>
@@ -197,12 +156,9 @@ const ProductCard = ({
             ) : (
               <span className="card-action">
                 <button
-                  className={cn("btn btn-xs btn-circle btn-white-primary", {
-                    "!cursor-not-allowed": loadingRemove,
-                  })}
+                  className={cn("btn btn-xs btn-circle btn-white-primary")}
                   data-toggle="button"
-                  disabled={loadingRemove}
-                  onClick={onRemoveWishList}
+                  onClick={() => onRemoveWishList(id)}
                 >
                   <i className="fe fe-trash" />
                 </button>
@@ -222,31 +178,23 @@ const ProductCard = ({
           </div>
           {/* Title */}
           <div className="font-weight-bold">
-            <a className="text-body card-product-name" href="product.html">
+            <Link
+              className="text-body card-product-name"
+              to={generatePath(PATH.productDetail, {
+                slug,
+              })}
+            >
               {name}
-            </a>
+            </Link>
           </div>
-          <div className="card-product-rating !items-baseline">
-            <span className="mr-2">
+          <div className="card-product-rating">
+            <span className="mr-2 h-full">
               {+rating_average ? toFixed(+rating_average) : ""}
             </span>
-            {rating_average
-              ? createArray(Math.floor(rating_average)).map((_, id) => (
-                  <Star key={id} />
-                ))
-              : ""}
-            {rating_average < 5 &&
-            toFixed(+rating_average) - Math.floor(toFixed(+rating_average)) >
-              0 ? (
-              <HalfStar />
-            ) : (
-              ""
-            )}
+            {rating_average ? <Rating value={+rating_average} /> : null}
             {review_count ? (
-              <span className="ml-2">{`(${review_count} reviews)`}</span>
-            ) : (
-              ""
-            )}
+              <span className="ml-2 h-full">{`(${review_count} reviews)`}</span>
+            ) : null}
           </div>
           {/* Price */}
           <div className="card-product-price">

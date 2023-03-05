@@ -2,19 +2,21 @@ import { GuestRoute } from "@/components/GuestRoute";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { PATH } from "@/config";
 import { MainLayout } from "@/layouts/MainLayout";
+import { delayFallback } from "@/utils";
 
 import { lazy } from "react";
 import profile from "./profile";
-
-const Home = lazy(() => import("@/pages"));
-const Page404 = lazy(() => import("@/pages/404"));
-const ProductPage = lazy(() => import("@/pages/ProductPage"));
-const ProductDetailPage = lazy(() => import("@/pages/[slug]"));
-const AuthPage = lazy(() => import("@/pages/auth"));
-const ContactPage = lazy(() => import("@/pages/contact"));
-const FaqPage = lazy(() => import("@/pages/faq"));
-const ResetPasswordPage = lazy(() => import("@/pages/reset-password"));
-const ShippingPage = lazy(() => import("@/pages/shipping"));
+const Home = lazy(() => delayFallback(import("@/pages")));
+const Page404 = lazy(() => delayFallback(import("@/pages/404")));
+const ProductPage = lazy(() => delayFallback(import("@/pages/ProductPage")));
+const ProductDetailPage = lazy(() => delayFallback(import("@/pages/[slug]")));
+const AuthPage = lazy(() => delayFallback(import("@/pages/auth")));
+const ContactPage = lazy(() => delayFallback(import("@/pages/contact")));
+const FaqPage = lazy(() => delayFallback(import("@/pages/faq")));
+const ResetPasswordPage = lazy(() =>
+  delayFallback(import("@/pages/reset-password"))
+);
+const ShippingPage = lazy(() => delayFallback(import("@/pages/shipping")));
 
 export const routers = [
   {

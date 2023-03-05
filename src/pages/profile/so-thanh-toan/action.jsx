@@ -66,15 +66,7 @@ const PaymentActionPage = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const checkUpdate = object.isEqual(
-      form,
-      paymentDetails,
-      "cardNumber",
-      "cardName",
-      "expired",
-      "cvv",
-      "default"
-    );
+    const checkUpdate = object.isEqual(form, paymentDetails);
 
     if (!!id && checkUpdate) {
       clearWaititngQueue();

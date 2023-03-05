@@ -22,7 +22,11 @@ const withListLoading = (Component, LoadingComponent = Component) => {
             {<Component {...e} {...props} />}
           </Fragment>
         ))
-      : empty || <EmptyText>{emptyText}</EmptyText>;
+      : empty || (
+          <div className="col-12">
+            <EmptyText>{emptyText}</EmptyText>
+          </div>
+        );
   };
 };
 

@@ -116,7 +116,11 @@ const useQuery = ({
       }
     }
   };
-
+  const clearPreviousData = () => {
+    if (keepPreviousData && dataRef.current[queryKey]) {
+      delete dataRef.current[queryKey];
+    }
+  };
   useEffect(() => {
     if (enabled) {
       fetchData();
@@ -187,6 +191,7 @@ const useQuery = ({
     error,
     status,
     fetchData,
+    clearPreviousData,
   };
 };
 export default useQuery;

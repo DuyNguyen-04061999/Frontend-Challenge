@@ -47,7 +47,10 @@ const WishlistPage = () => {
           empty={
             <div className="col-12">
               <EmptyText>Hiện tại bạn chưa có sản phẩm yêu thích</EmptyText>
-              <Button onClick={() => navigate(PATH.products)} className="mt-5">
+              <Button
+                onClick={() => navigate(PATH.products)}
+                className="mt-5 btn-sm text-xs"
+              >
                 Đi đến trang sản phẩm
               </Button>
             </div>

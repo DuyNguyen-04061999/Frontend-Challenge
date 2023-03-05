@@ -1,9 +1,11 @@
 import { PATH } from "@/config";
+import useAction from "@/hooks/useAction";
+import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
 import { handleToastMessage } from "@/utils";
 import withListLoading from "@/utils/withListLoading";
 import moment from "moment/moment";
-import React, { useState } from "react";
+import React from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 import AddressPaymentCardLoading from "../AddressCardLoading";
 import Button from "../Button";
@@ -18,27 +20,28 @@ const PaymentCard = ({
   ...props
 }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const onSetDefaultPayment = async () => {
-    setLoading(true);
-    await handleToastMessage({
-      promise: userService.editPayment(_id, {
-        default: true,
-      }),
-      pending: "Đang cập nhật thông tin",
-      success: "Đã cập nhật thành công",
-    });
-    setLoading(false);
-    await refetchPaymentList();
-  };
-  const onDeletePayment = async () => {
-    await handleToastMessage({
-      promise: userService.deletePayment(_id),
-      pending: "Đang xóa sổ thanh toán",
-      success: "Đã xóa sổ thanh toán thành công",
-    });
-    await refetchPaymentList();
-  };
+  const { loading, fetchData: editPaymentService } = useQuery({
+    enabled: false,
+    queryFn: ({ params }) => userService.editPayment(...params),
+    limitDuration: 1000,
+  });
+  const onSetDefaultPayment = useAction({
+    promise: editPaymentService,
+    successMessage: "Đã cập nhật thành công",
+    pendingMessage: "Đang cập nhật thông tin",
+    onSuccess: async () => {
+      await refetchPaymentList();
+    },
+  });
+  const onDeletePayment = useAction({
+    promise: userService.deletePayment,
+    successMessage: "Đã xóa sổ thanh toán thành công",
+    pendingMessage: "Đang xóa sổ thanh toán",
+    onSuccess: async () => {
+      await refetchPaymentList();
+    },
+  });
+
   return (
     <div className="col-12">
       {/* Card */}
@@ -74,7 +77,11 @@ const PaymentCard = ({
               <Button
                 className="btn-xs text-sm"
                 outline
-                onClick={onSetDefaultPayment}
+                onClick={() =>
+                  onSetDefaultPayment(_id, {
+                    default: true,
+                  })
+                }
                 loading={loading}
               >
                 Đặt làm mặc định
@@ -102,7 +109,7 @@ const PaymentCard = ({
               <div
                 className="btn btn-xs btn-circle btn-white-primary"
                 href="account-payment-edit.html"
-                onClick={() => onDeletePayment()}
+                onClick={() => onDeletePayment(_id)}
               >
                 <i className="fe fe-trash" />
               </div>

@@ -28,16 +28,8 @@ const AddressPage = () => {
         loading={loading}
         data={addressList}
         refetchAddress={refetchAddress}
-        empty={
-          <div className="col-12 mb-6">
-            {
-              <EmptyText className="w-max">
-                Hiện tại bạn chưa cung cấp địa chỉ, vui lòng thêm địa chỉ ở bên
-                dưới
-              </EmptyText>
-            }
-          </div>
-        }
+        emptyText="Hiện tại bạn chưa cung cấp địa chỉ, vui lòng thêm địa chỉ ở bên
+                dưới"
       />
       <div className="col-12">
         {/* Button */}

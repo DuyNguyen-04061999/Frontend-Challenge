@@ -32,11 +32,7 @@ const PaymentPage = () => {
           loadingCount={2}
           heightLoading={296}
           refetchPaymentList={refetchPaymentList}
-          empty={
-            <div className="col-12 mb-5">
-              <EmptyText>Hiện tại bạn chưa có sổ thanh toán</EmptyText>
-            </div>
-          }
+          emptyText="Hiện tại bạn chưa có sổ thanh toán"
         />
 
         <div className="col-12">

@@ -1,10 +1,14 @@
 import { PATH } from "@/config";
+import { useAuth } from "@/hooks/useAuth";
 import { onOpenDrawer } from "@/stores/drawerReducer";
-import { cn } from "@/utils";
+import { cn, createItem } from "@/utils";
+import { Dropdown, Popover } from "antd";
 import React from "react";
-import { useDispatch } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import SearchDrawer from "../SearchDrawer";
+import UserHover from "../UserHover";
+import { useDispatch } from "react-redux";
+import { logoutAction } from "@/stores/authReducer";
 
 const HeaderNavs = [
   {
@@ -31,6 +35,7 @@ const HeaderNavs = [
 
 const Header = () => {
   const dispatch = useDispatch();
+  const { user } = useAuth();
   return (
     <>
       <SearchDrawer />
@@ -225,7 +230,7 @@ const Header = () => {
                 ))}
               </ul>
               {/* Nav */}
-              <ul className="navbar-nav flex-row">
+              <ul className="navbar-nav flex-row items-center">
                 <li className="nav-item">
                   <span
                     className="nav-link cursor-pointer"
@@ -238,11 +243,7 @@ const Header = () => {
                     <i className="fe fe-search" />
                   </span>
                 </li>
-                <li className="nav-item ml-lg-n4">
-                  <Link className="nav-link" to={PATH.profile.index}>
-                    <i className="fe fe-user" />
-                  </Link>
-                </li>
+
                 <li className="nav-item ml-lg-n4">
                   <Link className="nav-link" to={PATH.profile.wishList}>
                     <i className="fe fe-heart" />
@@ -258,6 +259,61 @@ const Header = () => {
                       <i className="fe fe-shopping-cart" />
                     </span>
                   </a>
+                </li>
+                <li className="nav-item ml-lg-n4">
+                  {user ? (
+                    <Dropdown
+                      placement="bottomRight"
+                      arrow
+                      trigger="click"
+                      menu={createItem(
+                        {
+                          key: "1",
+                          label: (
+                            <Link className="user-link" to={PATH.profile.index}>
+                              Thông tin cá nhân
+                            </Link>
+                          ),
+                        },
+                        {
+                          key: "2",
+                          label: (
+                            <Link
+                              className="user-link"
+                              to={PATH.profile.payment}
+                            >
+                              Sổ thanh toán
+                            </Link>
+                          ),
+                        },
+                        {
+                          key: "3",
+                          label: (
+                            <span
+                              className="user-link cursor-pointer"
+                              onClick={() => dispatch(logoutAction())}
+                            >
+                              Đăng xuất
+                            </span>
+                          ),
+                        }
+                      )}
+                    >
+                      <span className="nav-link cursor-pointer">
+                        <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-400">
+                          <img
+                            src={user?.avatar}
+                            alt="ava"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </span>
+                    </Dropdown>
+                  ) : (
+                    <Link className="nav-link" to={PATH.auth}>
+                      <i className="fe fe-user" />
+                    </Link>
+                  )}
                 </li>
               </ul>
             </div>
