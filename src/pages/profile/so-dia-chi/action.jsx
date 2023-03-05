@@ -68,21 +68,10 @@ const AddressActionPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      const checkUpdate = object.isEqual(
-        form,
-        addressDetailed,
-        "fullName",
-        "email",
-        "phone",
-        "province",
-        "district",
-        "address",
-        "default"
-      );
+      const checkUpdate = object.isEqual(form, addressDetailed);
       if (checkUpdate && !!id) {
         clearWaititngQueue();
-        toast.warn("Vui lòng điền thông tin mới để cập nhật");
-        return;
+        return toast.warn("Vui lòng điền thông tin mới để cập nhật");
       }
       const res = await handleToastMessage({
         promise: id

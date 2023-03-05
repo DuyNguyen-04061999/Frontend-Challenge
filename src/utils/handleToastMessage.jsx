@@ -2,8 +2,8 @@ import { toast } from "react-toastify";
 import { clearWaititngQueue } from "./clearWaititngQueue";
 
 export const handleToastMessage = ({ promise, pending, success, error }) => {
-  clearWaititngQueue();
   toast.dismiss();
+  clearWaititngQueue();
   return toast.promise(promise, {
     pending: {
       render() {
@@ -18,7 +18,7 @@ export const handleToastMessage = ({ promise, pending, success, error }) => {
     error: {
       render({ data }) {
         // When the promise reject, data will contains the error
-        return error || data.response.data.message;
+        return error || data?.response?.data?.message || "lỗi";
       },
     },
   });

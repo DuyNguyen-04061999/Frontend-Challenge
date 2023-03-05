@@ -6,18 +6,18 @@ import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
 import createArray from "@/utils/createArray";
 import React, { useMemo, useRef, useState } from "react";
-import { Link, NavLink, useLocation, useMatch } from "react-router-dom";
+import { NavLink, useMatch } from "react-router-dom";
 import useScrollTop from "@/hooks/useScrollTop";
 import { useCategories } from "@/hooks/useCategories";
 import queryString from "query-string";
 import CategoryLink from "@/components/CategoryLink";
 import { cn } from "@/utils";
 import { PATH } from "@/config";
-import EmptyText from "@/components/EmptyText";
 import useQueryParams from "@/hooks/useQueryParams";
 import useEffectDidMount from "@/hooks/useEffectDidMount";
-import StarRating from "@/components/StarRating";
 import Radio from "@/components/Radio";
+import Rating from "@/components/Rating";
+import Breadcrumb from "@/components/Breadcrumb";
 
 const options = [
   {
@@ -187,27 +187,15 @@ const ProductPage = () => {
                       }}
                     >
                       <Radio rating={5}>
-                        <StarRating />
-                        <StarRating />
-                        <StarRating />
-                        <StarRating />
-                        <StarRating />
+                        <Rating value={5} />
                         <span className="text-small ml-2">from 5 star</span>
                       </Radio>
                       <Radio rating={4}>
-                        <StarRating />
-                        <StarRating />
-                        <StarRating />
-                        <StarRating />
-                        <StarRating color="#b8b8b8" />
+                        <Rating value={4} />
                         <span className="text-small ml-2">from 4 star</span>
                       </Radio>
                       <Radio rating={3}>
-                        <StarRating />
-                        <StarRating />
-                        <StarRating />
-                        <StarRating color="#b8b8b8" />
-                        <StarRating color="#b8b8b8" />
+                        <Rating value={3} />
                         <span className="text-small ml-2">from 3 star</span>
                       </Radio>
                     </Radio.Group>
@@ -378,15 +366,10 @@ const ProductPage = () => {
                   {categoryTitle}
                 </h3>
                 {/* Breadcrumb */}
-                <ol className="breadcrumb mb-md-0 font-size-xs text-gray-400">
-                  <li className="breadcrumb-item">
-                    <Link className="text-gray-400" to={PATH.home}>
-                      Trang chủ
-                    </Link>
-                  </li>
-
-                  <li className="breadcrumb-item active">{categoryTitle}</li>
-                </ol>
+                <Breadcrumb>
+                  <Breadcrumb.Item to={PATH.home}>Trang chủ</Breadcrumb.Item>
+                  <Breadcrumb.Item>{categoryTitle}</Breadcrumb.Item>
+                </Breadcrumb>
               </div>
               <div className="col-12 col-md-auto">
                 {/* Select */}
@@ -423,13 +406,7 @@ const ProductPage = () => {
                 data={products}
                 loading={loading}
                 loadingCount={9}
-                empty={
-                  <div className="col-12">
-                    <EmptyText>
-                      Rất tiếc không có sản phẩm bạn tìm kiếm
-                    </EmptyText>
-                  </div>
-                }
+                emptyText="Rất tiếc không có sản phẩm bạn tìm kiếm"
               />
             </div>
 

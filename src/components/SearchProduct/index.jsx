@@ -4,6 +4,8 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { generatePath, Link } from "react-router-dom";
 import { onCloseDrawer } from "@/stores/drawerReducer";
+import withListLoading from "@/utils/withListLoading";
+import SearchProductLoading from "../SearchProductLoading";
 
 const SearchProduct = ({ thumbnail_url, real_price, price, name, slug }) => {
   const dispatch = useDispatch();
@@ -35,4 +37,4 @@ const SearchProduct = ({ thumbnail_url, real_price, price, name, slug }) => {
   );
 };
 
-export default SearchProduct;
+export default withListLoading(SearchProduct, SearchProductLoading);

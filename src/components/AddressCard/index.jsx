@@ -1,10 +1,8 @@
 import { PATH } from "@/config";
+import useAction from "@/hooks/useAction";
 import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
-import { handleToastMessage } from "@/utils";
-import handleError from "@/utils/handleError";
 import withListLoading from "@/utils/withListLoading";
-import { message } from "antd";
 import React from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 import AddressPaymentCardLoading from "../AddressCardLoading";
@@ -22,35 +20,36 @@ const AddressCard = withListLoading(
     refetchAddress,
     _id,
   }) => {
+    //=====
     const navigate = useNavigate();
     const { fetchData: editAddressService, loadingEditAddress } = useQuery({
       enabled: false,
       queryFn: ({ params }) => userService.editAddress(...params),
     });
-
-    const onSetDefaultAddress = async (id) => {
-      await handleToastMessage({
-        promise: editAddressService(id, { default: true }),
-        pending: "Đang cập nhật địa chỉ",
-        success: "Đã đặt địa chỉ mặc định theo yêu cầu",
-      });
-      await refetchAddress();
-    };
-
+    const onSetDefaultAddress = useAction({
+      promise: editAddressService,
+      pendingMessage: "Đang cập nhật địa chỉ",
+      successMessage: "Đã đặt địa chỉ mặc định theo yêu cầu",
+      onSuccess: async () => {
+        await refetchAddress();
+      },
+    });
+    // =====
     const { fetchData: deleteAddressService, loading: loadingDeleteAddress } =
       useQuery({
         enabled: false,
         queryFn: ({ params }) => userService.deleteAddress(...params),
       });
 
-    const onDeleteAddress = async (id) => {
-      await handleToastMessage({
-        promise: deleteAddressService(id),
-        pending: "Đang xóa địa chỉ",
-        success: "Đã xóa địa chỉ theo yêu cầu",
-      });
-      await refetchAddress();
-    };
+    const onDeleteAddress = useAction({
+      promise: deleteAddressService,
+      pendingMessage: "Đang xóa địa chỉ",
+      successMessage: "Đã xóa địa chỉ theo yêu cầu",
+      recall: false,
+      onSuccess: async () => {
+        await refetchAddress();
+      },
+    });
     return (
       <div className="col-12 select-none">
         {/* Card */}
@@ -77,7 +76,7 @@ const AddressCard = withListLoading(
               <Button
                 outline
                 className="ml-auto block btn-xs"
-                onClick={() => onSetDefaultAddress(_id)}
+                onClick={() => onSetDefaultAddress(_id, { default: true })}
                 loading={loadingEditAddress}
               >
                 Đặt làm địa chỉ mặc định
@@ -101,7 +100,6 @@ const AddressCard = withListLoading(
                 <button
                   className="btn btn-xs btn-circle btn-white-primary"
                   onClick={() => onDeleteAddress(_id)}
-                  disabled={loadingDeleteAddress}
                 >
                   <i className="fe fe-trash" />
                 </button>

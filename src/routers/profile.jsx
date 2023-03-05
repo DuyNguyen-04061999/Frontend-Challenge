@@ -1,19 +1,28 @@
 import { lazy } from "react";
 import ProfileLayout from "@/layouts/ProfileLayout";
 import { PATH } from "@/config";
+import { delayFallback } from "@/utils";
 
-const ProfilePage = lazy(() => import("@/pages/profile"));
-const AddressPage = lazy(() => import("@/pages/profile/so-dia-chi"));
+const ProfilePage = lazy(() => delayFallback(import("@/pages/profile")));
+const AddressPage = lazy(() =>
+  delayFallback(import("@/pages/profile/so-dia-chi"))
+);
 const AddressActionPage = lazy(() =>
-  import("@/pages/profile/so-dia-chi/action")
+  delayFallback(import("@/pages/profile/so-dia-chi/action"))
 );
-const OrderPage = lazy(() => import("@/pages/profile/order"));
-const OrderDetailPage = lazy(() => import("@/pages/profile/orderDetail"));
-const PaymentPage = lazy(() => import("@/pages/profile/so-thanh-toan"));
+const OrderPage = lazy(() => delayFallback(import("@/pages/profile/order")));
+const OrderDetailPage = lazy(() =>
+  delayFallback(import("@/pages/profile/orderDetail"))
+);
+const PaymentPage = lazy(() =>
+  delayFallback(import("@/pages/profile/so-thanh-toan"))
+);
 const PaymentActionPage = lazy(() =>
-  import("@/pages/profile/so-thanh-toan/action")
+  delayFallback(import("@/pages/profile/so-thanh-toan/action"))
 );
-const WishlistPage = lazy(() => import("@/pages/profile/wishlist"));
+const WishlistPage = lazy(() =>
+  delayFallback(import("@/pages/profile/wishlist"))
+);
 
 const profile = {
   element: <ProfileLayout />,

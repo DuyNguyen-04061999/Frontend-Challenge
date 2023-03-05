@@ -1,5 +1,5 @@
 import { PATH } from "@/config";
-import { useCategories, useCategory } from "@/hooks/useCategories";
+import { useCategories } from "@/hooks/useCategories";
 import useDebounce from "@/hooks/useDebounce";
 import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
@@ -20,6 +20,7 @@ import styled from "styled-components";
 import EmptyText from "../EmptyText";
 import Portal from "../Portal";
 import SearchProduct from "../SearchProduct";
+import SearchProductLoading from "../SearchProductLoading";
 import Skeleton from "../Skeleton";
 
 const ContentStyle = styled.div`
@@ -212,15 +213,12 @@ const SearchDrawer = () => {
             className="modal-body border-top font-size-sm"
             style={{ height: heightBody, overflowY: "auto" }}
           >
-            {loading ? (
-              createArray(6).map((_, id) => <ProductCardLoading key={id} />)
-            ) : products.length === 0 ? (
-              <EmptyText>
-                Rất tiếc, không tìm thấy sản phẩm phù hợp với lựa chọn của bạn
-              </EmptyText>
-            ) : (
-              products?.map((e) => <SearchProduct key={e?.id} {...e} />)
-            )}
+            <SearchProduct
+              loading={loading}
+              data={products}
+              loadingCount={9}
+              emptyText="Rất tiếc, không tìm thấy sản phẩm phù hợp với lựa chọn của bạn"
+            />
           </BodyStyled>
 
           {/* Button */}
@@ -236,25 +234,6 @@ const SearchDrawer = () => {
         </div>
       </ContentStyle>
     </Portal>
-  );
-};
-
-const ProductCardLoading = () => {
-  return (
-    <div className="row align-items-center position-relative mb-5">
-      <div className="col-4 col-md-3 img-cate">
-        {/* Image */}
-        <Skeleton className="rounded" />
-      </div>
-      <div className="col position-static">
-        {/* Text */}
-        <p className="mb-0 font-weight-bold">
-          <Skeleton height={10} className="rounded" />
-          <Skeleton height={10} className="rounded" />
-          <Skeleton height={20} marginTop={20} width={80} className="rounded" />
-        </p>
-      </div>
-    </div>
   );
 };
 
