@@ -22,7 +22,9 @@ import { useOpenModal } from "@/hooks/useOpenModal";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [checkRemember, setCheckRemember] = useState(getRemember()?.checked);
+  const [checkRemember, setCheckRemember] = useState(
+    getRemember()?.checked || false
+  );
   const dispatch = useDispatch();
   const [{ code }] = useQueryParams();
   const { open, onOpenModal, onCloseModal } = useOpenModal();
@@ -83,14 +85,12 @@ const Login = () => {
     (async () => {
       if (code) {
         try {
-          const res = await dispatch(loginByCodeAction({ code }));
+          const res = await dispatch(loginByCodeAction({ code })).unwrap();
           toast.success(
             <p>
               Chúc mừng{" "}
-              <span className="text-[#34d399] font-bold">
-                {res?.payload?.name}
-              </span>{" "}
-              đã đăng nhập thành công!
+              <span className="text-[#34d399] font-bold">{res?.name}</span> đã
+              đăng nhập thành công!
             </p>,
             {
               position: "top-center",

@@ -19,4 +19,6 @@ export * from "./object";
 export * from "./assets";
 export * from "./handleToastMessage";
 export * from "./delayFallback";
+export * from "./blockInValidChar";
+// =====
 export * from "./storageCache";

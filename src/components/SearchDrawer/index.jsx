@@ -1,27 +1,18 @@
 import { PATH } from "@/config";
-import { useCategories } from "@/hooks/useCategories";
+import { useCategories, useCategory } from "@/hooks/useCategories";
 import useDebounce from "@/hooks/useDebounce";
 import useQuery from "@/hooks/useQuery";
+import useWindowSize from "@/hooks/useWindowSize";
 import { productService } from "@/services/product.service";
 import { onCloseDrawer } from "@/stores/drawerReducer";
 import { toSlug } from "@/utils";
-import createArray from "@/utils/createArray";
 import queryString from "query-string";
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { generatePath, Link } from "react-router-dom";
 import styled from "styled-components";
-import EmptyText from "../EmptyText";
 import Portal from "../Portal";
 import SearchProduct from "../SearchProduct";
-import SearchProductLoading from "../SearchProductLoading";
-import Skeleton from "../Skeleton";
 
 const ContentStyle = styled.div`
   height: ${({ height }) => `${height}px`} !important;
@@ -66,16 +57,16 @@ const BodyStyled = styled.div`
 `;
 const SearchDrawer = () => {
   const { open } = useSelector((state) => state.drawer.search);
-  const [size, setSize] = useState([0, 0]);
+  const size = useWindowSize();
   const dispatch = useDispatch();
-  const onClose = () => dispatch(onCloseDrawer({ name: "search" }));
+  const onClose = () => dispatch(onCloseDrawer("search"));
   const [idCategory, setIDCategory] = useState();
   const [search, setSearch] = useState();
   const searchDebounce = useDebounce(search, 500);
   const [heightBody, setHeightBody] = useState();
 
   const { categoryList = [] } = useCategories([], open);
-  const category = categoryList.find((e) => e.id === +idCategory);
+  const category = useCategory(+idCategory);
 
   const topRef = useRef();
   const buttonRef = useRef();
@@ -90,7 +81,7 @@ const SearchDrawer = () => {
 
   const { data: { data: products = [] } = {}, loading } = useQuery({
     enabled: open,
-    queryKey: `product-search-${_qs}`,
+    queryKey: [_qs],
     keepPreviousData: true,
     queryFn: ({ signal }) => productService.getProducts(`?${_qs}`, signal),
   });
@@ -116,17 +107,6 @@ const SearchDrawer = () => {
 
     setHeightBody(bodyHeight);
   }, [size]);
-
-  useLayoutEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-
-    //cleanup Fn
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
 
   useEffect(() => {
     if (open) {

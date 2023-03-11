@@ -1,14 +1,18 @@
 import { PATH } from "@/config";
 import { useAuth } from "@/hooks/useAuth";
 import { onOpenDrawer } from "@/stores/drawerReducer";
-import { cn, createItem } from "@/utils";
+import { avatarDefault, cn, createItem } from "@/utils";
 import { Dropdown, Popover } from "antd";
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import SearchDrawer from "../SearchDrawer";
-import UserHover from "../UserHover";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "@/stores/authReducer";
+import { CheckCircleFilled } from "@ant-design/icons";
+import Button from "../Button";
+import CartDrawer from "../CartDrawer";
+import { useCart } from "@/hooks/useCart";
+import { onSetOpenCart } from "@/stores/cart/cartReducer";
 
 const HeaderNavs = [
   {
@@ -36,9 +40,11 @@ const HeaderNavs = [
 const Header = () => {
   const dispatch = useDispatch();
   const { user } = useAuth();
+  const { cart, open } = useCart();
   return (
     <>
       <SearchDrawer />
+      <CartDrawer />
       <div>
         {/* NAVBAR */}
         <div className="navbar navbar-topbar navbar-expand-xl navbar-light bg-light">
@@ -237,7 +243,7 @@ const Header = () => {
                     data-toggle="modal"
                     onClick={(e) => {
                       e.preventDefault();
-                      dispatch(onOpenDrawer({ name: "search" }));
+                      dispatch(onOpenDrawer("search"));
                     }}
                   >
                     <i className="fe fe-search" />
@@ -249,17 +255,45 @@ const Header = () => {
                     <i className="fe fe-heart" />
                   </Link>
                 </li>
-                <li className="nav-item ml-lg-n4">
-                  <a
-                    className="nav-link"
-                    data-toggle="modal"
-                    href="#modalShoppingCart"
+                <Popover
+                  open={open}
+                  onOpenChange={(status) => {
+                    if (!status) {
+                      dispatch(onSetOpenCart(status));
+                    }
+                  }}
+                  trigger="click"
+                  placement="bottomRight"
+                  overlayClassName="max-w-[300px]"
+                  content={
+                    <>
+                      <div className="flex items-center gap-x-2">
+                        <CheckCircleFilled className="text-green-500" />
+                        <h5 className="text-base m-0 font-bold">
+                          Thêm sản phẩm thành công
+                        </h5>
+                      </div>
+                      <Button className="mt-5 btn-xs text-sm">
+                        ĐI ĐẾN GIỎ HÀNG VÀ THANH TOÁN
+                      </Button>
+                    </>
+                  }
+                >
+                  <li
+                    className="nav-item ml-lg-n4"
+                    onClick={() => dispatch(onOpenDrawer("cart"))}
                   >
-                    <span data-cart-items={2}>
-                      <i className="fe fe-shopping-cart" />
-                    </span>
-                  </a>
-                </li>
+                    <a className="nav-link cursor-pointer" data-toggle="modal">
+                      <span
+                        data-cart-items={
+                          (user && cart && cart?.totalQuantity) || null
+                        }
+                      >
+                        <i className="fe fe-shopping-cart" />
+                      </span>
+                    </a>
+                  </li>
+                </Popover>
                 <li className="nav-item ml-lg-n4">
                   {user ? (
                     <Dropdown
@@ -270,7 +304,10 @@ const Header = () => {
                         {
                           key: "1",
                           label: (
-                            <Link className="user-link" to={PATH.profile.index}>
+                            <Link
+                              className="user-link block"
+                              to={PATH.profile.index}
+                            >
                               Thông tin cá nhân
                             </Link>
                           ),
@@ -279,7 +316,7 @@ const Header = () => {
                           key: "2",
                           label: (
                             <Link
-                              className="user-link"
+                              className="user-link block"
                               to={PATH.profile.payment}
                             >
                               Sổ thanh toán
@@ -290,7 +327,7 @@ const Header = () => {
                           key: "3",
                           label: (
                             <span
-                              className="user-link cursor-pointer"
+                              className="user-link block cursor-pointer"
                               onClick={() => dispatch(logoutAction())}
                             >
                               Đăng xuất
@@ -302,7 +339,7 @@ const Header = () => {
                       <span className="nav-link cursor-pointer">
                         <div className="w-7 h-7 rounded-full overflow-hidden border border-gray-400">
                           <img
-                            src={user?.avatar}
+                            src={user?.avatar || avatarDefault}
                             alt="ava"
                             className="w-full h-full object-cover"
                           />
