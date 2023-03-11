@@ -42,7 +42,7 @@ const useAction = ({
           error: errorMessage,
         });
       }
-      onSuccess?.();
+      await onSuccess?.();
     } catch (error) {
       if (antd) {
         handleError(error, antd, key);

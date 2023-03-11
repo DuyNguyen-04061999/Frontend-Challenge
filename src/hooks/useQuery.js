@@ -73,7 +73,6 @@ const useQuery = ({
     : typeof queryKey === "string"
     ? queryKey
     : undefined;
-
   //====== cancel when out the page ====
   useEffect(() => {
     return () => {
@@ -155,7 +154,7 @@ const useQuery = ({
       }
       await delayDuration(startTime, limitDuration);
       if (res) {
-        onSuccess?.(res);
+        await onSuccess?.(res);
         dispatch({ type: SET_DATA, payload: res });
         dispatch({ type: SET_STATUS, payload: "success" });
         setCacheDataOrPreviousData(res);

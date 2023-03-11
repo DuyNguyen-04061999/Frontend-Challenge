@@ -11,11 +11,11 @@ const drawerSlice = createSlice({
     },
   },
   reducers: {
-    onCloseDrawer: (state, { payload: { name } }) => ({
+    onCloseDrawer: (state, { payload: name }) => ({
       ...state,
       [name]: { open: false },
     }),
-    onOpenDrawer: (state, { payload: { name } }) => ({
+    onOpenDrawer: (state, { payload: name }) => ({
       ...state,
       [name]: { open: true },
     }),

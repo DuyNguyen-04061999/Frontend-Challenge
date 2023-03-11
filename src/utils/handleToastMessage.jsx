@@ -6,20 +6,27 @@ export const handleToastMessage = ({ promise, pending, success, error }) => {
   clearWaititngQueue();
   return toast.promise(promise, {
     pending: {
-      render() {
-        return pending || "Đang gửi thông tin";
-      },
+      ...(pending && {
+        render() {
+          return pending;
+        },
+      }),
     },
-    success: {
-      render() {
-        return success || "Đã gửi thông tin thành công";
+    ...(success && {
+      success: {
+        render() {
+          return success;
+        },
       },
-    },
-    error: {
-      render({ data }) {
-        // When the promise reject, data will contains the error
-        return error || data?.response?.data?.message || "lỗi";
+    }),
+
+    ...(error && {
+      error: {
+        render({ data }) {
+          // When the promise reject, data will contains the error
+          return error || data?.response?.data?.message;
+        },
       },
-    },
+    }),
   });
 };

@@ -1,17 +1,18 @@
 import { PATH } from "@/config";
 import useAction from "@/hooks/useAction";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 import { useCategory } from "@/hooks/useCategories";
 import useQuery from "@/hooks/useQuery";
 import { productService } from "@/services/product.service";
+import { updateCartAction } from "@/stores/cart/cartReducer";
 import { cn, toFixed, toSlug } from "@/utils";
-import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import withListLoading from "@/utils/withListLoading";
 import React, { useMemo } from "react";
+import { useDispatch } from "react-redux";
 import { generatePath, Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import HalfStar from "../HalfStar";
 import PopConfirm from "../PopConfirm";
 import ProductCardLoading from "../ProductCardLoading";
 import Rating from "../Rating";
@@ -31,6 +32,9 @@ const ProductCard = ({
   id,
   fetchWishList,
 }) => {
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+
   const img1 =
     images?.[0]?.large_url || thumbnail_url || images?.[1]?.large_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
@@ -75,6 +79,12 @@ const ProductCard = ({
         sách yêu thích
       </p>
     ),
+    errorMessage: (
+      <p>
+        <span className="font-semibold italic">{`"${name}"`}</span> đã được thêm
+        vào danh sách yêu thích trước đó
+      </p>
+    ),
   });
 
   const onRemoveWishList = useAction({
@@ -99,8 +109,44 @@ const ProductCard = ({
   });
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
+  // ========== cart ===========
+  const { cart } = useCart();
+  const quantity = useMemo(() => {
+    const { quantity } =
+      cart?.listItems?.find((e) => e?.productId === id) || {};
+
+    return quantity ? quantity + 1 : 1;
+  }, [cart]);
+
+  const handleUpdateCart = () => {
+    user
+      ? dispatch(
+          updateCartAction({
+            id,
+            data: { quantity },
+            toast: true,
+            pending: (
+              <>
+                Đang thêm <span className="font-semibold">{name}</span> vào giỏ
+                hàng
+              </>
+            ),
+            success: (
+              <>
+                Đã thêm <span className="font-semibold">{name}</span> vào giỏ
+                hàng thành công
+              </>
+            ),
+          })
+        )
+      : (navigate(PATH.auth, {
+          state: {
+            redirect: pathname,
+          },
+        }),
+        toast.warn("Vui lòng đăng nhập để mua sản phẩm"));
+  };
   return (
     <div className="col-6 col-md-4">
       {/* Card */}
@@ -126,6 +172,7 @@ const ProductCard = ({
               <button
                 className="btn btn-xs btn-circle btn-white-primary"
                 data-toggle="button"
+                onClick={handleUpdateCart}
               >
                 <i className="fe fe-shopping-cart" />
               </button>
@@ -198,7 +245,7 @@ const ProductCard = ({
           </div>
           {/* Price */}
           <div className="card-product-price">
-            {real_price !== price ? (
+            {real_price && price ? (
               <>
                 <span className="text-primary sale !text-[20px] mr-[4px]">
                   {currency(real_price)}
@@ -208,7 +255,7 @@ const ProductCard = ({
                 </span>
               </>
             ) : (
-              <span className="text-primary sale">{currency(real_price)}</span>
+              <span className="text-primary sale">{currency(price)}</span>
             )}
           </div>
         </div>

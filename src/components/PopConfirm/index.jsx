@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Popconfirm as PopconfirmM } from "antd";
 import Button from "../Button";
 
-const PopConfirm = ({ description, onConfirm, ...props }) => {
+const PopConfirm = ({ description, onConfirm, loading, ...props }) => {
   return (
     <PopconfirmM
       {...props}
@@ -25,9 +25,15 @@ const PopConfirm = ({ description, onConfirm, ...props }) => {
                 {props.cancelText || "Cancel"}
               </Button>
             )}
-            <Button className="mt-5 btn-xs" onClick={onConfirm}>
-              {props.okText || "ok"}
-            </Button>
+            {props?.okText && (
+              <Button
+                className="mt-5 btn-xs rounded"
+                onClick={onConfirm}
+                loading={loading}
+              >
+                {props.okText || "ok"}
+              </Button>
+            )}
           </div>
         </>
       }

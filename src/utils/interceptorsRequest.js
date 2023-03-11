@@ -1,5 +1,6 @@
 import { getToken } from "./token";
 
+//======= trc khi gui api ========
 export function interceptorsRequest(api) {
   api.interceptors.request.use(
     (config) => {

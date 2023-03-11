@@ -1,22 +1,28 @@
 import { authService } from "@/services/auth.service";
 import { getToken, setToken } from "./token";
 
+let refreshTokenPromise = null;
+
 export function interceptorsResponse(api) {
   api.interceptors.response.use(
-    (res) => res?.data,
+    (res) => res?.data || res,
     async (error) => {
       try {
         if (
           error?.response?.status === 403 &&
           error?.response?.data?.error_code === "TOKEN_EXPIRED"
         ) {
-          //refresh token
-          const token = getToken();
-          const res = await authService.refreshToken({
-            refreshToken: token?.refreshToken,
-          });
-          setToken(res?.data);
-          //thuc thi lai api bi loi
+          if (refreshTokenPromise) {
+            await refreshTokenPromise;
+          } else {
+            const token = getToken();
+            refreshTokenPromise = authService.refreshToken({
+              refreshToken: token?.refreshToken,
+            });
+            const res = await refreshTokenPromise;
+            setToken(res?.data);
+            refreshTokenPromise = null;
+          }
           return api(error?.config);
         }
       } catch (err) {

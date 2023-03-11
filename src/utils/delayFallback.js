@@ -1,2 +1,2 @@
-export const delayFallback = (importLink, delayMs = 1500) =>
+export const delayFallback = (importLink, delayMs = 0) =>
   new Promise((resolve) => setTimeout(() => resolve(importLink), delayMs));
