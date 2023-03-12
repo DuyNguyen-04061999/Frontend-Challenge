@@ -7,18 +7,18 @@ import React, {
 } from "react";
 
 const UploadImage = forwardRef(({ children }, ref) => {
-  const [imagePreview, setImagePreview] = useState();
+  const [imagePreviewLink, setImagePreviewLink] = useState();
   const fileRef = useRef();
 
   const onPreview = () => {
     if (fileRef.current?.files?.length > 0) {
-      const file = fileRef.current?.files[0];
+      const file = fileRef.current?.files[0]; //this is an object not array
       const previewLink = file && URL.createObjectURL(file);
-      setImagePreview(previewLink);
+      setImagePreviewLink(previewLink);
     }
   };
 
-  const removeImage = () => setImagePreview();
+  const removeImage = () => setImagePreviewLink();
 
   useEffect(() => {
     //====
@@ -29,7 +29,7 @@ const UploadImage = forwardRef(({ children }, ref) => {
     fileRef.current.click();
   };
 
-  useImperativeHandle(ref, () => fileRef.current.files[0], [imagePreview]);
+  useImperativeHandle(ref, () => fileRef.current.files[0], [imagePreviewLink]);
   return (
     <>
       <input
@@ -37,9 +37,9 @@ const UploadImage = forwardRef(({ children }, ref) => {
         type="file"
         hidden
         ref={fileRef}
-        onChange={onPreview}
+        onChange={onPreview} //first step
       />
-      {children(imagePreview, trigger)}
+      {children(imagePreviewLink, trigger)}
     </>
   );
 });

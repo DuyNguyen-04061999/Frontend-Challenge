@@ -18,7 +18,7 @@ const Portal = ({
       {overlay && (
         <div
           style={{ transition: "all 0.2s ease-in-out" }}
-          className={`overlay absolute inset-0 cursor-pointer bg-black bg-opacity-40 ${
+          className={`overlay absolute inset-0 cursor-pointer bg-black bg-opacity-70 ${
             open ? "opacity-100" : "opacity-0"
           }`}
           onClick={onClose}

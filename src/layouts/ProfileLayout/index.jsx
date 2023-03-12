@@ -1,6 +1,6 @@
 import { PATH } from "@/config";
 import store from "@/stores";
-import { logoutAction } from "@/stores/authReducer";
+import { logoutAction } from "@/stores/auth/authReducer";
 import { cn } from "@/utils";
 import handleError from "@/utils/handleError";
 import React from "react";
@@ -35,14 +35,8 @@ const ProfileNav = [
     onClick: async (e) => {
       e.preventDefault();
       toast.dismiss();
-      try {
-        await store.dispatch(logoutAction());
-        toast.warning("Bạn đã đăng xuất khỏi tài khoản", {
-          autoClose: 2000,
-        });
-      } catch (error) {
-        handleError(error);
-      }
+      store.dispatch(logoutAction());
+      toast.warning("Bạn đã đăng xuất khỏi tài khoản");
     },
   },
 ];

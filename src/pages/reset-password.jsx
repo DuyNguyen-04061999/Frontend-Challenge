@@ -1,9 +1,10 @@
 import Button from "@/components/Button";
 import Field from "@/components/Field";
+import { useAuth } from "@/hooks/useAuth";
 import useBodyClass from "@/hooks/useBodyClass";
 import { useForm } from "@/hooks/useForm";
 import useQueryParams from "@/hooks/useQueryParams";
-import { changePasswordByCodeAction } from "@/stores/authReducer";
+import { changePasswordByCodeAction } from "@/stores/auth/authReducer";
 import { confirm, min, require } from "@/utils";
 import handleError from "@/utils/handleError";
 import React, { useState } from "react";
@@ -12,7 +13,8 @@ import { toast } from "react-toastify";
 
 const ResetPasswordPage = () => {
   useBodyClass("bg-light");
-  const [loading, setLoading] = useState(false);
+  const { loading } = useAuth();
+  const _loading = loading["changeCode"] || false;
   const [{ code }] = useQueryParams();
   const dispatch = useDispatch();
   const { register, form, formRef, validate } = useForm(
@@ -38,29 +40,7 @@ const ResetPasswordPage = () => {
   const onChangePassword = async (e) => {
     e.preventDefault();
     if (validate()) {
-      try {
-        setLoading(true);
-        const res = await dispatch(
-          changePasswordByCodeAction({ ...form, code })
-        );
-        toast.success(
-          <p>
-            Chúc mừng{" "}
-            <span className="text-[#34d399] font-bold">
-              {res?.payload?.name}
-            </span>{" "}
-            đã đăng nhập thành công!
-          </p>,
-          {
-            position: "top-center",
-            autoClose: 2000,
-          }
-        );
-      } catch (error) {
-        handleError(error);
-      } finally {
-        setLoading(false);
-      }
+      dispatch(changePasswordByCodeAction({ ...form, code }));
     }
   };
   return (
@@ -108,7 +88,7 @@ const ResetPasswordPage = () => {
 
                     <div className="col-6 mx-auto flex items-center justify-center">
                       {/* Button */}
-                      <Button className="w-full" loading={loading}>
+                      <Button className="w-full" loading={_loading}>
                         Đăng nhập
                       </Button>
                     </div>

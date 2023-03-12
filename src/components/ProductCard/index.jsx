@@ -68,21 +68,21 @@ const ProductCard = ({
     pendingMessage: (
       <p>
         Đang thêm sản phẩm
-        <span className="font-semibold italic">{`"${name}"`}</span> vào danh
+        <span className="font-semibold italic">"{`"${name}"`}"</span> vào danh
         sách yêu thích
       </p>
     ),
     successMessage: (
       <p>
         Đã thêm sản phẩm
-        <span className="font-semibold italic">{`"${name}"`}</span> vào danh
+        <span className="font-semibold italic">"{`"${name}"`}"</span> vào danh
         sách yêu thích
       </p>
     ),
     errorMessage: (
       <p>
-        <span className="font-semibold italic">{`"${name}"`}</span> đã được thêm
-        vào danh sách yêu thích trước đó
+        <span className="font-semibold italic">"{`"${name}"`}"</span> đã được
+        thêm vào danh sách yêu thích trước đó
       </p>
     ),
   });
@@ -95,14 +95,14 @@ const ProductCard = ({
     pendingMessage: (
       <p>
         Đang xóa
-        <span className="font-semibold italic">{`"${name}"`}</span> khỏi danh
+        <span className="font-semibold italic">"{`"${name}"`}"</span> khỏi danh
         sách yêu thích
       </p>
     ),
     successMessage: (
       <p>
         Đã xóa
-        <span className="font-semibold italic">{`"${name}"`}</span> khỏi danh
+        <span className="font-semibold italic">"{`"${name}"`}"</span> khỏi danh
         sách yêu thích
       </p>
     ),
@@ -128,14 +128,14 @@ const ProductCard = ({
             toast: true,
             pending: (
               <>
-                Đang thêm <span className="font-semibold">{name}</span> vào giỏ
-                hàng
+                Đang thêm <span className="font-semibold italic">"{name}"</span>{" "}
+                vào giỏ hàng
               </>
             ),
             success: (
               <>
-                Đã thêm <span className="font-semibold">{name}</span> vào giỏ
-                hàng thành công
+                Đã thêm <span className="font-semibold italic">"{name}"</span>{" "}
+                vào giỏ hàng thành công
               </>
             ),
           })

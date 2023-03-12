@@ -1,10 +1,11 @@
 import { useCart } from "@/hooks/useCart";
+import useEffectDidMount from "@/hooks/useEffectDidMount";
 import { deleteCartAction, updateCartAction } from "@/stores/cart/cartReducer";
 import { blockInvalidChar, cn } from "@/utils";
 import currency from "@/utils/currency";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import PopConfirm from "../PopConfirm";
 const ProductCart = ({
@@ -12,43 +13,54 @@ const ProductCart = ({
   productId,
   product: { thumbnail_url, name, price, real_price },
 }) => {
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openConfirmQuantity, setOpenConfirmQuantity] = useState(false);
+  let [_quantity, setQuantity] = useState(quantity);
+
   const dispatch = useDispatch();
   const { loading } = useCart();
   const _loadingSpin = loading?.[productId] || false;
 
-  const inputRef = useRef();
+  useEffectDidMount(() => {
+    if (_quantity !== quantity) {
+      setQuantity(quantity);
+    }
+  }, [quantity]);
+
   function decreaseQuantity() {
-    if (+inputRef.current.value === 1) return;
-    inputRef.current.value--;
+    if (_quantity <= 1) return;
+    _quantity--;
+    setQuantity(_quantity);
     dispatch(
       updateCartAction({
         id: productId,
         data: {
-          quantity: inputRef.current?.value,
+          quantity: _quantity,
         },
       })
     );
   }
   const increaseQuantity = () => {
-    inputRef.current.value++;
+    _quantity++;
+    setQuantity(_quantity);
     dispatch(
       updateCartAction({
         id: productId,
         data: {
-          quantity: inputRef.current?.value,
+          quantity: _quantity,
         },
       })
     );
   };
 
-  const onBlur = () => {
-    if (!inputRef.current.value) return (inputRef.current.value = quantity);
-    if (+inputRef.current.value !== quantity) {
+  const onBlur = (e) => {
+    if (!e.target.value) return setQuantity(quantity);
+    if (_quantity !== quantity) {
       dispatch(
         updateCartAction({
           id: productId,
           data: {
-            quantity: +inputRef.current.value,
+            quantity: _quantity,
           },
         })
       );
@@ -58,6 +70,8 @@ const ProductCart = ({
     if (/^0/.test(e.target.value)) {
       e.target.value = e.target.value.replace(/^0/, "");
     }
+
+    setQuantity(+e.target.value || "");
   };
   return (
     <Spin
@@ -108,19 +122,23 @@ const ProductCart = ({
               <div className="btn-group btn-quantity select-none">
                 <PopConfirm
                   title="Thông báo"
+                  open={openConfirmQuantity}
+                  onOpenChange={(status) => setOpenConfirmQuantity(status)}
+                  trigger="click"
                   description={
                     <p className="text-base m-0">
                       Bạn có muốn xóa{" "}
                       <span className="font-semibold">"sản phẩm"</span> này?
                     </p>
                   }
-                  disabled={+inputRef.current?.value > 1}
+                  disabled={_quantity > 1}
                   okText="Xóa"
-                  placement="leftBottom"
+                  placement="bottomRight"
                   loading={_loadingSpin}
                   overlayClassName="max-w-[300px]"
                   onConfirm={() => {
                     dispatch(deleteCartAction(productId));
+                    setOpenConfirmQuantity(false);
                   }}
                 >
                   <span
@@ -134,9 +152,8 @@ const ProductCart = ({
                   </span>
                 </PopConfirm>
                 <input
-                  ref={inputRef}
+                  value={_quantity}
                   className="border !border-y-transparent"
-                  defaultValue={quantity}
                   onChange={handleChangeInput}
                   onKeyDown={blockInvalidChar}
                   onBlur={onBlur}
@@ -156,6 +173,9 @@ const ProductCart = ({
               {/* Remove */}
               <PopConfirm
                 title="Thông báo"
+                onOpenChange={(status) => setOpenConfirm(status)}
+                trigger="click"
+                open={openConfirm}
                 description={
                   <p className="text-base m-0">
                     Bạn có muốn xóa{" "}
@@ -168,6 +188,7 @@ const ProductCart = ({
                 loading={_loadingSpin}
                 onConfirm={() => {
                   dispatch(deleteCartAction(productId));
+                  setOpenConfirm(false);
                 }}
               >
                 <span className="font-size-xs text-gray-400 ml-auto flex items-center gap-x-1 select-none cursor-pointer">
