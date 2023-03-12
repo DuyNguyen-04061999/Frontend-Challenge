@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
-import { setUserAction } from "@/stores/authReducer";
+import { setUserAction } from "@/stores/auth/authReducer";
 import {
   avatarDefault,
   clearWaititngQueue,
@@ -147,6 +147,7 @@ const ProfilePage = () => {
     enabled: false,
     queryFn: ({ params }) => fileService.uploadFile(...params),
   });
+  // ======
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -158,7 +159,7 @@ const ProfilePage = () => {
       const res = await uploadService(fileRef?.current);
       if (res.success) {
         avatar = res.link;
-        fileRef.current = null;
+        fileRef.current = null; //tắt trạng thái có hình mới
       }
     }
 

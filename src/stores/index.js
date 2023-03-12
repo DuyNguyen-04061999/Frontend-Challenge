@@ -1,10 +1,10 @@
-import authReducer, { getUserAction } from "./authReducer";
-import cacheReducer from "./cacheReducer";
-import drawerReducer from "./drawerReducer";
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import rootSaga from "./rootSaga";
+import authReducer, { getUserAction } from "./auth/authReducer";
+import cacheReducer from "./cacheReducer";
 import cartReducer, { getCartAction } from "./cart/cartReducer";
+import drawerReducer from "./drawerReducer";
+import rootSaga from "./rootSaga";
 
 const reducer = {
   auth: authReducer,
@@ -19,7 +19,8 @@ const store = configureStore({
   devTools: import.meta.env.VITE_ENV === "development",
 });
 
+sagaMiddleware.run(rootSaga);
+
 store.dispatch(getUserAction());
 store.dispatch(getCartAction());
-sagaMiddleware.run(rootSaga);
 export default store;

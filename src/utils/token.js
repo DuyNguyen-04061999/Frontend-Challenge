@@ -1,7 +1,7 @@
 const TOKEN_KEY = "token";
 const USER_KEY = "user";
-const PASSWORD_KEY = "password";
 const REMEMBER_KEY = "remember";
+const CART_KEY = "cart";
 export const setToken = (data) => {
   localStorage.setItem(TOKEN_KEY, JSON.stringify(data));
 };
@@ -30,4 +30,14 @@ export const getRemember = () => {
 };
 export const clearRemember = () => {
   localStorage.removeItem(REMEMBER_KEY);
+};
+
+export const setCart = (data) => {
+  localStorage.setItem(CART_KEY, JSON.stringify(data));
+};
+export const getCart = () => {
+  return JSON.parse(localStorage.getItem(CART_KEY)) || null;
+};
+export const clearCart = () => {
+  localStorage.removeItem(CART_KEY);
 };

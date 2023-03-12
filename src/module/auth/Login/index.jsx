@@ -1,27 +1,26 @@
 import Field from "@/components/Field";
 import { useForm } from "@/hooks/useForm";
-import { loginAction, loginByCodeAction } from "@/stores/authReducer";
+import { loginAction, loginByCodeAction } from "@/stores/auth/authReducer";
 import {
-  clearRemember,
   copyToClipBoard,
   getRemember,
+  setRemember,
   min,
   regex,
   require,
-  setRemember,
 } from "@/utils";
 import React, { memo, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import Button from "@/components/Button";
 import { useDispatch } from "react-redux";
-import handleError from "@/utils/handleError";
 import useQueryParams from "@/hooks/useQueryParams";
 import { message } from "antd";
 import ResetPasswordModal from "@/components/ResetPasswordModal";
 import { useOpenModal } from "@/hooks/useOpenModal";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
+  const { loading } = useAuth();
+  const _loading = loading.login || false;
   const [checkRemember, setCheckRemember] = useState(
     getRemember()?.checked || false
   );
@@ -41,66 +40,31 @@ const Login = () => {
     },
     {
       initialValue: {
-        username: getRemember()?.email,
+        username: getRemember()?.username,
         password: getRemember()?.password,
       },
     }
   );
 
-  const onLogin = async (e) => {
+  const onLogin = (e) => {
     e.preventDefault();
     if (validate()) {
-      setLoading(true);
-      try {
-        const res = await dispatch(loginAction(form)).unwrap();
-        if (checkRemember) {
-          setRemember({
-            email: form.username,
-            password: form.password,
-            checked: checkRemember,
-          });
-        } else {
-          clearRemember();
-        }
-        toast.success(
-          <p>
-            Chúc mừng{" "}
-            <span className="text-[#34d399] font-bold">{res?.name}</span> đã
-            đăng nhập thành công!
-          </p>,
-          {
-            position: "top-center",
-            autoClose: 2000,
-          }
-        );
-      } catch (error) {
-        handleError(error);
-      } finally {
-        setLoading(false);
+      dispatch(loginAction(form));
+
+      if (checkRemember) {
+        setRemember({
+          username: form.username,
+          password: form.password,
+          checked: true,
+        });
       }
     }
   };
 
   useEffect(() => {
-    (async () => {
-      if (code) {
-        try {
-          const res = await dispatch(loginByCodeAction({ code })).unwrap();
-          toast.success(
-            <p>
-              Chúc mừng{" "}
-              <span className="text-[#34d399] font-bold">{res?.name}</span> đã
-              đăng nhập thành công!
-            </p>,
-            {
-              position: "top-center",
-            }
-          );
-        } catch (error) {
-          handleError(error);
-        }
-      }
-    })();
+    if (code) {
+      dispatch(loginByCodeAction(code));
+    }
   }, []);
 
   const _copyToClipBoard = async (e) => {
@@ -178,7 +142,7 @@ const Login = () => {
                 </div>
                 <div className="col-12">
                   {/* Button */}
-                  <Button loading={loading}>Đăng nhập</Button>
+                  <Button loading={_loading}>Đăng nhập</Button>
                 </div>
                 <div className="col-12">
                   <p className="font-size-sm text-muted mt-5 mb-2 font-light">

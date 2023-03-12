@@ -7,12 +7,13 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import SearchDrawer from "../SearchDrawer";
 import { useDispatch } from "react-redux";
-import { logoutAction } from "@/stores/authReducer";
+import { logoutAction } from "@/stores/auth/authReducer";
 import { CheckCircleFilled } from "@ant-design/icons";
 import Button from "../Button";
 import CartDrawer from "../CartDrawer";
 import { useCart } from "@/hooks/useCart";
 import { onSetOpenCart } from "@/stores/cart/cartReducer";
+import { toast } from "react-toastify";
 
 const HeaderNavs = [
   {
@@ -328,7 +329,11 @@ const Header = () => {
                           label: (
                             <span
                               className="user-link block cursor-pointer"
-                              onClick={() => dispatch(logoutAction())}
+                              onClick={() => {
+                                toast.dismiss();
+                                dispatch(logoutAction());
+                                toast.warn("Bạn đã đăng xuất khỏi tài khoản");
+                              }}
                             >
                               Đăng xuất
                             </span>
