@@ -1,11 +1,13 @@
 import { message } from "antd";
 import { toast } from "react-toastify";
+import { clearWaititngQueue } from "./clearWaititngQueue";
 const handleError = (error, antd, key) => {
   console.log(
     "%cerror handleError.js line:3 ",
     "color: red; display: block; width: 100%;",
     error
   );
+  clearWaititngQueue();
   // toast.dismiss();
   if (antd) {
     return message.error({

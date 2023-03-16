@@ -5,7 +5,7 @@ export * from "./handleError";
 export * from "./handleToast";
 export * from "./interceptorsRequest";
 export * from "./interceptorsResponse";
-export * from "./token";
+export * from "./storage";
 export * from "./validate";
 export * from "./http"; //===== http phải để trc storageCache
 export * from "./items";

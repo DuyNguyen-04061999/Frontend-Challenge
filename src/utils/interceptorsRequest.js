@@ -1,4 +1,4 @@
-import { getToken } from "./token";
+import { getToken } from "./storage";
 
 //======= trc khi gui api ========
 export function interceptorsRequest(api) {

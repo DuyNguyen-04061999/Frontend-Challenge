@@ -1,5 +1,5 @@
 import { authService } from "@/services/auth.service";
-import { getToken, setToken } from "./token";
+import { getToken, setToken } from "./storage";
 
 let refreshTokenPromise = null;
 

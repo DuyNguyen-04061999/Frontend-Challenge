@@ -17,6 +17,7 @@ const useAction = ({
   const onAction = async (...params) => {
     if (flagRef.current) return;
     flagRef.current = true;
+    let res;
     try {
       if (antd) {
         message.open({
@@ -24,7 +25,7 @@ const useAction = ({
           key,
           content: pendingMessage,
         });
-        await promise(...params);
+        res = await promise(...params);
         if (successMessage) {
           message.open({
             key,
@@ -35,14 +36,14 @@ const useAction = ({
           message?.destroy(key);
         }
       } else {
-        await handleToastMessage({
+        res = await handleToastMessage({
           promise: promise(...params),
           pending: pendingMessage,
           success: successMessage,
           error: errorMessage,
         });
       }
-      await onSuccess?.();
+      await onSuccess?.(res);
     } catch (error) {
       if (antd) {
         handleError(error, antd, key);

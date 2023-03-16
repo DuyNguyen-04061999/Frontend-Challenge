@@ -15,7 +15,10 @@ const reducer = {
 const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
   reducer,
-  middleware: (gDM) => gDM().concat(sagaMiddleware),
+  middleware: (gDM) =>
+    gDM({
+      serializableCheck: false,
+    }).concat(sagaMiddleware),
   devTools: import.meta.env.VITE_ENV === "development",
 });
 

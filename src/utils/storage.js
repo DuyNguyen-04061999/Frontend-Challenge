@@ -2,6 +2,9 @@ const TOKEN_KEY = "token";
 const USER_KEY = "user";
 const REMEMBER_KEY = "remember";
 const CART_KEY = "cart";
+const LIST_ITEMS_KEY = "list-items";
+const PRECHEKOUT_RES = "precheckout-response";
+const PRECHEKOUT_DATA = "precheckout-data";
 export const setToken = (data) => {
   localStorage.setItem(TOKEN_KEY, JSON.stringify(data));
 };
@@ -40,4 +43,29 @@ export const getCart = () => {
 };
 export const clearCart = () => {
   localStorage.removeItem(CART_KEY);
+};
+
+export const setPreckoutData = (data) => {
+  localStorage.setItem(PRECHEKOUT_DATA, JSON.stringify(data));
+};
+export const getPreckoutData = () => {
+  return (
+    JSON.parse(localStorage.getItem(PRECHEKOUT_DATA)) || {
+      listItems: [],
+      promotionCode: [],
+      shippingMethod: "mien-phi"
+    }
+  );
+};
+export const clearPreckoutData = () => {
+  localStorage.removeItem(PRECHEKOUT_DATA);
+};
+export const setPreckoutResponse = (data) => {
+  localStorage.setItem(PRECHEKOUT_RES, JSON.stringify(data));
+};
+export const getPreckoutResponse = () => {
+  return JSON.parse(localStorage.getItem(PRECHEKOUT_RES)) || {};
+};
+export const clearPreckoutResponse = () => {
+  localStorage.removeItem(PRECHEKOUT_RES);
 };

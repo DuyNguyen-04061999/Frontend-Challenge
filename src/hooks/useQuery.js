@@ -115,7 +115,8 @@ const useQuery = ({
       }
     }
   };
-  const clearPreviousData = () => {
+  const clearPreviousData = (queryKey) => {
+    console.log("aa");
     if (keepPreviousData && dataRef.current[queryKey]) {
       delete dataRef.current[queryKey];
     }

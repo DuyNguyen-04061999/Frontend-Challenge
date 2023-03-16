@@ -1,9 +1,23 @@
 import { authService } from "@/services/auth.service";
 import { userService } from "@/services/user.service";
-import { clearToken, clearUser, getToken, setToken, setUser } from "@/utils";
+import {
+  clearCart,
+  clearPreckoutData,
+  clearPreckoutResponse,
+  clearToken,
+  clearUser,
+  getToken,
+  setToken,
+  setUser,
+} from "@/utils";
 import handleError from "@/utils/handleError";
 import { toast } from "react-toastify";
 import { call, put } from "redux-saga/effects";
+import {
+  clearCartAction,
+  onSetPreCheckoutData,
+  onSetPreCheckoutRes,
+} from "../cart/cartReducer";
 import {
   loginSuccessAction,
   onLogout,
@@ -44,8 +58,13 @@ export function* loginWorker({ payload: form } = {}) {
 
 export function* logoutWorker() {
   yield put(onLogout());
-  clearToken();
+  yield put(clearCartAction());
   clearUser();
+  clearToken();
+  clearPreckoutData();
+  yield put(onSetPreCheckoutData({}));
+  clearPreckoutResponse();
+  yield put(onSetPreCheckoutRes({}));
 }
 export function* setUserWorker({ payload }) {
   setUser(payload); //====localStorage

@@ -12,21 +12,19 @@ export const handleToastMessage = ({ promise, pending, success, error }) => {
         },
       }),
     },
-    ...(success && {
-      success: {
+    success: {
+      ...(success && {
         render() {
           return success;
         },
-      },
-    }),
+      }),
+    },
 
-    ...(error && {
-      error: {
-        render({ data }) {
-          // When the promise reject, data will contains the error
-          return error || data?.response?.data?.message;
-        },
+    error: {
+      render({ data }) {
+        // When the promise reject, data will contains the error
+        return error || data?.response?.data?.message;
       },
-    }),
+    },
   });
 };
