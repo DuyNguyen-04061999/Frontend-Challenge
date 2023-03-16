@@ -1,13 +1,34 @@
 import { cartService } from "@/services/cart.service";
-import { getToken, handleToastMessage, setCart } from "@/utils";
+import {
+  clearCart,
+  getToken,
+  handleToastMessage,
+  setCart,
+  setPreckoutData,
+  setPreckoutResponse,
+} from "@/utils";
 import handleError from "@/utils/handleError";
-import { call, delay, put, putResolve, race, take } from "redux-saga/effects";
+import {
+  call,
+  delay,
+  put,
+  putResolve,
+  race,
+  select,
+  take,
+} from "redux-saga/effects";
 import { onLogout } from "../auth/authReducer";
 import {
   getCartAction,
   onSetCart,
   onSetLoading,
+  onSetPreCheckoutData,
+  onSetPreCheckoutRes,
   setCartAction,
+  setPreCheckoutDataAction,
+  setPreCheckoutDataSuccessAction,
+  setPreCheckoutResAction,
+  updateCartQuantitySuccessAction,
 } from "./cartReducer";
 
 export function* updateCartWorker({
@@ -26,6 +47,7 @@ export function* updateCartWorker({
       yield call(cartService.updateQuantity, id, data);
     }
     yield putResolve(getCartAction());
+    yield put(updateCartQuantitySuccessAction(id));
   } catch (error) {
     console.error(error);
   } finally {
@@ -38,6 +60,14 @@ export function* deleteCartWorker({ payload: id } = {}) {
     yield put(onSetLoading({ id, loading: true }));
     yield call(cartService.removeItem, id);
     yield putResolve(getCartAction());
+    const {
+      cart: { preCheckoutData },
+    } = yield select();
+    let listItems = preCheckoutData.listItems;
+    if (listItems.find((e) => e === id)) {
+      listItems = listItems.filter((e) => e !== id);
+      yield put(setPreCheckoutDataAction({ ...preCheckoutData, listItems }));
+    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -47,6 +77,7 @@ export function* deleteCartWorker({ payload: id } = {}) {
 
 export function* getCartWorker() {
   if (getToken()) {
+    yield put(onSetLoading({ id: "getCart", loading: true }));
     try {
       const { cart } = yield race({
         cart: call(cartService.getCart),
@@ -57,6 +88,8 @@ export function* getCartWorker() {
       }
     } catch (error) {
       handleError(error);
+    } finally {
+      yield put(onSetLoading({ id: "getCart", loading: false }));
     }
   }
 }
@@ -66,5 +99,78 @@ export function* setCartWorker({ payload: data } = {}) {
   yield put(onSetCart(data)); //state
 }
 export function* clearCartWorker() {
+  clearCart();
   yield put(onSetCart(null));
+}
+export function* setPreCheckoutDataInitialWorker() {
+  yield put(
+    setPreCheckoutDataAction({
+      listItems: [],
+      promotionCode: [],
+      shippingMethod: "mien-phi",
+    })
+  );
+}
+export function* setPreCheckoutDataWorker({ payload }) {
+  setPreckoutData(payload); //localStorage
+  yield put(onSetPreCheckoutData(payload)); //state
+  yield put(setPreCheckoutDataSuccessAction()); //call api preCheckout
+}
+
+export function* setPreCheckoutResWorker({ payload }) {
+  setPreckoutResponse(payload);
+  yield put(onSetPreCheckoutRes(payload));
+}
+
+export function* getPreCheckoutResWorker({ type, payload }) {
+  const {
+    cart: { preCheckoutData },
+  } = yield select();
+  yield put(onSetLoading({ id: "checkout-board", loading: true }));
+  try {
+    if (type === updateCartQuantitySuccessAction.toString()) {
+      if (!preCheckoutData?.listItems?.includes(payload)) return;
+    }
+
+    const res = yield call(cartService.preCheckout, preCheckoutData);
+    yield putResolve(setPreCheckoutResAction(res?.data));
+  } catch (error) {
+    handleError(error);
+  } finally {
+    yield put(onSetLoading({ id: "checkout-board", loading: false }));
+  }
+}
+export function* getPromotionWorker({
+  payload: { code, onSuccess, onError } = {},
+} = {}) {
+  const {
+    cart: { preCheckoutData },
+  } = yield select();
+  try {
+    yield put(onSetLoading({ id: "loadingPromotion", loading: true }));
+    yield delay(500);
+    const res = yield call(cartService.getPromotion, code);
+    yield putResolve(
+      setPreCheckoutDataAction({
+        ...preCheckoutData,
+        promotionCode: [res?.data?.code],
+      })
+    );
+    onSuccess?.();
+  } catch (error) {
+    onError(error);
+  } finally {
+    yield putResolve(onSetLoading({ id: "loadingPromotion", loading: false }));
+  }
+}
+
+export function* removePromotionWorker({ payload: { onSuccess } } = {}) {
+  const {
+    cart: { preCheckoutData },
+  } = yield select();
+
+  yield putResolve(
+    setPreCheckoutDataAction({ ...preCheckoutData, promotionCode: [] })
+  );
+  onSuccess?.();
 }

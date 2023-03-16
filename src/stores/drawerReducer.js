@@ -9,6 +9,9 @@ const drawerSlice = createSlice({
     cart: {
       open: false,
     },
+    address: {
+      open: false,
+    },
   },
   reducers: {
     onCloseDrawer: (state, { payload: name }) => ({

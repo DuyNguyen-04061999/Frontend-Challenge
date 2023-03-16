@@ -1,13 +1,20 @@
+import { cn } from "@/utils";
 import React from "react";
 import Skeleton from "../Skeleton";
 
-const AddressPaymentCardLoading = ({ height = 274 }) => {
+const AddressPaymentCardLoading = ({
+  height: heightLoading = 274,
+  hideAction,
+}) => {
   return (
-    <div className="col-12">
+    <div className={cn({ "col-12": !hideAction })}>
       {/* Card */}
       <div
-        className="card card-lg bg-light mb-8 justify-center"
-        style={{ height: height }}
+        className={cn("card card-lg  justify-center", {
+          "mb-8 bg-light": !hideAction,
+          "border bg-white": hideAction,
+        })}
+        style={{ height: heightLoading }}
       >
         <div className="card-body">
           {/* Text */}

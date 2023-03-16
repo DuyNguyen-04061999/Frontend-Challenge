@@ -5,7 +5,7 @@ import {
   loginAction,
   loginByCodeAction,
   logoutAction,
-  setUserAction,
+  setUserAction
 } from "./authReducer";
 import {
   changePasswordByCodeWorker,
@@ -13,7 +13,7 @@ import {
   loginByCodeWorker,
   loginWorker,
   logoutWorker,
-  setUserWorker,
+  setUserWorker
 } from "./worker";
 
 export function* authSaga() {

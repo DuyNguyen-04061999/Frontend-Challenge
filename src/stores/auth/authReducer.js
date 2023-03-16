@@ -1,4 +1,4 @@
-import { getUser } from "@/utils/token";
+import { getUser } from "@/utils/storage";
 import { createAction, createSlice } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({

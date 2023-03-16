@@ -2,6 +2,7 @@ import { GuestRoute } from "@/components/GuestRoute";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { PATH } from "@/config";
 import { MainLayout } from "@/layouts/MainLayout";
+
 import { delayFallback } from "@/utils";
 
 import { lazy } from "react";
@@ -10,14 +11,19 @@ const Home = lazy(() => delayFallback(import("@/pages")));
 const Page404 = lazy(() => delayFallback(import("@/pages/404")));
 const ProductPage = lazy(() => delayFallback(import("@/pages/ProductPage")));
 const ProductDetailPage = lazy(() => delayFallback(import("@/pages/[slug]")));
-const AuthPage = lazy(() => delayFallback(import("@/pages/auth")));
-const ContactPage = lazy(() => delayFallback(import("@/pages/contact")));
-const FaqPage = lazy(() => delayFallback(import("@/pages/faq")));
+const AuthPage = lazy(() => delayFallback(import("@/pages/AuthPage")));
+const ContactPage = lazy(() => delayFallback(import("@/pages/ContactPage")));
+const FaqPage = lazy(() => delayFallback(import("@/pages/FaqPage")));
 const ResetPasswordPage = lazy(() =>
-  delayFallback(import("@/pages/reset-password"))
+  delayFallback(import("@/pages/ResetPasswordPage"))
 );
-const ShippingPage = lazy(() => delayFallback(import("@/pages/shipping")));
+const ViewCartPage = lazy(() => delayFallback(import("@/pages/ViewCartPage")));
 
+const ShippingPage = lazy(() => delayFallback(import("@/pages/ShippingPage")));
+const CheckoutPage = lazy(() => delayFallback(import("@/pages/CheckoutPage")));
+const OrderCompletedPage = lazy(() =>
+  delayFallback(import("@/pages/OrderCompletedPage"), 1500)
+);
 export const routers = [
   {
     element: <MainLayout />,
@@ -28,7 +34,21 @@ export const routers = [
       },
       {
         element: <PrivateRoute redirect={PATH.auth} />,
-        children: [profile],
+        children: [
+          profile,
+          {
+            element: <ViewCartPage />,
+            path: PATH.viewCart,
+          },
+          {
+            element: <CheckoutPage />,
+            path: PATH.checkout,
+          },
+          {
+            element: <OrderCompletedPage />,
+            path: PATH.orderCompleted,
+          },
+        ],
       },
       {
         element: <GuestRoute redirect={PATH.profile.index} />,

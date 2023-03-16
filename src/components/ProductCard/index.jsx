@@ -245,7 +245,7 @@ const ProductCard = ({
           </div>
           {/* Price */}
           <div className="card-product-price">
-            {real_price && price ? (
+            {real_price && price && real_price < price ? (
               <>
                 <span className="text-primary sale !text-[20px] mr-[4px]">
                   {currency(real_price)}

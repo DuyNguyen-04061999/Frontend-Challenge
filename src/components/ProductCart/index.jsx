@@ -1,101 +1,59 @@
+import { PATH } from "@/config";
 import { useCart } from "@/hooks/useCart";
-import useEffectDidMount from "@/hooks/useEffectDidMount";
-import { deleteCartAction, updateCartAction } from "@/stores/cart/cartReducer";
-import { blockInvalidChar, cn } from "@/utils";
+import { cn } from "@/utils";
 import currency from "@/utils/currency";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import PopConfirm from "../PopConfirm";
+import React from "react";
+import { generatePath, Link } from "react-router-dom";
+import Checkout from "../Checkout";
+import InputQuantity from "../InputQuantity";
 const ProductCart = ({
+  hideInput = false,
+  showCheckout = false,
+  price: priceTotal,
   quantity,
   productId,
-  product: { thumbnail_url, name, price, real_price },
+  product: { thumbnail_url, name, price, real_price, slug },
+  ...props
 }) => {
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [openConfirmQuantity, setOpenConfirmQuantity] = useState(false);
-  let [_quantity, setQuantity] = useState(quantity);
-
-  const dispatch = useDispatch();
   const { loading } = useCart();
   const _loadingSpin = loading?.[productId] || false;
-
-  useEffectDidMount(() => {
-    if (_quantity !== quantity) {
-      setQuantity(quantity);
-    }
-  }, [quantity]);
-
-  function decreaseQuantity() {
-    if (_quantity <= 1) return;
-    _quantity--;
-    setQuantity(_quantity);
-    dispatch(
-      updateCartAction({
-        id: productId,
-        data: {
-          quantity: _quantity,
-        },
-      })
-    );
-  }
-  const increaseQuantity = () => {
-    _quantity++;
-    setQuantity(_quantity);
-    dispatch(
-      updateCartAction({
-        id: productId,
-        data: {
-          quantity: _quantity,
-        },
-      })
-    );
-  };
-
-  const onBlur = (e) => {
-    if (!e.target.value) return setQuantity(quantity);
-    if (_quantity !== quantity) {
-      dispatch(
-        updateCartAction({
-          id: productId,
-          data: {
-            quantity: _quantity,
-          },
-        })
-      );
-    }
-  };
-  const handleChangeInput = (e) => {
-    if (/^0/.test(e.target.value)) {
-      e.target.value = e.target.value.replace(/^0/, "");
-    }
-
-    setQuantity(+e.target.value || "");
-  };
   return (
     <Spin
       spinning={_loadingSpin}
       indicator={<LoadingOutlined style={{ color: "#000", fontSize: 28 }} />}
     >
-      <li className="list-group-item animate-[fadeIn_1s]">
-        <div className="row align-items-center">
-          <div className="w-[120px]" title={name}>
+      <li
+        className={cn(
+          "list-group-item animate-[fadeIn_1s] flex items-center gap-x-5 last:border-b-0",
+          props?.className
+        )}
+      >
+        {showCheckout ? <Checkout productId={productId} /> : null}
+        <div className="row align-items-center flex-nowrap w-full">
+          <div className="w-[120px] flex-shrink-0" title={name}>
             {/* Image */}
-            <a href="./product.html">
+            <Link
+              to={generatePath(PATH.productDetail, {
+                slug,
+              })}
+            >
               <img className="img-fluid" src={thumbnail_url} alt="..." />
-            </a>
+            </Link>
           </div>
-          <div className="flex-1 px-2">
+          <div className="flex-grow px-2 w-full">
             {/* Title */}
             <p className="font-size-sm mb-6">
-              <a
-                className="text-body line-clamp-2 font-semibold"
-                href="./product.html"
+              <Link
+                className="text-body line-clamp-3 font-semibold"
+                to={generatePath(PATH.productDetail, {
+                  slug,
+                })}
                 title={name}
               >
                 {name}
-              </a>{" "}
+              </Link>{" "}
               <br />
               <span className="card-product-price">
                 {real_price < price ? (
@@ -109,93 +67,29 @@ const ProductCart = ({
                   </>
                 ) : (
                   <>
-                    <span className="sale text-primary !text-xl">
+                    <div className="sale text-primary !text-xl">
                       {currency(real_price || price)}
-                    </span>
+                    </div>
                   </>
                 )}
               </span>
+              {hideInput ? (
+                <span className="mt-5 block">
+                  x {quantity} ={" "}
+                  <span className="font-semibold">{currency(priceTotal)}</span>
+                </span>
+              ) : null}
             </p>
-            {/*Footer */}
-            <div className="d-flex align-items-center">
-              {/* Select */}
-              <div className="btn-group btn-quantity select-none">
-                <PopConfirm
-                  title="Thông báo"
-                  open={openConfirmQuantity}
-                  onOpenChange={(status) => setOpenConfirmQuantity(status)}
-                  trigger="click"
-                  description={
-                    <p className="text-base m-0">
-                      Bạn có muốn xóa{" "}
-                      <span className="font-semibold">"sản phẩm"</span> này?
-                    </p>
-                  }
-                  disabled={_quantity > 1}
-                  okText="Xóa"
-                  placement="bottomRight"
-                  loading={_loadingSpin}
-                  overlayClassName="max-w-[300px]"
-                  onConfirm={() => {
-                    dispatch(deleteCartAction(productId));
-                    setOpenConfirmQuantity(false);
-                  }}
-                >
-                  <span
-                    className={cn(
-                      "outline-none border-none cursor-pointer p-[10px] flex justify-center items-center"
-                    )}
-                    disabled
-                    onClick={decreaseQuantity}
-                  >
-                    -
-                  </span>
-                </PopConfirm>
-                <input
-                  value={_quantity}
-                  className="border !border-y-transparent"
-                  onChange={handleChangeInput}
-                  onKeyDown={blockInvalidChar}
-                  onBlur={onBlur}
-                  type="number"
-                />
 
-                <span
-                  className={cn(
-                    "outline-none border-none cursor-pointer p-[10px] flex justify-center items-center"
-                  )}
-                  disabled
-                  onClick={increaseQuantity}
-                >
-                  +
-                </span>
-              </div>
-              {/* Remove */}
-              <PopConfirm
-                title="Thông báo"
-                onOpenChange={(status) => setOpenConfirm(status)}
-                trigger="click"
-                open={openConfirm}
-                description={
-                  <p className="text-base m-0">
-                    Bạn có muốn xóa{" "}
-                    <span className="font-semibold">"sản phẩm"</span> này?
-                  </p>
-                }
-                okText="Xóa"
-                placement="bottomRight"
-                overlayClassName="max-w-[300px]"
-                loading={_loadingSpin}
-                onConfirm={() => {
-                  dispatch(deleteCartAction(productId));
-                  setOpenConfirm(false);
-                }}
-              >
-                <span className="font-size-xs text-gray-400 ml-auto flex items-center gap-x-1 select-none cursor-pointer">
-                  <i className="fe fe-trash" /> Xóa
-                </span>
-              </PopConfirm>
-            </div>
+            {/*Footer */}
+
+            {!hideInput ? (
+              <InputQuantity
+                _loadingSpin={_loadingSpin}
+                productId={productId}
+                quantity={quantity}
+              />
+            ) : null}
           </div>
         </div>
       </li>

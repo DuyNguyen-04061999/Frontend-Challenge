@@ -7,13 +7,14 @@ const Field = ({
   error,
   renderInput,
   onChange,
+  classNameGroup,
   ...props
 }) => {
   const _onChange = (e) => {
     onChange(e.target.value);
   };
   return (
-    <div className="form-group relative">
+    <div className={cn("form-group relative", classNameGroup)}>
       {label && <label htmlFor={props.id}>{label}</label>}
 
       {renderInput ? (
@@ -23,7 +24,6 @@ const Field = ({
           type={type}
           {...props}
           onChange={_onChange}
-          
           style={{ border: error ? "1px solid red" : "" }}
           className={cn(props.className, { "placeholder-red-500": !!error })}
         />

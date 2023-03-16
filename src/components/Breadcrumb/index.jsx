@@ -10,15 +10,14 @@ const Breadcrumb = ({ children }) => {
 };
 
 Breadcrumb.Item = ({ children, to }) => {
-  const Component = to ? Link : Fragment;
   return (
     <li className="breadcrumb-item">
       {to ? (
-        <Component className="text-gray-400" to={to}>
+        <Link className="text-gray-400" to={to}>
           {children}
-        </Component>
+        </Link>
       ) : (
-        <Component>{children}</Component>
+        <>{children}</>
       )}
     </li>
   );

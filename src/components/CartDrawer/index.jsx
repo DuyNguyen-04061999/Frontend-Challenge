@@ -1,7 +1,6 @@
 import { PATH } from "@/config";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import useQuery from "@/hooks/useQuery";
 import useWindowSize from "@/hooks/useWindowSize";
 import { onCloseDrawer } from "@/stores/drawerReducer";
 import { cartImg, cn, logInImg, shoppingImg } from "@/utils";
@@ -164,12 +163,16 @@ const CartDrawer = () => {
               </div>
               {/* Buttons */}
               <div className="modal-body">
-                <a
-                  className="btn btn-block btn-outline-dark"
-                  href="./shopping-cart.html"
+                <Button
+                  className="btn-block"
+                  outline
+                  onClick={() => {
+                    navigate(PATH.viewCart);
+                    onClose();
+                  }}
                 >
                   View Cart
-                </a>
+                </Button>
               </div>
             </div>
           </>
@@ -194,7 +197,7 @@ const CartDrawer = () => {
                 className="w-full mt-10"
                 onClick={() => {
                   navigate(PATH.auth);
-                  dispatch(onCloseDrawer("cart"));
+                  onClose();
                 }}
               >
                 Đăng nhập

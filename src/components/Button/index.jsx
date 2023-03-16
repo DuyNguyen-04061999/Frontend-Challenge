@@ -8,17 +8,19 @@ const Button = ({
   style = {},
   loading = false,
   onClick,
+  disabled = false,
 }) => {
   return (
     <button
       className={cn("btn btn-sm relative uppercase", className, {
         "cursor-not-allowed": loading,
+        "cursor-default": disabled,
         "btn-dark": !outline,
         "btn-outline-dark": outline,
       })}
       type="submit"
       style={style}
-      disabled={loading}
+      disabled={loading || disabled}
       onClick={onClick}
     >
       <LoadingOutlined
