@@ -78,7 +78,7 @@ const ProductPage = () => {
     name: queryParams.search,
     categories: match?.params.id,
     page: queryParams.page,
-    sort: queryParams.sort,
+    sort: queryParams?.sort,
     minPrice: queryParams.minPrice,
     maxPrice: queryParams.maxPrice,
     filterRating: queryParams.filterRating,

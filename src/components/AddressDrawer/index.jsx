@@ -6,7 +6,7 @@ import { onCloseDrawer } from "@/stores/drawerReducer";
 import { cn } from "@/utils";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import AddressCard from "../AddressCard";
 import Portal from "../Portal";
@@ -40,7 +40,6 @@ const ContentStyle = styled.div`
 
 const AddressDrawer = ({ selected, ...props }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const size = useWindowSize();
   const [height, setHeight] = useState();
   const headerRef = useRef();
@@ -65,19 +64,16 @@ const AddressDrawer = ({ selected, ...props }) => {
   const {
     data: { data: addressList = [] } = {},
     loading,
-    clearPreviousData,
-    fetchData: getAddressService,
+    clearAllData,
   } = useQuery({
     queryKey: "get-addressList",
-    keepPreviousData: true,
-    keepStorage: false,
     enabled: open,
     queryFn: () => userService.getAddress(),
     onSuccess: (res) => res?.data.sort((e) => (e.default ? -1 : 0)),
   });
 
   useEffect(() => {
-    return () => clearPreviousData("get-addressList");
+    return () => clearAllData();
   }, []);
   return (
     <Portal
@@ -133,8 +129,8 @@ const AddressDrawer = ({ selected, ...props }) => {
             className={cn(
               "border cursor-pointer bg-white hover:!bg-[#EEFFF3] transition-all"
             )}
+            clearAllDataDrawer={clearAllData}
             onClick={() => {
-              clearPreviousData("get-addressList");
               onClose();
             }}
           />

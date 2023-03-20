@@ -1,6 +1,8 @@
 import { cartService } from "@/services/cart.service";
 import {
   clearCart,
+  clearPreckoutData,
+  clearPreckoutResponse,
   getToken,
   handleToastMessage,
   setCart,
@@ -84,7 +86,7 @@ export function* getCartWorker() {
         logout: take(onLogout),
       });
       if (cart) {
-        yield put(setCartAction(cart?.data));
+        yield putResolve(setCartAction(cart?.data));
       }
     } catch (error) {
       handleError(error);
@@ -98,10 +100,18 @@ export function* setCartWorker({ payload: data } = {}) {
   setCart(data); //localStorage
   yield put(onSetCart(data)); //state
 }
+
 export function* clearCartWorker() {
   clearCart();
   yield put(onSetCart(null));
+
+  clearPreckoutData();
+  yield put(onSetPreCheckoutData({}));
+
+  clearPreckoutResponse();
+  yield put(onSetPreCheckoutRes({}));
 }
+
 export function* setPreCheckoutDataInitialWorker() {
   yield put(
     setPreCheckoutDataAction({

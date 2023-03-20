@@ -2,7 +2,7 @@ import React from "react";
 
 const ShippingPage = () => {
   return (
-    <div>
+    <>
       <nav className="py-5">
         <div className="container">
           <div className="row">
@@ -234,7 +234,7 @@ const ShippingPage = () => {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

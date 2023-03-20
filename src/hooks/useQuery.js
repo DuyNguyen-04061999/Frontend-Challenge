@@ -79,7 +79,6 @@ const useQuery = ({
       controllerRef.current.abort();
     };
   }, []);
-
   useEffect(() => {
     if (typeof reFetchRef.current === "boolean") {
       reFetchRef.current = true;
@@ -89,23 +88,26 @@ const useQuery = ({
   const getCacheDataOrPreviousData = () => {
     if (reFetchRef.current) return;
     //======= keep old data =======
-    if (keepPreviousData && dataRef.current[_queryKey] && _queryKey) {
-      return dataRef.current[_queryKey];
-    }
-    // ===== tránh call lại api khi trùng queryKey ====
-    if (_asyncFunction[_queryKey]) {
-      return _asyncFunction[_queryKey];
+    if (_queryKey) {
+      if (keepPreviousData && dataRef.current[_queryKey]) {
+        return dataRef.current[_queryKey];
+      }
+      // ===== tránh call lại api khi trùng queryKey ====
+      if (_asyncFunction[_queryKey]) {
+        return _asyncFunction[_queryKey];
+      }
+
+      if (_cache) {
+        return _cache.get(_queryKey);
+      }
     }
 
-    if (_cache) {
-      return _cache.get(_queryKey);
-    }
     return;
   };
 
   const setCacheDataOrPreviousData = (data) => {
     if (_queryKey && data) {
-      if (keepPreviousData && dataRef.current) {
+      if (keepPreviousData) {
         dataRef.current[_queryKey] = data;
       }
 
@@ -116,9 +118,16 @@ const useQuery = ({
     }
   };
   const clearPreviousData = (queryKey) => {
-    console.log("aa");
     if (keepPreviousData && dataRef.current[queryKey]) {
       delete dataRef.current[queryKey];
+    }
+  };
+  const clearAllData = () => {
+    dataRef.current = {};
+    for (const key in _asyncFunction) {
+      if (_asyncFunction.hasOwnProperty(key)) {
+        delete _asyncFunction[key];
+      }
     }
   };
   useEffect(() => {
@@ -161,6 +170,7 @@ const useQuery = ({
         setCacheDataOrPreviousData(res);
         reFetchRef.current = false;
         dispatch({ type: SET_LOADING, payload: false });
+
         if (!keepStorage) {
           delete _asyncFunction[_queryKey];
         }
@@ -192,6 +202,7 @@ const useQuery = ({
     status,
     fetchData,
     clearPreviousData,
+    clearAllData,
   };
 };
 export default useQuery;

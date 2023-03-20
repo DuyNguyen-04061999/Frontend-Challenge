@@ -8,6 +8,7 @@ import {
   min,
   regex,
   require,
+  clearRemember,
 } from "@/utils";
 import React, { memo, useEffect, useState } from "react";
 import Button from "@/components/Button";
@@ -57,6 +58,8 @@ const Login = () => {
           password: form.password,
           checked: true,
         });
+      } else {
+        clearRemember();
       }
     }
   };

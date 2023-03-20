@@ -26,8 +26,9 @@ const WishlistPage = () => {
     loading,
     fetchData: refetchWishListService,
   } = useQuery({
-    queryKey: [_qs],
+    queryKey: `wishList-${_qs}`,
     queryFn: () => productService.getWishlist(`?${_qs}`),
+    keepPreviousData: true,
     keepStorage: false,
   });
   useScrollTop(

@@ -10,9 +10,9 @@ const AddressPage = lazy(() =>
 const AddressActionPage = lazy(() =>
   delayFallback(import("@/pages/profile/so-dia-chi/action"))
 );
-const OrderPage = lazy(() => delayFallback(import("@/pages/profile/order")));
+const OrderPage = lazy(() => delayFallback(import("@/pages/profile/donhang")));
 const OrderDetailPage = lazy(() =>
-  delayFallback(import("@/pages/profile/orderDetail"))
+  delayFallback(import("@/pages/profile/donhang/[id]"))
 );
 const PaymentPage = lazy(() =>
   delayFallback(import("@/pages/profile/so-thanh-toan"))

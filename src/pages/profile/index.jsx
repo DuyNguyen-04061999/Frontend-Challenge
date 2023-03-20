@@ -270,6 +270,7 @@ const ProfilePage = () => {
             <Field
               className="form-control form-control-sm"
               id="accountEmail"
+              type="number"
               placeholder="Phone Number *"
               label="Phone Number *"
               {...register("phone")}

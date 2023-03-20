@@ -66,11 +66,9 @@ const ProductCart = ({
                     </span>
                   </>
                 ) : (
-                  <>
-                    <div className="sale text-primary !text-xl">
-                      {currency(real_price || price)}
-                    </div>
-                  </>
+                  <span className="sale text-primary !text-xl">
+                    {currency(real_price || price)}
+                  </span>
                 )}
               </span>
               {hideInput ? (

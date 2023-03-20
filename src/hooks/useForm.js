@@ -25,14 +25,20 @@ export const useForm = (
         let _form = { ...form, [name]: value }; //cập nhật giá trị mới nhất
         if (Array.isArray(rules[name]) && rules[name].length > 0) {
           const errObj = {};
+
+          //tạo error mới
           errObj[name] = validate(
             {
               [name]: rules[name],
             },
             _form
-          )[name]; //validate trong lúc nhập data
+          )[name];
+          // setErrors((error) => ({ ...error, [name]: errObj[name] })); //validate trong lúc nhập data
+          // if (!_form[name]?.trim()) {
+          //   setErrors((error) => ({ ...error, [name]: "" }));
+          // } khi xóa thì tắt validate
           setErrors((error) => ({ ...error, [name]: "" })); //mất error khi nhập
-
+          //validate field phụ thuộc
           if (
             Array.isArray(dependencies[name]) &&
             dependencies[name].length > 0
