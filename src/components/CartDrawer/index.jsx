@@ -91,7 +91,6 @@ const CartDrawer = () => {
       >
         {user && cart ? (
           <>
-            {/* Close */}
             <button
               type="button"
               className="close !outline-none"
@@ -102,9 +101,6 @@ const CartDrawer = () => {
               <i className="fe fe-x" aria-hidden="true" />
             </button>
 
-            {/* Header*/}
-
-            {/* === */}
             <div
               className="modal-header line-height-fixed font-size-lg"
               ref={headerRef}
@@ -113,9 +109,7 @@ const CartDrawer = () => {
                 Your Cart ({totalQuantity ? totalQuantity : 0})
               </strong>
             </div>
-            {/* ==== */}
 
-            {/* List group */}
             {totalQuantity <= 0 ? (
               <div className="flex flex-col items-center px-5 pt-2 animate-[fadeIn_1s]">
                 <div className="w-full flex justify-center">
@@ -161,7 +155,6 @@ const CartDrawer = () => {
                 <strong>Tổng cộng:</strong>{" "}
                 <strong className="ml-auto">{currency(subTotal)}</strong>
               </div>
-              {/* Buttons */}
               <div className="modal-body">
                 <Button
                   className="btn-block"

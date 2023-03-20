@@ -58,13 +58,10 @@ export function* loginWorker({ payload: form } = {}) {
 
 export function* logoutWorker() {
   yield put(onLogout());
-  yield put(clearCartAction());
   clearUser();
   clearToken();
-  clearPreckoutData();
-  yield put(onSetPreCheckoutData({}));
-  clearPreckoutResponse();
-  yield put(onSetPreCheckoutRes({}));
+
+ 
 }
 export function* setUserWorker({ payload }) {
   setUser(payload); //====localStorage

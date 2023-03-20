@@ -78,7 +78,7 @@ const ResetPasswordPage = () => {
                       {/* Email */}
                       <Field
                         className="form-control form-control-sm"
-                        id="password"
+                        id="confirmPassword"
                         placeholder="Confirm password *"
                         label="Confirm password *"
                         type="password"

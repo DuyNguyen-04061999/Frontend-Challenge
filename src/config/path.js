@@ -10,8 +10,10 @@ export const PATH = {
   orderCompleted: "/dat-hang-thanh-cong",
   profile: {
     index: PROFILE,
+
     order: PROFILE + "/don-hang",
     orderDetail: PROFILE + "/don-hang/:id",
+    
     wishList: PROFILE + "/san-pham-yeu-thich",
 
     address: PROFILE + "/so-dia-chi",

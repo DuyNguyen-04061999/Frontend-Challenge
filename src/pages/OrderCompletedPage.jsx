@@ -1,10 +1,16 @@
 import { PATH } from "@/config";
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import {
+  generatePath,
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 const OrderCompletedPage = () => {
   const { state } = useLocation();
-
+  const navigate = useNavigate();
   if (!state?._id) {
     return <Navigate to={PATH.products} />;
   }
@@ -27,9 +33,12 @@ const OrderCompletedPage = () => {
               accont.
             </p>
             {/* Button */}
-            <a className="btn btn-dark" href="./account-order.html">
+            <Link
+              className="btn btn-dark"
+              to={generatePath(PATH.profile.orderDetail, { id: state?._id })}
+            >
               View My Orders
-            </a>
+            </Link>
           </div>
         </div>
       </div>

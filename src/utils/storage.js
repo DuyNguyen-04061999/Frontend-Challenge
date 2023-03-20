@@ -53,7 +53,7 @@ export const getPreckoutData = () => {
     JSON.parse(localStorage.getItem(PRECHEKOUT_DATA)) || {
       listItems: [],
       promotionCode: [],
-      shippingMethod: "mien-phi"
+      shippingMethod: "mien-phi",
     }
   );
 };

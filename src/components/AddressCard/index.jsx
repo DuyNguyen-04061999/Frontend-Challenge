@@ -35,6 +35,7 @@ const AddressCard = withListLoading(
       successMessage: "Đã đặt lại địa chỉ mặc định",
       onSuccess: async (res) => {
         await refetchAddress(res?.data);
+        props?.clearAllDataDrawer();
       },
     });
     // =====

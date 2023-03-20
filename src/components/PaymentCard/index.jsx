@@ -2,7 +2,6 @@ import { PATH } from "@/config";
 import useAction from "@/hooks/useAction";
 import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
-import { handleToastMessage } from "@/utils";
 import withListLoading from "@/utils/withListLoading";
 import moment from "moment/moment";
 import React from "react";

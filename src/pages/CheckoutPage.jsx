@@ -358,7 +358,7 @@ const CheckoutPage = () => {
               <div className="product-card">
                 <div className="card-body">
                   <ul className="list-group list-group-lg list-group-flush-x">
-                    {listItems.map((e) => (
+                    {listItems?.map((e) => (
                       <ProductCart
                         key={e?.productId}
                         {...e}

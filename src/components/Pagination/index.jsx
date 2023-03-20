@@ -57,7 +57,10 @@ const Pagination = ({ totalPage, page = "page", style = {} }) => {
       <ul className="pagination pagination-sm text-gray-400">
         <li
           className="page-item"
-          style={{ visibility: currentPage <= 1 ? "hidden" : "visible" }}
+          style={{
+            visibility:
+              currentPage <= 1 || totalPage <= 5 ? "hidden" : "visible",
+          }}
         >
           <Link className="page-link page-link-arrow" to={firstLink}>
             <i className="fa fa-caret-left" />
@@ -86,7 +89,8 @@ const Pagination = ({ totalPage, page = "page", style = {} }) => {
         <li
           className="page-item"
           style={{
-            visibility: currentPage >= totalPage ? "hidden" : "visible",
+            visibility:
+              currentPage >= totalPage || totalPage <= 5 ? "hidden" : "visible",
           }}
         >
           <Link className="page-link page-link-arrow" to={lastLink}>
