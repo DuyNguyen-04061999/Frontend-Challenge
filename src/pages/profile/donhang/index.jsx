@@ -43,12 +43,12 @@ const OrderPage = () => {
 
   for (const { key, status } of queries) {
     const { data: { count } = {} } = useQuery({
-      queryKey: key,
       queryFn: () => orderService.count(`?status=${status}`),
     });
     counts[key] = count;
   }
   const { countConfirm, countPending, countShipping } = counts;
+
   const queryList = [
     "all",
     "pending",

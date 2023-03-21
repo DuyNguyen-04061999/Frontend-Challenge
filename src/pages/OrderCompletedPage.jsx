@@ -1,16 +1,9 @@
 import { PATH } from "@/config";
 import React from "react";
-import {
-  generatePath,
-  Link,
-  Navigate,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { generatePath, Link, Navigate, useLocation } from "react-router-dom";
 
 const OrderCompletedPage = () => {
   const { state } = useLocation();
-  const navigate = useNavigate();
   if (!state?._id) {
     return <Navigate to={PATH.products} />;
   }

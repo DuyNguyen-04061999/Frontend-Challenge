@@ -88,11 +88,7 @@ const ResetPasswordModal = ({ open, onCancel }) => {
             />
 
             {/* Button */}
-            <Button
-              className="mx-auto mt-7"
-              loading={loading}
-              style={{ width: 154 }}
-            >
+            <Button className="mx-auto mt-7" loading={loading}>
               Reset Password
             </Button>
           </form>

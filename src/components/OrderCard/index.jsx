@@ -9,6 +9,7 @@ const OrderCard = ({ ...props }) => {
   const navigate = useNavigate();
   const { finishedDate, status, listItems, _id } = props || {};
   const checkPayback = moment(finishedDate).add(7, "days") >= moment();
+  
   return (
     <div className="card card-lg mb-5 border">
       <OrderStatus order={props} />

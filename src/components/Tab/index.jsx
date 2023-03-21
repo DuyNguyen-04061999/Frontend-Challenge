@@ -3,7 +3,6 @@ import { cn } from "@/utils";
 import React, {
   createContext,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -70,22 +69,24 @@ Tab.Title = ({ children, className = "" }) => {
 };
 
 Tab.Content = ({ children, className, index }) => {
-  const firstRender = useRef(false);
+  // const firstRender = useRef(false);
   const { contentIndexRef, activeIndex, callApiOnActive } = useContext(Context);
   const indexContent = index ?? useMemo(() => ++contentIndexRef.current, []);
   const active = indexContent === activeIndex;
 
-  useEffect(() => {
-    if (active) {
-      firstRender.current = true;
-    }
-  }, [active]);
+  // useEffect(() => {
+  //   if (active) {
+  //     firstRender.current = true;
+  //   }
+  // }, [active]);
 
-  if (callApiOnActive && !active) {
-    if (!firstRender.current) {
-      return null;
-    }
-  }
+  // if (callApiOnActive && !active) {
+  //   if (!firstRender.current) {
+  //     return null;
+  //   }
+  // }
+
+  if (callApiOnActive && !active) return null;
 
   return (
     <div className={cn(className, { "active show": active })}>{children}</div>
