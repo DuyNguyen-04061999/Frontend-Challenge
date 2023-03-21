@@ -1,7 +1,3 @@
-import classNames from "classnames";
-
-// export { default as cn } from "classNames";
-export const cn = classNames;
 export * from "./createArray";
 export * from "./currency";
 export * from "./handleError";
@@ -23,5 +19,6 @@ export * from "./assets";
 export * from "./handleToastMessage";
 export * from "./delayFallback";
 export * from "./blockInValidChar";
+export * from "./classNames";
 // =====
 export * from "./storageCache";
