@@ -54,7 +54,6 @@ const ProductPage = () => {
   const [minPrice, setMinPrice] = useState(queryParams.minPrice || "");
   const [maxPrice, setMaxPrice] = useState(queryParams.maxPrice || "");
   const match = useMatch(PATH.category);
-  console.log("match :>> ", match);
   //Khống chế việc render lần 1 cho price
   useEffectDidMount(() => {
     setMinPrice("");
