@@ -16,7 +16,7 @@ const Radio = ({ children, rating }) => {
         type="radio"
         name={rating}
         checked={value === rating}
-        onChange={() => onChange(rating)}
+        readOnly
       />
       <label className="custom-control-label">{children}</label>
     </div>

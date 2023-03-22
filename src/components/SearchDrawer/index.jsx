@@ -66,7 +66,7 @@ const SearchDrawer = () => {
   const [heightBody, setHeightBody] = useState();
 
   const { categoryList = [] } = useCategories([], open);
-  const category = useCategory(+idCategory);
+  const category = useCategory(+idCategory, [], open);
 
   const topRef = useRef();
   const buttonRef = useRef();
