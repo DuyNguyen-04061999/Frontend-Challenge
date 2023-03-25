@@ -14,6 +14,7 @@ import CartDrawer from "../CartDrawer";
 import { useCart } from "@/hooks/useCart";
 import { onSetOpenCart } from "@/stores/cart/cartReducer";
 import { toast } from "react-toastify";
+import { useTranslate } from "../TranslateProvider";
 
 const HeaderNavs = [
   {
@@ -37,12 +38,17 @@ const HeaderNavs = [
     nav: "Sản phẩm khuyến mãi",
   },
 ];
-
+const LANG = {
+  vi: "Tiếng Việt",
+  eng: "English",
+  chi: "China",
+};
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { cart, open } = useCart();
+  const { t, setLang, lang } = useTranslate();
   return (
     <>
       <SearchDrawer />
@@ -135,25 +141,32 @@ const Header = () => {
                 </li>
                 <li className="nav-item dropdown">
                   {/* Toggle */}
-                  <a
-                    className="nav-link dropdown-toggle"
-                    data-toggle="dropdown"
-                    href="#"
+                  <Dropdown
+                    trigger="click"
+                    arrow
+                    placement="bottom"
+                    menu={createItem(
+                      {
+                        key: "1",
+                        label: "English",
+                        onClick: () => setLang("eng"),
+                      },
+                      {
+                        key: "2",
+                        label: "VIE",
+                        onClick: () => setLang("vi"),
+                      },
+                      {
+                        key: "3",
+                        label: "CHI",
+                        onClick: () => setLang("chi"),
+                      }
+                    )}
                   >
-                    English
-                  </a>
-                  {/* Menu */}
-                  <div className="dropdown-menu minw-0">
-                    <a className="dropdown-item" href="#">
-                      English
+                    <a className="nav-link dropdown-toggle cursor-pointer inline-block select-none">
+                      {LANG?.[lang]}
                     </a>
-                    <a className="dropdown-item" href="#">
-                      French
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      German
-                    </a>
-                  </div>
+                  </Dropdown>
                 </li>
               </ul>
               {/* Nav */}
@@ -232,7 +245,7 @@ const Header = () => {
                       }
                       to={e.to}
                     >
-                      {e.nav}
+                      {t(e.nav)}
                     </NavLink>
                   </li>
                 ))}

@@ -2,7 +2,6 @@ const TOKEN_KEY = "token";
 const USER_KEY = "user";
 const REMEMBER_KEY = "remember";
 const CART_KEY = "cart";
-const LIST_ITEMS_KEY = "list-items";
 const PRECHEKOUT_RES = "precheckout-response";
 const PRECHEKOUT_DATA = "precheckout-data";
 export const setToken = (data) => {
