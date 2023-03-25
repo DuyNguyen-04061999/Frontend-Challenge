@@ -10,7 +10,9 @@ import profile from "./profile";
 const Home = lazy(() => delayFallback(import("@/pages")));
 const Page404 = lazy(() => delayFallback(import("@/pages/404")));
 const ProductPage = lazy(() => delayFallback(import("@/pages/product")));
-const ProductDetailPage = lazy(() => delayFallback(import("@/pages/product/[slug]")));
+const ProductDetailPage = lazy(() =>
+  delayFallback(import("@/pages/product/[slug]"))
+);
 const AuthPage = lazy(() => delayFallback(import("@/pages/AuthPage")));
 const ContactPage = lazy(() => delayFallback(import("@/pages/ContactPage")));
 const FaqPage = lazy(() => delayFallback(import("@/pages/FaqPage")));
@@ -87,10 +89,10 @@ export const routers = [
         element: <ContactPage />,
         path: PATH.contact,
       },
+      {
+        element: <Page404 />,
+        path: "*",
+      },
     ],
-  },
-  {
-    element: <Page404 />,
-    path: "*",
   },
 ];

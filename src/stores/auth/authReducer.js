@@ -36,3 +36,6 @@ export const loginByCodeAction = createAction(`${name}/login-by-code`);
 export const changePasswordByCodeAction = createAction(
   `${name}/change-password-by-code`
 );
+export const changePasswordByCodeSuccessAction = createAction(
+  `${name}/change-password-by-code-success`
+);

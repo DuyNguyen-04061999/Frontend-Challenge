@@ -6,8 +6,7 @@ const Pagination = ({ totalPage, page = "page", style = {} }) => {
   const [searchParam] = useSearchParams();
   const currentPage = Number(searchParam.get(page) || 1);
   const { pathname } = useLocation();
-  const fakeParam = new URLSearchParams(searchParam);
-
+  const _searchParam = new URLSearchParams(searchParam);
   const renderPaginate = () => {
     let startPage = currentPage - 2;
     let endPage = currentPage + 2;
@@ -23,8 +22,8 @@ const Pagination = ({ totalPage, page = "page", style = {} }) => {
       startPage = endPage - 6 > 0 ? endPage - 6 : 1;
     }
     for (let i = startPage; i <= endPage; i++) {
-      fakeParam.set(page, i);
-      const link = `${pathname}?${fakeParam.toString()}`;
+      _searchParam.set(page, i);
+      const link = `${pathname}?${_searchParam.toString()}`;
       list.push(
         <li className={cn("page-item", { active: currentPage === i })} key={i}>
           <Link className="page-link cursor-pointer" to={link}>
@@ -36,17 +35,17 @@ const Pagination = ({ totalPage, page = "page", style = {} }) => {
 
     return list;
   };
-  fakeParam.set(page, currentPage - 1);
-  const prevLink = `${pathname}?${fakeParam.toString()}`;
+  _searchParam.set(page, currentPage - 1);
+  const prevLink = `${pathname}?${_searchParam.toString()}`;
 
-  fakeParam.set(page, currentPage + 1);
-  const nextLink = `${pathname}?${fakeParam.toString()}`;
+  _searchParam.set(page, currentPage + 1);
+  const nextLink = `${pathname}?${_searchParam.toString()}`;
 
-  fakeParam.set(page, 1);
-  const firstLink = `${pathname}?${fakeParam.toString()}`;
+  _searchParam.set(page, 1);
+  const firstLink = `${pathname}?${_searchParam.toString()}`;
 
-  fakeParam.set(page, totalPage);
-  const lastLink = `${pathname}?${fakeParam.toString()}`;
+  _searchParam.set(page, totalPage);
+  const lastLink = `${pathname}?${_searchParam.toString()}`;
 
   if (totalPage <= 1) return null;
   return (

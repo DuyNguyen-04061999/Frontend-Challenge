@@ -1,21 +1,28 @@
 import Button from "@/components/Button";
 import Field from "@/components/Field";
+import { PATH } from "@/config";
 import { useAuth } from "@/hooks/useAuth";
 import useBodyClass from "@/hooks/useBodyClass";
 import { useForm } from "@/hooks/useForm";
 import useQueryParams from "@/hooks/useQueryParams";
 import { changePasswordByCodeAction } from "@/stores/auth/authReducer";
 import { confirm, min, require } from "@/utils";
-import handleError from "@/utils/handleError";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ResetPasswordPage = () => {
   useBodyClass("bg-light");
+  const navigate = useNavigate();
   const { loading } = useAuth();
   const _loading = loading["changeCode"] || false;
   const [{ code }] = useQueryParams();
+  useEffect(() => {
+    if (!code) {
+      navigate(PATH.auth);
+    }
+  }, []);
   const dispatch = useDispatch();
   const { register, form, formRef, validate } = useForm(
     {
@@ -40,7 +47,20 @@ const ResetPasswordPage = () => {
   const onChangePassword = async (e) => {
     e.preventDefault();
     if (validate()) {
-      dispatch(changePasswordByCodeAction({ ...form, code }));
+      dispatch(
+        changePasswordByCodeAction({
+          ...form,
+          code,
+          onSuccess: (user) =>
+            toast.success(
+              <p>
+                Chào mừng{" "}
+                <span className="text-[#34d399] font-bold">{user?.name}</span>{" "}
+                quay trở lại
+              </p>
+            ),
+        })
+      );
     }
   };
   return (
