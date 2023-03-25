@@ -637,7 +637,7 @@ const ProductDetailPage = () => {
                     <ReviewCardList
                       loading={loadingGetReview}
                       loadingCount={3}
-                      emptyText={
+                      empty={
                         <EmptyText>
                           Sản phẩm hiện tại chưa có đánh giá nào
                         </EmptyText>
