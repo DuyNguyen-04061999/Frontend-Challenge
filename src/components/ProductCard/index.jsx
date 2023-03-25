@@ -38,11 +38,7 @@ const ProductCard = ({
   const img1 =
     images?.[0]?.large_url || thumbnail_url || images?.[1]?.large_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
-
   const categoryItem = useCategory(categories);
-  const linkDetail = generatePath(PATH.productDetail, {
-    slug,
-  });
   const linkCategory = useMemo(() => {
     if (categoryItem) {
       return generatePath(PATH.category, {
@@ -161,7 +157,7 @@ const ProductCard = ({
         {/* Image */}
         <div className="card-img">
           {/* Image */}
-          <Link className="card-img-hover" to={linkDetail}>
+          <Link className="card-img-hover" to={`/${slug}`}>
             <img className="card-img-top card-img-back" src={img2} alt="..." />
             <img className="card-img-top card-img-front" src={img1} alt="..." />
           </Link>

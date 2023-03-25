@@ -40,7 +40,7 @@ const PreCheckoutBoard = ({ hideAction = false }) => {
                 <li className="list-group-item d-flex">
                   <span>Shipping</span>{" "}
                   <span className="ml-auto font-size-sm">
-                    {currency(shipping.shippingPrice)}
+                    {currency(shipping?.shippingPrice)}
                   </span>
                 </li>
               )}

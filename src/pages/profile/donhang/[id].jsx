@@ -20,7 +20,6 @@ const OrderDetailPage = () => {
       toast.error("Đơn hàng không tồn tại");
       navigate(PATH.profile.order);
     },
-    limitDuration: 1000,
   });
 
   const PAYMENT = {
@@ -159,12 +158,15 @@ const OrderDetailPage = () => {
                         Hủy đơn
                       </Button>
                     )}
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-block btn-outline-dark"
-                    >
-                      Viết review
-                    </a>
+                    {status === "finished" && !e?.review && (
+                      <Link
+                        to={`/${e?.product?.slug}`}
+                        state={{ orderId: _id }}
+                        className="btn btn-sm btn-block btn-outline-dark"
+                      >
+                        Viết review
+                      </Link>
+                    )}
                   </div>
                 </div>
               </li>
