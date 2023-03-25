@@ -2,9 +2,9 @@ import { PATH } from "@/config";
 import { useAuth } from "@/hooks/useAuth";
 import { onOpenDrawer } from "@/stores/drawerReducer";
 import { avatarDefault, cn, createItem } from "@/utils";
-import { Dropdown, Popover } from "antd";
+import { Badge, Dropdown, Popover } from "antd";
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import SearchDrawer from "../SearchDrawer";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "@/stores/auth/authReducer";
@@ -40,6 +40,7 @@ const HeaderNavs = [
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { cart, open } = useCart();
   return (
@@ -274,7 +275,13 @@ const Header = () => {
                           Thêm sản phẩm thành công
                         </h5>
                       </div>
-                      <Button className="mt-5 btn-xs text-sm">
+                      <Button
+                        className="mt-5 btn-xs text-sm"
+                        onClick={() => {
+                          navigate(PATH.viewCart);
+                          dispatch(onSetOpenCart(false));
+                        }}
+                      >
                         ĐI ĐẾN GIỎ HÀNG VÀ THANH TOÁN
                       </Button>
                     </>
@@ -285,13 +292,13 @@ const Header = () => {
                     onClick={() => dispatch(onOpenDrawer("cart"))}
                   >
                     <a className="nav-link cursor-pointer" data-toggle="modal">
-                      <span
-                        data-cart-items={
-                          (user && cart && cart?.totalQuantity) || null
-                        }
+                      <Badge
+                        count={user && cart && cart?.totalQuantity}
+                        size="small"
+                        offset={[0, 1]}
                       >
                         <i className="fe fe-shopping-cart" />
-                      </span>
+                      </Badge>
                     </a>
                   </li>
                 </Popover>

@@ -11,13 +11,19 @@ import { useSearchParams } from "react-router-dom";
 
 const Context = createContext();
 
-const Tab = ({ children, callApiOnActive, queryList, keySearch }) => {
+const Tab = ({
+  children,
+  callApiOnActive,
+  queryList,
+  keySearch,
+  defaultValue = 0,
+}) => {
   const titleIndexRef = useRef(-1);
   const contentIndexRef = useRef(-1);
   const [search] = useSearchParams();
   const defaultIndex = search.get(keySearch)
     ? queryList?.indexOf(search.get(keySearch))
-    : 0;
+    : defaultValue;
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
 
   useEffectDidMount(() => {

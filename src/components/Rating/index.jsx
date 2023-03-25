@@ -6,7 +6,8 @@ const RatingStyled = styled.span`
   height: 14px;
   background: url(/img/star-gray.svg) repeat-x;
   position: relative;
-
+  display: inline-block;
+  overflow: hidden;
   &::before {
     content: "";
     position: absolute;

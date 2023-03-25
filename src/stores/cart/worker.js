@@ -24,6 +24,7 @@ import {
   getCartAction,
   onSetCart,
   onSetLoading,
+  onSetOpenCart,
   onSetPreCheckoutData,
   onSetPreCheckoutRes,
   setCartAction,
@@ -34,7 +35,7 @@ import {
 } from "./cartReducer";
 
 export function* updateCartWorker({
-  payload: { id, data, toast = false, pending, success } = {},
+  payload: { id, data, toast = false, pending, success, alert } = {},
 } = {}) {
   try {
     yield delay(300);
@@ -49,6 +50,13 @@ export function* updateCartWorker({
       yield call(cartService.updateQuantity, id, data);
     }
     yield putResolve(getCartAction());
+    if (alert) {
+      window.scroll({
+        top: 0,
+        behavior: "smooth",
+      });
+      yield putResolve(onSetOpenCart(true));
+    }
     yield put(updateCartQuantitySuccessAction(id));
   } catch (error) {
     console.error(error);

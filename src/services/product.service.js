@@ -5,6 +5,8 @@ export const productService = {
   getProducts: (query = "", signal) =>
     http.get(`${PRODUCT_API}${query}`, { signal }),
 
+  getProductDetail: (id) => http.get(`${PRODUCT_API}/${id}`),
+
   getCategories: (signal) => http.get(`${PRODUCT_API}/categories`, { signal }),
 
   getWishlist: (query = "", signal) =>

@@ -18,7 +18,7 @@ const Field = ({
       {label && <label htmlFor={props.id}>{label}</label>}
 
       {renderInput ? (
-        renderInput({ onChange, error, type, ...props })
+        renderInput({ _onChange, error, type, ...props })
       ) : (
         <input
           type={type}

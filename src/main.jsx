@@ -11,19 +11,19 @@ import { OpenModalProvider } from "./hooks/useOpenModal";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
-  <BrowserRouter>
-    <Provider store={store}>
-      <OpenModalProvider>
-        <App />
-      </OpenModalProvider>
-      <ToastContainer
-        style={{ fontSize: "16px" }}
-        pauseOnHover={false}
-        limit={3}
-        containerId="toast-id"
-        autoClose={2000}
-      />
-    </Provider>
-  </BrowserRouter>
+    <BrowserRouter>
+      <Provider store={store}>
+        <OpenModalProvider>
+          <App />
+        </OpenModalProvider>
+        <ToastContainer
+          style={{ fontSize: "16px" }}
+          pauseOnHover={false}
+          limit={3}
+          containerId="toast-id"
+          autoClose={2000}
+        />
+      </Provider>
+    </BrowserRouter>
   // </React.StrictMode>
 );
