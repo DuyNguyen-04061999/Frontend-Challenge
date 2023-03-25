@@ -18,6 +18,7 @@ import { message } from "antd";
 import ResetPasswordModal from "@/components/ResetPasswordModal";
 import { useOpenModal } from "@/hooks/useOpenModal";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { loading } = useAuth();
@@ -50,7 +51,22 @@ const Login = () => {
   const onLogin = (e) => {
     e.preventDefault();
     if (validate()) {
-      dispatch(loginAction(form));
+      dispatch(
+        loginAction({
+          ...form,
+          onSuccess: (user) =>
+            toast.success(
+              <p>
+                Chúc mừng{" "}
+                <span className="text-[#34d399] font-bold">{user?.name}</span>{" "}
+                đã đăng nhập thành công!
+              </p>,
+              {
+                position: "top-center",
+              }
+            ),
+        })
+      );
 
       if (checkRemember) {
         setRemember({
@@ -66,7 +82,22 @@ const Login = () => {
 
   useEffect(() => {
     if (code) {
-      dispatch(loginByCodeAction(code));
+      dispatch(
+        loginByCodeAction({
+          code,
+          onSuccess: (user) =>
+            toast.success(
+              <p>
+                Chúc mừng{" "}
+                <span className="text-[#34d399] font-bold">{user?.name}</span>{" "}
+                đã đăng nhập thành công!
+              </p>,
+              {
+                position: "top-center",
+              }
+            ),
+        })
+      );
     }
   }, []);
 

@@ -18,11 +18,7 @@ const ResetPasswordModal = ({ open, onCancel }) => {
     ],
   });
 
-  const {
-    data,
-    fetchData: resetService,
-    loading,
-  } = useQuery({
+  const { fetchData: resetService, loading } = useQuery({
     enabled: false,
     queryFn: () =>
       userService.resetPassword({
@@ -36,9 +32,7 @@ const ResetPasswordModal = ({ open, onCancel }) => {
     if (validate()) {
       try {
         const res = await resetService();
-        toast.success(res?.message, {
-          autoClose: 1800,
-        });
+        toast.success(res?.message);
       } catch (error) {
         handleError(error);
       } finally {
@@ -55,7 +49,6 @@ const ResetPasswordModal = ({ open, onCancel }) => {
       maskStyle={{ padding: 0 }}
     >
       <div className="modal-content">
-        {/* Close */}
         <button
           type="button"
           className="close !outline-none"
@@ -65,20 +58,15 @@ const ResetPasswordModal = ({ open, onCancel }) => {
         >
           <i className="fe fe-x" aria-hidden="true" />
         </button>
-        {/* Header*/}
         <div className="modal-header line-height-fixed font-size-lg">
           <strong className="mx-auto">Forgot Password?</strong>
         </div>
-        {/* Body */}
         <div className="modal-body text-center">
-          {/* Text */}
           <p className="mb-7 font-size-sm text-gray-500">
             Vui lòng nhập địa chỉ email. Bạn sẽ nhận được đường link để nhập mật
             khẩu mới.
           </p>
-          {/* Form */}
           <form autoComplete="off" onSubmit={onResetPassword}>
-            {/* Email */}
             <Field
               className="form-control form-control-sm"
               id="modalPasswordResetEmail"
@@ -87,7 +75,6 @@ const ResetPasswordModal = ({ open, onCancel }) => {
               {...register("username")}
             />
 
-            {/* Button */}
             <Button className="mx-auto mt-7" loading={loading}>
               Reset Password
             </Button>

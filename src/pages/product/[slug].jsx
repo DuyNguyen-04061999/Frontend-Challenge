@@ -41,6 +41,7 @@ import useScrollTop from "@/hooks/useScrollTop";
 const ProductDetailPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { state, pathname } = useLocation();
   useScrollTop();
   const { slug } = useParams();
   const { cart, loading: loadingUpdatecart } = useCart();
@@ -177,7 +178,7 @@ const ProductDetailPage = () => {
       queryFn: ({ params }) => reviewService.postReview(...params),
     }
   );
-  const { state } = useLocation();
+
   const onPostReview = async () => {
     if (validate()) {
       try {

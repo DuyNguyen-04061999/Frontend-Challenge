@@ -1,5 +1,9 @@
 import { takeLatest } from "redux-saga/effects";
-import { loginSuccessAction, logoutAction } from "../auth/authReducer";
+import {
+  changePasswordByCodeSuccessAction,
+  loginSuccessAction,
+  logoutAction,
+} from "../auth/authReducer";
 import {
   clearCartAction,
   deleteCartAction,
@@ -31,7 +35,10 @@ import {
 export function* cartSaga() {
   yield takeLatest(updateCartAction, updateCartWorker);
   yield takeLatest(deleteCartAction, deleteCartWorker);
-  yield takeLatest([getCartAction, loginSuccessAction], getCartWorker);
+  yield takeLatest(
+    [getCartAction, loginSuccessAction, changePasswordByCodeSuccessAction],
+    getCartWorker
+  );
   yield takeLatest([clearCartAction, logoutAction], clearCartWorker);
   yield takeLatest(setCartAction, setCartWorker);
 
