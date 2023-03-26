@@ -291,7 +291,6 @@ const ProductPage = () => {
                   </div>
                 </div>
               </div>
-              {/* Item */}
               <div className="w-100">
                 <div
                   className="card bg-cover"
@@ -325,7 +324,6 @@ const ProductPage = () => {
                   </div>
                 </div>
               </div>
-              {/* Item */}
               <div className="w-100">
                 <div
                   className="card bg-cover"
