@@ -12,7 +12,7 @@ const Slider = ({ children, className, ...props }) => {
     <Swiper
       modules={[Navigation, Pagination, Scrollbar, A11y]}
       className={className}
-      
+     
       {...props}
     >
       {Children.map(children, (child, id) => (
