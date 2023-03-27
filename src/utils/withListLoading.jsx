@@ -8,8 +8,8 @@ const withListLoading = (Component, LoadingComponent = Component) => {
       ? createArray(loadingCount).map((_, id) => (
           <LoadingComponent key={id} {...props} />
         ))
-      : data && data?.length > 0
-      ? data?.map((e) => (
+      : data && data.length > 0
+      ? data.map((e) => (
           <Fragment key={e?._id || e?.id}>
             {<Component {...e} {...props} />}
           </Fragment>

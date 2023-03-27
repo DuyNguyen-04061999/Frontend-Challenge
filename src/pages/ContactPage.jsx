@@ -1,6 +1,44 @@
+import Button from "@/components/Button";
+import Field from "@/components/Field";
+import { useTranslate } from "@/components/TranslateProvider";
+import { useForm } from "@/hooks/useForm";
+import useQuery from "@/hooks/useQuery";
+import { organizationService } from "@/services/organization.service";
+import { cn, regex, require } from "@/utils";
+import handleError from "@/utils/handleError";
 import React from "react";
+import { toast } from "react-toastify";
+
+const rules = {
+  name: [require({ message: "Vui lòng cho biết họ tên" })],
+  email: [
+    require({ message: "Vui lòng điền email" }),
+    regex("email", "Emai chưa đúng"),
+  ],
+  phone: [require(), regex("phone")],
+  title: [require()],
+  content: [require()],
+};
 
 const ContactPage = () => {
+  const { t } = useTranslate();
+  const { loading, fetchData: postContactServices } = useQuery({
+    enabled: false,
+    queryFn: ({ params }) => organizationService.postContact(...params),
+  });
+  const { register, validate, form, formRef, reset } = useForm(rules);
+  const onContact = async (e) => {
+    e.preventDefault();
+    if (validate()) {
+      try {
+        await postContactServices(form);
+        toast.success(t("Đã gửi thông tin thành công"));
+        reset?.();
+      } catch (error) {
+        handleError(error);
+      }
+    }
+  };
   return (
     <div>
       <nav className="py-5">
@@ -106,63 +144,54 @@ const ContactPage = () => {
               </aside>
             </div>
             <div className="col-12 col-md-8">
-              {/* Form */}
-              <form>
+              <form autoComplete="off" onSubmit={onContact} ref={formRef}>
+                <Field
+                  {...register("name")}
+                  className="form-control form-control-sm"
+                  id="contactName"
+                  placeholder="Your Name *"
+                />
+                <Field
+                  {...register("email")}
+                  className="form-control form-control-sm"
+                  id="contactEmail"
+                  placeholder="Your Email *"
+                />
+                <Field
+                  {...register("phone")}
+                  className="form-control form-control-sm"
+                  id="contactPhone"
+                  type="number"
+                  placeholder="Your Phone *"
+                />
+
                 {/* Email */}
-                <div className="form-group">
-                  <label className="sr-only" htmlFor="contactName">
-                    Your Name *
-                  </label>
-                  <input
-                    className="form-control form-control-sm"
-                    id="contactName"
-                    type="text"
-                    placeholder="Your Name *"
-                    required
-                  />
-                </div>
-                {/* Email */}
-                <div className="form-group">
-                  <label className="sr-only" htmlFor="contactEmail">
-                    Your Email *
-                  </label>
-                  <input
-                    className="form-control form-control-sm"
-                    id="contactEmail"
-                    type="email"
-                    placeholder="Your Email *"
-                    required
-                  />
-                </div>
-                {/* Email */}
-                <div className="form-group">
-                  <label className="sr-only" htmlFor="contactTitle">
-                    Title *
-                  </label>
-                  <input
-                    className="form-control form-control-sm"
-                    id="contactTitle"
-                    type="text"
-                    placeholder="Title *"
-                    required
-                  />
-                </div>
-                {/* Email */}
-                <div className="form-group mb-7">
-                  <label className="sr-only" htmlFor="contactMessage">
-                    Message *
-                  </label>
-                  <textarea
-                    className="form-control form-control-sm"
-                    id="contactMessage"
-                    rows={5}
-                    placeholder="Message *"
-                    required
-                    defaultValue={""}
-                  />
-                </div>
-                {/* Button */}
-                <button className="btn btn-dark">Send Message</button>
+                <Field
+                  {...register("title")}
+                  className="form-control form-control-sm"
+                  id="contactTitle"
+                  placeholder="Title *"
+                />
+
+                <Field
+                  {...register("content")}
+                  id="contactMessage"
+                  rows={5}
+                  placeholder="Message *"
+                  classNameGroup="mb-7"
+                  renderInput={({ error, _onChange, ...props }) => (
+                    <textarea
+                      {...props}
+                      onChange={_onChange}
+                      className={cn("form-control form-control-sm", {
+                        "border-red-500 placeholder:text-red-500": error,
+                      })}
+                    />
+                  )}
+                />
+                <Button className="normal-case" loading={loading}>
+                  Send Message
+                </Button>
               </form>
             </div>
           </div>

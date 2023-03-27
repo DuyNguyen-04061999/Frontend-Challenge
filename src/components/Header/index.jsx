@@ -30,11 +30,11 @@ const HeaderNavs = [
     nav: "Laptop",
   },
   {
-    to: "/nha-cua-doi-song/1883",
-    nav: "Máy tính",
+    to: "/dien-thoai-may-tinh-bang/1789",
+    nav: "Điện thoại",
   },
   {
-    to: "/deal-hot?page=1&sort=discount_rate.desc",
+    to: `${PATH.products}?sort=discount_rate.desc`,
     nav: "Sản phẩm khuyến mãi",
   },
 ];
@@ -338,9 +338,9 @@ const Header = () => {
                           label: (
                             <Link
                               className="user-link block"
-                              to={PATH.profile.payment}
+                              to={PATH.profile.order}
                             >
-                              Sổ thanh toán
+                              Đơn hàng của tôi
                             </Link>
                           ),
                         },

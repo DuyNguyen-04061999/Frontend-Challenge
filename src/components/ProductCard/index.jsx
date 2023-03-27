@@ -31,6 +31,7 @@ const ProductCard = ({
   slug,
   id,
   fetchWishList,
+  className,
 }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
@@ -144,7 +145,7 @@ const ProductCard = ({
         toast.warn("Vui lòng đăng nhập để mua sản phẩm"));
   };
   return (
-    <div className="col-6 col-md-4">
+    <div className={cn("col-6 col-md-4", className)}>
       {/* Card */}
       <div className="card mb-7">
         {/* Badge */}
