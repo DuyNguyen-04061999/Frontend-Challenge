@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const Context = createContext();
@@ -24,13 +25,16 @@ const Tab = ({
   const defaultIndex = search.get(keySearch)
     ? queryList?.indexOf(search.get(keySearch))
     : defaultValue;
+
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
 
-  useEffectDidMount(() => {
-    if (!search.get(keySearch)) {
-      setActiveIndex(defaultIndex);
-    }
-  }, [defaultIndex]);
+  // useEffectDidMount(() => {
+  //   if (!search.get(keySearch)) {
+  //     setActiveIndex(0);
+  //   } else {
+  //     setActiveIndex(defaultIndex);
+  //   }
+  // }, [defaultIndex]);
 
   const onActive = (index) => {
     setActiveIndex(index);
@@ -41,7 +45,7 @@ const Tab = ({
         titleIndexRef,
         contentIndexRef,
         onActive,
-        activeIndex,
+        activeIndex: defaultIndex || activeIndex,
         callApiOnActive,
         queryList,
         keySearch,
@@ -59,11 +63,14 @@ Tab.Title = ({ children, className = "" }) => {
   const [search, setSearch] = useSearchParams();
   const _onClick = (e) => {
     e.preventDefault();
-    onActive(indexTitle);
     if (queryList && keySearch) {
-      // const _search = new URLSearchParams(search);
-      // _search.set(keySearch, queryList[indexTitle]);
-      setSearch({ [keySearch]: queryList[indexTitle] });
+      const _search = new URLSearchParams(search);
+      _search.set(keySearch, queryList[indexTitle]);
+      // setSearch(_search, { replace: true });
+
+      setSearch({ [keySearch]: queryList[indexTitle] }, { replace: true });
+    } else {
+      onActive(indexTitle);
     }
   };
   const active = activeIndex === indexTitle;
@@ -75,24 +82,25 @@ Tab.Title = ({ children, className = "" }) => {
 };
 
 Tab.Content = ({ children, className, index }) => {
-  // const firstRender = useRef(false);
+  const firstRender = useRef(false);
   const { contentIndexRef, activeIndex, callApiOnActive } = useContext(Context);
+
   const indexContent = index ?? useMemo(() => ++contentIndexRef.current, []);
   const active = indexContent === activeIndex;
 
-  // useEffect(() => {
-  //   if (active) {
-  //     firstRender.current = true;
-  //   }
-  // }, [active]);
+  useEffect(() => {
+    if (active) {
+      firstRender.current = true;
+    }
+  }, [active]);
 
-  // if (callApiOnActive && !active) {
-  //   if (!firstRender.current) {
-  //     return null;
-  //   }
-  // }
+  if (callApiOnActive && !active) {
+    if (!firstRender.current) {
+      return null;
+    }
+  }
 
-  if (callApiOnActive && !active) return null;
+  // if (callApiOnActive && !active) return null;
 
   return (
     <div className={cn(className, { "active show": active })}>{children}</div>

@@ -89,6 +89,7 @@ const ProductPage = () => {
   } = useQuery({
     queryKey: `product-page-${_qs}`,
     keepPreviousData: true,
+    keepStorage: false,
     queryFn: ({ signal }) => productService.getProducts(`?${_qs}`, signal),
   });
 

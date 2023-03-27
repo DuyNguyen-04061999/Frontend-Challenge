@@ -1,12 +1,15 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import Button from "@/components/Button";
 import EmptyText from "@/components/EmptyText";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Field from "@/components/Field";
 import ImagePreview from "@/components/ImagePreview";
 import InputQuantity from "@/components/InputQuantity";
+import Pagination from "@/components/Pagination";
 import Rating from "@/components/Rating";
-import ReviewCard, { ReviewCardList } from "@/components/ReviewCard";
+import { ReviewCardList } from "@/components/ReviewCard";
 import ShortenContent from "@/components/ShortenContent";
+import Skeleton from "@/components/Skeleton";
 import Tab from "@/components/Tab";
 import ZoomImage from "@/components/ZoomImage";
 import { PATH } from "@/config";
@@ -16,6 +19,8 @@ import { useCart } from "@/hooks/useCart";
 import { useCategory } from "@/hooks/useCategories";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
+import useQueryParams from "@/hooks/useQueryParams";
+import useScrollTop from "@/hooks/useScrollTop";
 import { productService } from "@/services/product.service";
 import { reviewService } from "@/services/review.service";
 import { updateCartAction } from "@/stores/cart/cartReducer";
@@ -23,20 +28,16 @@ import { cn, require, toSlug } from "@/utils";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import handleError from "@/utils/handleError";
+import queryString from "query-string";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import {
   generatePath,
   useLocation,
   useNavigate,
   useParams,
 } from "react-router-dom";
-import Pagination from "@/components/Pagination";
-import queryString from "query-string";
-import useQueryParams from "@/hooks/useQueryParams";
-import Skeleton from "@/components/Skeleton";
-import useScrollTop from "@/hooks/useScrollTop";
+import { toast } from "react-toastify";
 
 const ProductDetailPage = () => {
   const dispatch = useDispatch();
@@ -163,7 +164,7 @@ const ProductDetailPage = () => {
     page: params?.page,
   });
   const {
-    data: { data: reviewList = [], paginate = {} } = {},
+    data: { data: reviewList, paginate },
     fetchData: getReviewService,
     loading: loadingGetReview,
   } = useQuery({
@@ -234,7 +235,7 @@ const ProductDetailPage = () => {
                         Sale
                       </div>
                       {/* Slider */}
-                      <ZoomImage timesIncrease={3}>
+                      <ZoomImage timesIncrease={2}>
                         {({
                           handleMouseLeave,
                           handleZoomImage,
@@ -564,96 +565,97 @@ const ProductDetailPage = () => {
               </div>
             </div>
           </section>
+
           <section className="pt-9 pb-11" id="reviews">
             <div className="container">
-              <div className="row">
-                <div className="col-12">
-                  {/* Heading */}
-                  <h4 className="mb-10 text-center">
-                    Customer Reviews ({reviewList?.length})
-                  </h4>
-                  {/* Header */}
-                  {user && state?.orderId && (
-                    <div className="h-auto" id="reviewForm">
-                      <div className="row">
-                        <div className="col-12 mb-6 text-center">
-                          <p className="mb-1 font-size-xs">Score:</p>
-                          <div className="rating-form">
-                            <div
-                              className="rating h5 text-dark"
-                              data-value={valueRating}
-                            >
-                              {createArray(5).map((_, id) => (
-                                <div
-                                  className="rating-item cursor-pointer"
-                                  key={id}
-                                  onClick={() => setValueRating(id + 1)}
-                                >
-                                  <i className="fas fa-star" />
-                                </div>
-                              ))}
+              <ErrorBoundary>
+                <div className="row">
+                  <div className="col-12">
+                    {reviewList && (
+                      <h4 className="mb-10 text-center">
+                        Customer Reviews ({reviewList.length})
+                      </h4>
+                    )}
+
+                    {user && state?.orderId && (
+                      <div className="h-auto" id="reviewForm">
+                        <div className="row">
+                          <div className="col-12 mb-6 text-center">
+                            <p className="mb-1 font-size-xs">Score:</p>
+                            <div className="rating-form">
+                              <div
+                                className="rating h5 text-dark"
+                                data-value={valueRating}
+                              >
+                                {createArray(5).map((_, id) => (
+                                  <div
+                                    className="rating-item cursor-pointer"
+                                    key={id}
+                                    onClick={() => setValueRating(id + 1)}
+                                  >
+                                    <i className="fas fa-star" />
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           </div>
-                        </div>
-
-                        <div className="col-12">
-                          <Field
-                            {...register("content")}
-                            className="form-control form-control-sm"
-                            id="reviewText"
-                            rows={5}
-                            placeholder="Review *"
-                            renderInput={({
-                              error,
-                              className,
-                              _onChange,
-                              ...props
-                            }) => (
-                              <textarea
-                                {...props}
-                                onChange={_onChange}
-                                className={cn(className, {
-                                  "border-red-500 placeholder:text-red-500":
-                                    error,
-                                })}
-                              />
-                            )}
-                          />
-                        </div>
-                        <div className="col-12 text-center">
-                          <Button
-                            className="normal-case"
-                            loading={loadingPostReview}
-                            onClick={onPostReview}
-                          >
-                            Post Review
-                          </Button>
+                          <div className="col-12">
+                            <Field
+                              {...register("content")}
+                              className="form-control form-control-sm"
+                              id="reviewText"
+                              rows={5}
+                              placeholder="Review *"
+                              renderInput={({
+                                error,
+                                className,
+                                _onChange,
+                                ...props
+                              }) => (
+                                <textarea
+                                  {...props}
+                                  onChange={_onChange}
+                                  className={cn(className, {
+                                    "border-red-500 placeholder:text-red-500":
+                                      error,
+                                  })}
+                                />
+                              )}
+                            />
+                          </div>
+                          <div className="col-12 text-center">
+                            <Button
+                              className="normal-case"
+                              loading={loadingPostReview}
+                              onClick={onPostReview}
+                            >
+                              Post Review
+                            </Button>
+                          </div>
                         </div>
                       </div>
+                    )}
+                    <div className="mt-8">
+                      <ReviewCardList
+                        loading={loadingGetReview}
+                        loadingCount={3}
+                        empty={
+                          <EmptyText>
+                            Sản phẩm hiện tại chưa có đánh giá nào
+                          </EmptyText>
+                        }
+                        data={reviewList}
+                      />
                     </div>
-                  )}
-
-                  <div className="mt-8">
-                    <ReviewCardList
-                      loading={loadingGetReview}
-                      loadingCount={3}
-                      empty={
-                        <EmptyText>
-                          Sản phẩm hiện tại chưa có đánh giá nào
-                        </EmptyText>
-                      }
-                      data={reviewList}
-                    />
+                    {
+                      <Pagination
+                        totalPage={paginate?.totalPage}
+                        style={{ marginTop: 20 }}
+                      />
+                    }
                   </div>
-
-                  {!loadingGetReview && (
-                    <Pagination
-                      totalPage={paginate?.totalPage}
-                      style={{ marginTop: 20 }}
-                    />
-                  )}
                 </div>
-              </div>
+              </ErrorBoundary>
             </div>
           </section>
 

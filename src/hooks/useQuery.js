@@ -137,7 +137,7 @@ const useQuery = ({
   }, [enabled].concat(queryKey, dependencyList));
 
   const fetchData = async (...params) => {
-    //hủy api cũ
+    //hủy api cũ khi chưa call xong
     controllerRef.current.abort();
     //tạo signal api mới
     controllerRef.current = new AbortController();

@@ -8,6 +8,8 @@ export const productService = {
   getProductDetail: (id) => http.get(`${PRODUCT_API}/${id}`),
 
   getCategories: (signal) => http.get(`${PRODUCT_API}/categories`, { signal }),
+  getCategoryDetail: (id, signal) =>
+    http.get(`${PRODUCT_API}/categories/${id}`, { signal }),
 
   getWishlist: (query = "", signal) =>
     http.get(`${PRODUCT_API}/wishlist${query}`, { signal }),

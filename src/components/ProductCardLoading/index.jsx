@@ -1,9 +1,15 @@
+import { cn } from "@/utils";
 import React from "react";
 import Skeleton from "../Skeleton";
 
-const ProductCardLoading = () => {
+const ProductCardLoading = ({ className }) => {
   return (
-    <div className="col-6 col-md-4 product-loading product-card-loading">
+    <div
+      className={cn(
+        "col-6 col-md-4 product-loading product-card-loading",
+        className
+      )}
+    >
       <div className="card mb-7">
         <div className="card-img">
           <Skeleton className="absolute left-0 top-0" />
