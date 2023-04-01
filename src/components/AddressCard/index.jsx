@@ -18,7 +18,6 @@ const AddressCard = withListLoading(
     district,
     fullName,
     default: addressDefault,
-    refetchAddress,
     _id,
     className,
     ...props
@@ -34,8 +33,8 @@ const AddressCard = withListLoading(
       pendingMessage: "Đang cập nhật địa chỉ",
       successMessage: "Đã đặt lại địa chỉ mặc định",
       onSuccess: async (res) => {
-        await refetchAddress(res?.data);
-        props?.clearAllDataDrawer();
+        await props?.refetchAddress(res?.data);
+        await props?.updateDataDrawer();
       },
     });
     // =====

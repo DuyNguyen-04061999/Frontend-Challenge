@@ -64,17 +64,17 @@ const AddressDrawer = ({ selected, ...props }) => {
   const {
     data: { data: addressList = [] } = {},
     loading,
-    clearAllData,
+    fetchData: getAddressList,
+    clearPreviousData,
   } = useQuery({
     queryKey: "get-addressList",
     enabled: open,
     queryFn: () => userService.getAddress(),
     onSuccess: (res) => res?.data.sort((e) => (e.default ? -1 : 0)),
+    keepPreviousData: true,
+    keepStorage: false,
   });
 
-  useEffect(() => {
-    return () => clearAllData();
-  }, []);
   return (
     <Portal
       open={open}
@@ -129,8 +129,9 @@ const AddressDrawer = ({ selected, ...props }) => {
             className={cn(
               "border cursor-pointer bg-white hover:!bg-[#EEFFF3] transition-all"
             )}
-            clearAllDataDrawer={clearAllData}
+            updateDataDrawer={getAddressList}
             onClick={() => {
+              clearPreviousData("get-addressList");
               onClose();
             }}
           />

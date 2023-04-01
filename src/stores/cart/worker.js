@@ -136,8 +136,8 @@ export function* setPreCheckoutDataWorker({ payload }) {
 }
 
 export function* setPreCheckoutResWorker({ payload }) {
-  setPreckoutResponse(payload);
-  yield put(onSetPreCheckoutRes(payload));
+  setPreckoutResponse(payload); //localStorage
+  yield put(onSetPreCheckoutRes(payload)); // state
 }
 
 export function* getPreCheckoutResWorker({ type, payload }) {

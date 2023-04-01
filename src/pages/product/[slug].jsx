@@ -259,7 +259,7 @@ const ProductDetailPage = () => {
                               className="image-cover absolute inset-0 z-10"
                               onMouseMove={handleZoomImage}
                               onMouseLeave={handleMouseLeave}
-                            ></div>
+                            />
                           </div>
                         )}
                       </ZoomImage>

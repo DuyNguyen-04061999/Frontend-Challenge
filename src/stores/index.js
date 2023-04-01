@@ -13,6 +13,7 @@ const reducer = {
   cart: cartReducer,
 };
 const sagaMiddleware = createSagaMiddleware();
+
 const store = configureStore({
   reducer,
   middleware: (gDM) =>

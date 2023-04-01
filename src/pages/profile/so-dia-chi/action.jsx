@@ -163,7 +163,7 @@ const AddressActionPage = () => {
             <div className="col-12">
               <Field
                 {...register("default")}
-                renderInput={({ value, onChange, ...props }) => (
+                renderInput={({ value, _onChange, ...props }) => (
                   <div className="custom-control custom-checkbox mb-0">
                     <input
                       {...props}
@@ -178,7 +178,7 @@ const AddressActionPage = () => {
                             "Không thể sửa đổi trạng thái của địa chỉ mặc định"
                           );
                         } else {
-                          onChange(e.target.checked);
+                          _onChange({ target: { value: e.target.checked } });
                         }
                       }}
                     />
