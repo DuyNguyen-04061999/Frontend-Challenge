@@ -25,7 +25,6 @@ const Tab = ({
   const defaultIndex = search.get(keySearch)
     ? queryList?.indexOf(search.get(keySearch))
     : defaultValue;
-
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
 
   // useEffectDidMount(() => {
@@ -45,7 +44,7 @@ const Tab = ({
         titleIndexRef,
         contentIndexRef,
         onActive,
-        activeIndex: defaultIndex || activeIndex,
+        activeIndex: defaultIndex ?? activeIndex,
         callApiOnActive,
         queryList,
         keySearch,
@@ -65,7 +64,7 @@ Tab.Title = ({ children, className = "" }) => {
     e.preventDefault();
     if (queryList && keySearch) {
       const _search = new URLSearchParams(search);
-      _search.set(keySearch, queryList[indexTitle]);
+      // _search.set(keySearch, queryList[indexTitle]);
       // setSearch(_search, { replace: true });
 
       setSearch({ [keySearch]: queryList[indexTitle] }, { replace: true });
