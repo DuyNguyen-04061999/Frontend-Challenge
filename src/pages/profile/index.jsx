@@ -336,10 +336,12 @@ const ProfilePage = () => {
               label="Gender"
               {...register("gender")}
               genderActive={user?.gender || genderList?.[0]}
-              renderInput={({ onChange, ...props }) => (
+              renderInput={({ _onChange, ...props }) => (
                 <Radio.Group
                   defaultValue={form?.gender || genderList[0]}
-                  onSetFilter={onChange}
+                  onSetFilter={(value) => {
+                    _onChange({ target: { value } });
+                  }}
                 >
                   <div className="btn-group-toggle" data-toggle="buttons">
                     <Radio.Gender gender="male">Male</Radio.Gender>

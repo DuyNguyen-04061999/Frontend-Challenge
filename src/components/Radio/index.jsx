@@ -2,7 +2,19 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import PropTypes, { string } from "prop-types";
 import { cn } from "@/utils";
 import useEffectDidMount from "@/hooks/useEffectDidMount";
+import styled from "styled-components";
 const Context = createContext();
+
+const LabelStyle = styled.label`
+  padding: 13px;
+  cursor: pointer;
+  &.active {
+    border: 1px solid #000 !important;
+  }
+  input {
+    display: none;
+  }
+`;
 
 const Radio = ({ children, rating }) => {
   const { value, onChange } = useContext(Context);
@@ -27,19 +39,29 @@ Radio.Gender = ({ children, gender }) => {
   const { value, onChange } = useContext(Context);
 
   return (
-    <label
-      className={cn("btn btn-sm btn-outline-border", {
+    <LabelStyle
+      className={cn("border", {
         active: value === gender,
       })}
+      htmlFor={gender}
+      onClick={() => {
+        if (value !== gender) {
+          onChange(gender);
+        }
+      }}
     >
       <input
+        id={gender}
         type="radio"
         name="gender"
         checked={value === gender}
-        onChange={() => onChange(gender)}
+        onChange={() => {
+          console.log("gender");
+          onChange(gender);
+        }}
       />
       {children}
-    </label>
+    </LabelStyle>
   );
 };
 
@@ -76,7 +98,6 @@ Radio.Payment = ({ children, imgSrc, type }) => {
 
 Radio.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
   const [value, setValue] = useState(defaultValue); //=== dùng để checked ====
-
   useEffectDidMount(() => setValue(defaultValue), [defaultValue]); //=== khi defaultValue bên ngoài thay đổi ====
 
   const onChange = (_value) => {
@@ -87,9 +108,9 @@ Radio.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
       return;
     }
     if (_value !== value) {
-      setValue(_value);
-      onSetFilter?.(_value); //khi click input cần làm cái gì đó ở bên ngoài
     }
+    setValue(_value);
+    onSetFilter?.(_value); //khi click input cần làm cái gì đó ở bên ngoài
   };
 
   return (

@@ -39,7 +39,9 @@ const ProductCard = ({
   const img1 =
     images?.[0]?.large_url || thumbnail_url || images?.[1]?.large_url;
   const img2 = images?.[1]?.large_url || thumbnail_url;
+  
   const categoryItem = useCategory(categories);
+
   const linkCategory = useMemo(() => {
     if (categoryItem) {
       return generatePath(PATH.category, {

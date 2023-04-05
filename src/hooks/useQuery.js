@@ -79,6 +79,7 @@ const useQuery = ({
       controllerRef.current.abort();
     };
   }, []);
+  
   useEffect(() => {
     if (typeof reFetchRef.current === "boolean") {
       reFetchRef.current = true;
