@@ -218,8 +218,7 @@ const Header = () => {
           <div className="container">
             {/* Brand */}
             <Link className="navbar-brand" to={PATH.home}>
-              <img style={{ width: 50 }} srcSet="/img/logo.png 2x" />
-              Shopper.
+              <img srcSet="/img/logo.png 2x" />
             </Link>
             {/* Toggler */}
             <button
