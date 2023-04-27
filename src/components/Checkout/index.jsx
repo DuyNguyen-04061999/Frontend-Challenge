@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 const Checkout = ({ productId }) => {
   const { preCheckoutData } = useCart();
   const dispatch = useDispatch();
+  
   const [checked, setChecked] = useState(
     preCheckoutData?.listItems?.includes(productId) || false
   );

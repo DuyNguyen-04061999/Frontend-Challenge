@@ -18,7 +18,7 @@ import {
   setPreCheckoutDataInitialAction,
 } from "@/stores/cart/cartReducer";
 import { onOpenDrawer } from "@/stores/drawerReducer";
-import { regex, require } from "@/utils";
+import { regex, required } from "@/utils";
 import currency from "@/utils/currency";
 import handleError from "@/utils/handleError";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -28,20 +28,20 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const addressRules = {
-  fullName: [require({ message: "Vui lòng điền họ và tên" })],
+  fullName: [required({ message: "Vui lòng điền họ và tên" })],
   phone: [
-    require({ message: "Vui lòng nhập số điện thoại" }),
+    required({ message: "Vui lòng nhập số điện thoại" }),
     regex("phone", "Số điện thoại không hợp lệ"),
   ],
   email: [
-    require({ message: "Vui lòng điền địa chỉ email" }),
+    required({ message: "Vui lòng điền địa chỉ email" }),
     regex("email", "Nhập địa chỉ email chưa hợp lệ"),
   ],
-  district: [require({ message: "Vui lòng nhập địa chỉ quận" })],
+  district: [required({ message: "Vui lòng nhập địa chỉ quận" })],
   province: [
-    require({ message: "Vui lòng cho biết tỉnh thành đang sinh sống" }),
+    required({ message: "Vui lòng cho biết tỉnh thành đang sinh sống" }),
   ],
-  address: [require({ message: "Vui lòng nhập số nhà" })],
+  address: [required({ message: "Vui lòng nhập số nhà" })],
 };
 const CheckoutPage = () => {
   const navigate = useNavigate();

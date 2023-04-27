@@ -6,7 +6,7 @@ import useBodyClass from "@/hooks/useBodyClass";
 import { useForm } from "@/hooks/useForm";
 import useQueryParams from "@/hooks/useQueryParams";
 import { changePasswordByCodeAction } from "@/stores/auth/authReducer";
-import { confirm, min, require } from "@/utils";
+import { confirm, min, required } from "@/utils";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -27,12 +27,12 @@ const ResetPasswordPage = () => {
   const { register, form, formRef, validate } = useForm(
     {
       password: [
-        require({ message: "Vui lòng nhập mật khẩu mới" }),
+        required({ message: "Vui lòng nhập mật khẩu mới" }),
         min(6, "Mật khẩu phải có ít nhất 6 kí tự"),
       ],
 
       confirmPassword: [
-        require({ message: "Vui lòng nhập lại mật khẩu" }),
+        required({ message: "Vui lòng nhập lại mật khẩu" }),
         confirm("password", "Mật khẩu chưa chính xác"),
       ],
     },

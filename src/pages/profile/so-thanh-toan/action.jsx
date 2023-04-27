@@ -11,7 +11,7 @@ import {
   cn,
   handleToastMessage,
   object,
-  require,
+  required,
 } from "@/utils";
 import handleError from "@/utils/handleError";
 import { DatePicker, Spin, Tooltip } from "antd";
@@ -22,10 +22,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const rules = {
-  cardNumber: [require()],
-  cardName: [require()],
-  expired: [require()],
-  cvv: [require()],
+  cardNumber: [required()],
+  cardName: [required()],
+  expired: [required()],
+  cvv: [required()],
 };
 const PaymentActionPage = () => {
   const { id } = useParams();

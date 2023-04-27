@@ -3,7 +3,7 @@ import Field from "@/components/Field";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
-import { clearWaititngQueue, confirm, min, regex, require } from "@/utils";
+import { clearWaititngQueue, confirm, min, regex, required } from "@/utils";
 import handleError from "@/utils/handleError";
 import React, { memo } from "react";
 import { toast } from "react-toastify";
@@ -11,17 +11,17 @@ import { toast } from "react-toastify";
 const Signup = () => {
   const { formRef, register, validate, form } = useForm(
     {
-      name: [require({ message: "Vui lòng cho điền họ và tên" })],
+      name: [required({ message: "Vui lòng cho điền họ và tên" })],
       username: [
-        require({ message: "Vui lòng nhập địa chỉ email" }),
+        required({ message: "Vui lòng nhập địa chỉ email" }),
         regex("email", "Vui lòng nhập địa chỉ email đúng"),
       ],
       password: [
-        require({ message: "Vui lòng nhập mật khẩu" }),
+        required({ message: "Vui lòng nhập mật khẩu" }),
         min(6, "Mật khẩu phải có ít nhất 6 kí tự"),
       ],
       confirmPassword: [
-        require({ message: "Vui lòng xác nhận lại mật khẩu" }),
+        required({ message: "Vui lòng xác nhận lại mật khẩu" }),
         confirm("password", "Mật khẩu nhập lại chưa chính xác"),
       ],
     },

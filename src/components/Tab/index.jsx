@@ -22,7 +22,7 @@ const Tab = ({
   const titleIndexRef = useRef(-1);
   const contentIndexRef = useRef(-1);
   const [search] = useSearchParams();
-  const defaultIndex = search.get(keySearch)
+  const defaultIndex = search.get(keySearch) // defaultIndex thay đổi theo search
     ? queryList?.indexOf(search.get(keySearch))
     : defaultValue;
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
@@ -60,6 +60,7 @@ Tab.Title = ({ children, className = "" }) => {
     useContext(Context);
   const indexTitle = useMemo(() => ++titleIndexRef.current, []);
   const [search, setSearch] = useSearchParams();
+
   const _onClick = (e) => {
     e.preventDefault();
     if (queryList && keySearch) {

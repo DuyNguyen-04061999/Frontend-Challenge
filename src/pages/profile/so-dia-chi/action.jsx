@@ -10,7 +10,7 @@ import {
   handleToastMessage,
   object,
   regex,
-  require,
+  required,
 } from "@/utils";
 import handleError from "@/utils/handleError";
 import { Spin } from "antd";
@@ -19,20 +19,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const rules = {
-  fullName: [require({ message: "Vui lòng điền họ và tên" })],
+  fullName: [required({ message: "Vui lòng điền họ và tên" })],
   phone: [
-    require({ message: "Vui lòng nhập số điện thoại" }),
+    required({ message: "Vui lòng nhập số điện thoại" }),
     regex("phone", "Số điện thoại không hợp lệ"),
   ],
   email: [
-    require({ message: "Vui lòng điền địa chỉ email" }),
+    required({ message: "Vui lòng điền địa chỉ email" }),
     regex("email", "Nhập địa chỉ email chưa hợp lệ"),
   ],
-  district: [require({ message: "Vui lòng nhập địa chỉ quận" })],
+  district: [required({ message: "Vui lòng nhập địa chỉ quận" })],
   province: [
-    require({ message: "Vui lòng cho biết tỉnh thành đang sinh sống" }),
+    required({ message: "Vui lòng cho biết tỉnh thành đang sinh sống" }),
   ],
-  address: [require({ message: "Vui lòng nhập số nhà" })],
+  address: [required({ message: "Vui lòng nhập số nhà" })],
 };
 
 const AddressActionPage = () => {

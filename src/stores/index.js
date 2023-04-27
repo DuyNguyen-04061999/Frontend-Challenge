@@ -18,7 +18,7 @@ const store = configureStore({
   reducer,
   middleware: (gDM) =>
     gDM({
-      serializableCheck: false,
+      serializableCheck: false,//tắt lỗi a non-serialize
     }).concat(sagaMiddleware),
   devTools: import.meta.env.VITE_ENV === "development",
 });

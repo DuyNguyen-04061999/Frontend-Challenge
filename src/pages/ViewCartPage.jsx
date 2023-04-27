@@ -11,7 +11,7 @@ import {
   getPromotionAction,
   removePromotionAction,
 } from "@/stores/cart/cartReducer";
-import { require, shoppingImg } from "@/utils";
+import { required, shoppingImg } from "@/utils";
 import handleError from "@/utils/handleError";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -24,7 +24,7 @@ const ViewCartPage = () => {
   const navigate = useNavigate();
   const { listItems = [] } = cart || {};
   const { form, validate, register, reset, formRef } = useForm({
-    code: [require({ message: "Vui lòng nhập mã giảm giá" })],
+    code: [required({ message: "Vui lòng nhập mã giảm giá" })],
   });
 
   const { loading } = useCart() || {};

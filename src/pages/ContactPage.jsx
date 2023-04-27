@@ -4,20 +4,20 @@ import { useTranslate } from "@/components/TranslateProvider";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
 import { organizationService } from "@/services/organization.service";
-import { cn, regex, require } from "@/utils";
+import { cn, regex, required } from "@/utils";
 import handleError from "@/utils/handleError";
 import React from "react";
 import { toast } from "react-toastify";
 
 const rules = {
-  name: [require({ message: "Vui lòng cho biết họ tên" })],
+  name: [required({ message: "Vui lòng cho biết họ tên" })],
   email: [
-    require({ message: "Vui lòng điền email" }),
+    required({ message: "Vui lòng điền email" }),
     regex("email", "Emai chưa đúng"),
   ],
-  phone: [require(), regex("phone")],
-  title: [require()],
-  content: [require()],
+  phone: [required(), regex("phone")],
+  title: [required()],
+  content: [required()],
 };
 
 const ContactPage = () => {

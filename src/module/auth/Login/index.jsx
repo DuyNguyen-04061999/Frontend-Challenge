@@ -7,7 +7,7 @@ import {
   setRemember,
   min,
   regex,
-  require,
+  required,
   clearRemember,
 } from "@/utils";
 import React, { memo, useEffect, useState } from "react";
@@ -32,11 +32,11 @@ const Login = () => {
   const { form, validate, formRef, register } = useForm(
     {
       username: [
-        require({ message: "Vui lòng nhập địa chỉ email" }),
+        required({ message: "Vui lòng nhập địa chỉ email" }),
         regex("email", "Email chưa chính xác"),
       ],
       password: [
-        require({ message: "Vui lòng nhập mật khẩu" }),
+        required({ message: "Vui lòng nhập mật khẩu" }),
         min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
       ],
     },

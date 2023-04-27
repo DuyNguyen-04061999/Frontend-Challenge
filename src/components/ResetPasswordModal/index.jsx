@@ -2,7 +2,7 @@ import { PATH } from "@/config";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
-import { regex, require } from "@/utils";
+import { regex, required } from "@/utils";
 import handleError from "@/utils/handleError";
 import { Modal } from "antd";
 import React from "react";
@@ -13,7 +13,7 @@ import Field from "../Field";
 const ResetPasswordModal = ({ open, onCancel }) => {
   const { register, validate, form, reset } = useForm({
     username: [
-      require({ message: "Vui lòng điền địa chỉ email" }),
+      required({ message: "Vui lòng điền địa chỉ email" }),
       regex("email", "Địa chỉ email chưa chính xác"),
     ],
   });

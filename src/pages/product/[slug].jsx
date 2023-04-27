@@ -24,7 +24,7 @@ import useScrollTop from "@/hooks/useScrollTop";
 import { productService } from "@/services/product.service";
 import { reviewService } from "@/services/review.service";
 import { updateCartAction } from "@/stores/cart/cartReducer";
-import { cn, require, toSlug } from "@/utils";
+import { cn, required, toSlug } from "@/utils";
 import createArray from "@/utils/createArray";
 import currency from "@/utils/currency";
 import handleError from "@/utils/handleError";
@@ -156,7 +156,7 @@ const ProductDetailPage = () => {
 
   const { form, register, validate } = useForm({
     content: [
-      require({ message: "Vui lòng điền nhận xét của bạn về sản phẩm" }),
+      required({ message: "Vui lòng điền nhận xét của bạn về sản phẩm" }),
     ],
   });
   const [params] = useQueryParams();

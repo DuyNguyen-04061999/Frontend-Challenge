@@ -20,7 +20,7 @@ const ListProducts = ({ id }) => {
     limit: 12,
     ...(params.tab === "san-pham-khuyen-mai" && { sort: "discount_rate.desc" }),
   });
-  const categoryItem = useCategory(id, [], !!id);
+  const categoryItem = useCategory(id);
 
   const linkMore = useMemo(() => {
     if (categoryItem) {
@@ -32,6 +32,7 @@ const ListProducts = ({ id }) => {
       return `${PATH.products}?sort=discount_rate.desc`;
     }
   }, [categoryItem]);
+
   const { data: { data: productList = [] } = {}, loading } = useQuery({
     queryKey: `${_qs}`,
     keepPreviousData: true,

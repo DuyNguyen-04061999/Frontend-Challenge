@@ -14,7 +14,7 @@ import {
   min,
   object,
   regex,
-  require,
+  required,
   setRemember,
   validate,
 } from "@/utils";
@@ -58,7 +58,7 @@ const ProfilePage = () => {
             const errObj = validate(
               {
                 currentPassword: [
-                  require({ message: "Vui lòng nhập mật khẩu hiện tại" }),
+                  required({ message: "Vui lòng nhập mật khẩu hiện tại" }),
                 ],
               },
               form
@@ -75,7 +75,7 @@ const ProfilePage = () => {
           if (form.currentPassword?.trim().length >= minLength) {
             const errObj = validate(
               {
-                newPassword: [require("Vui lòng nhập mật khẩu mới")],
+                newPassword: [required("Vui lòng nhập mật khẩu mới")],
               },
               form
             );
@@ -103,7 +103,7 @@ const ProfilePage = () => {
             const errObj = validate(
               {
                 confirmPassword: [
-                  require({ message: "Vui lòng xác nhận lại mật khẩu" }),
+                  required({ message: "Vui lòng xác nhận lại mật khẩu" }),
                 ],
               },
               form

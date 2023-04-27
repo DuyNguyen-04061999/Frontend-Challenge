@@ -57,7 +57,7 @@ export function validate(rules = {}, form = {}) {
         }
 
         if (rule?.min && rule?.max) {
-          if (form[name].length < min || form[name].length > max) {
+          if (form[name].length < rule.min || form[name].length > rule.max) {
             errObj[name] =
               rule.message || ERROR_MESSAGE.minMax(rule.min, rule.max);
             break;
@@ -84,7 +84,7 @@ export function validate(rules = {}, form = {}) {
   return errObj;
 }
 
-export const require = ({
+export const required = ({
   require = true,
   message = ERROR_MESSAGE.require,
 } = {}) => ({

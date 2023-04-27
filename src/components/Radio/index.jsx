@@ -108,9 +108,9 @@ Radio.Group = ({ children, defaultValue, toggle, onSetFilter }) => {
       return;
     }
     if (_value !== value) {
+      setValue(_value);
+      onSetFilter?.(_value); //khi click input cần làm cái gì đó ở bên ngoài
     }
-    setValue(_value);
-    onSetFilter?.(_value); //khi click input cần làm cái gì đó ở bên ngoài
   };
 
   return (

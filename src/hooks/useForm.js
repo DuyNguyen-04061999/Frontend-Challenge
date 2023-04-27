@@ -9,9 +9,11 @@ export const useForm = (
   // password: ["confirmPassword"],
   // },
   const [form, setForm] = useState(initialValue);
+
   useEffect(() => {
     setForm(initialValue);
   }, [JSON.stringify(initialValue)]);
+
   const [errors, setErrors] = useState({});
 
   const formRef = useRef();
@@ -27,16 +29,11 @@ export const useForm = (
           const errObj = {};
 
           //tạo error mới
-          errObj[name] = validate(
-            {
-              [name]: rules[name],
-            },
-            _form
-          )[name];
-          // setErrors((error) => ({ ...error, [name]: errObj[name] })); //validate trong lúc nhập data
+          errObj[name] = validate({ [name]: rules[name] }, _form)[name];
+          // setErrors((errors) => ({ ...errors, [name]: errObj[name] })); //validate trong lúc nhập data
           // if (!_form[name]?.trim()) {
           //   setErrors((error) => ({ ...error, [name]: "" }));
-          // } khi xóa thì tắt validate
+          // } // khi xóa thì tắt validate
           setErrors((error) => ({ ...error, [name]: "" })); //mất error khi nhập
           //validate field phụ thuộc
           if (
