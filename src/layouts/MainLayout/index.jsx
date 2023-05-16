@@ -1,7 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
-import { Spin } from "antd";
 import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 

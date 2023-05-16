@@ -1,7 +1,7 @@
 import { t } from "@/components/TranslateProvider";
 import { message } from "antd";
 import { toast } from "react-toastify";
-import { clearWaititngQueue } from "./clearWaititngQueue";
+import { clearWaititngQueue } from "./clearWaitingQueue";
 const handleError = (error, antd, key) => {
   console.log(
     "%cerror handleError.js line:3 ",

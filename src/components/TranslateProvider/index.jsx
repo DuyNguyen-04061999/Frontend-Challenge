@@ -7,6 +7,7 @@ export const t = (key) => {
 };
 
 const global = {};
+
 const TranslateProvider = ({ children, translate, defaultLang }) => {
   const [lang, setLang] = useState(
     () => JSON.parse(localStorage.getItem("lang")) || defaultLang
@@ -23,6 +24,7 @@ const TranslateProvider = ({ children, translate, defaultLang }) => {
   useEffect(() => {
     localStorage.setItem("lang", JSON.stringify(lang));
   }, [lang]);
+  
   return (
     <Context.Provider value={{ t: _t, setLang, lang }}>
       {children}

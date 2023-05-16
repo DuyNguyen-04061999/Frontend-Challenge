@@ -3,8 +3,8 @@ import { getToken, setToken } from "./storage";
 
 let refreshTokenPromise = null;
 
-export function interceptorsResponse(api) {
-  api.interceptors.response.use(
+export function interceptorsResponse(http) {
+  http.interceptors.response.use(
     (res) => res?.data || res,
     async (error) => {
       try {
@@ -15,7 +15,7 @@ export function interceptorsResponse(api) {
           if (refreshTokenPromise) {
             await refreshTokenPromise;
           } else {
-            const token = getToken();
+            const token = getToken();//refreshToken accessToken
             refreshTokenPromise = authService.refreshToken({
               refreshToken: token?.refreshToken,
             });
@@ -23,7 +23,7 @@ export function interceptorsResponse(api) {
             setToken(res?.data);
             refreshTokenPromise = null;
           }
-          return api(error?.config);
+          return http(error?.config);
         }
       } catch (err) {
         console.log("err :>> ", err);

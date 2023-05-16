@@ -24,9 +24,12 @@ const ContentStyle = styled.div`
 const Accordion = ({ title, children, index }) => {
   // const [active, setActive] = useState(false);
   const { activeIndex, onActive } = useContext(Context);
+
   const contentRef = useRef();
   const heightContent = contentRef.current?.scrollHeight;
+
   const active = activeIndex === index;
+  
   const _onClick = (e) => {
     e.preventDefault();
     onActive(index);

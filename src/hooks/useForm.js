@@ -30,11 +30,11 @@ export const useForm = (
 
           //tạo error mới
           errObj[name] = validate({ [name]: rules[name] }, _form)[name];
-          // setErrors((errors) => ({ ...errors, [name]: errObj[name] })); //validate trong lúc nhập data
+          // 1)setErrors((errors) => ({ ...errors, [name]: errObj[name] })); //validate trong lúc nhập data
           // if (!_form[name]?.trim()) {
           //   setErrors((error) => ({ ...error, [name]: "" }));
           // } // khi xóa thì tắt validate
-          setErrors((error) => ({ ...error, [name]: "" })); //mất error khi nhập
+          setErrors((error) => ({ ...error, [name]: "" })); //2)mất error khi nhập
           //validate field phụ thuộc
           if (
             Array.isArray(dependencies[name]) &&
@@ -42,7 +42,10 @@ export const useForm = (
           ) {
             for (const dependency of dependencies[name]) {
               // ===== validate lúc đang nhập data =====
-              if (_form[dependency]?.trim()) {
+              if (
+                typeof _form[dependency] === "string" &&
+                _form[dependency]?.trim()
+              ) {
                 //===chỉ validate khi có dữ liệu===
                 errObj[dependency] = validate(
                   { [dependency]: rules[dependency] },

@@ -9,7 +9,7 @@ export * from "./validate";
 export * from "./http"; //===== http phải để trc storageCache
 export * from "./items";
 export * from "./toSlug";
-export * from "./clearWaititngQueue";
+export * from "./clearWaitingQueue";
 export * from "./delay";
 export * from "./delayDuration";
 export * from "./toFixed";

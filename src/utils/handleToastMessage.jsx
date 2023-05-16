@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { clearWaititngQueue } from "./clearWaititngQueue";
+import { clearWaititngQueue } from "./clearWaitingQueue";
 
 export const handleToastMessage = ({ promise, pending, success, error }) => {
   toast.dismiss();
