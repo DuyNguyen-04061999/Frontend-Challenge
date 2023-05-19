@@ -4,45 +4,28 @@ import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "@/hooks/useForm";
 import useQuery from "@/hooks/useQuery";
 import { userService } from "@/services/user.service";
-import { setUserAction } from "@/stores/auth/authReducer";
 import {
-  avatarDefault,
   clearWaititngQueue,
   cn,
-  confirm,
-  getRemember,
-  min,
   object,
   regex,
   required,
-  setRemember,
-  validate,
 } from "@/utils";
 import handleError from "@/utils/handleError";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import _ from "lodash";
-import { fileService } from "@/services/file.service";
 import UploadImage from "@/components/UploadImage";
 import { Spin } from "antd";
-import DateField from "@/components/DateField";
-import Radio from "@/components/Radio";
 import PortalTitle from "@/components/PortalTitle";
 import { PROFILE_TITLE_ID } from "@/config";
 
 // =====
 const ProfilePage = () => {
-  const minLength = 6;
-  const genderList = ["male", "female"];
   const { user } = useAuth();
   const fileRef = useRef();
   const dispatch = useDispatch();
-  const [initialForm, setInitialForm] = useState({
-    ...user,
-    gender: user?.gender || genderList[0],
-    avatar: user?.avatar || avatarDefault,
-  });
   const {
     register,
     validate: validateForm,
@@ -51,80 +34,15 @@ const ProfilePage = () => {
     setForm,
   } = useForm(
     {
-      phone: [regex("phone", "Số điện thoại không chính xác")],
-      currentPassword: [
-        (_, form) => {
-          if (form.newPassword?.trim()?.length >= minLength) {
-            const errObj = validate(
-              {
-                currentPassword: [
-                  required({ message: "Vui lòng nhập mật khẩu hiện tại" }),
-                ],
-              },
-              form
-            );
-
-            return errObj.currentPassword;
-          }
-          return;
-        },
-        min(minLength, "Mật khẩu phải có ít nhất 6 ký tự"),
-      ],
-      newPassword: [
-        (_, form) => {
-          if (form.currentPassword?.trim().length >= minLength) {
-            const errObj = validate(
-              {
-                newPassword: [required("Vui lòng nhập mật khẩu mới")],
-              },
-              form
-            );
-
-            return errObj.newPassword;
-          }
-        },
-
-        min(minLength, "Mật khẩu phải có ít nhất 6 ký tự"),
-        (value, form) => {
-          if (
-            form.currentPassword?.trim().length >= minLength &&
-            value === form.currentPassword?.trim()
-          ) {
-            return "Mật khẩu mới không được trùng";
-          }
-        },
-      ],
-      confirmPassword: [
-        (_, form) => {
-          if (
-            form.newPassword?.trim().length >= minLength &&
-            form.newPassword?.trim() !== form?.currentPassword
-          ) {
-            const errObj = validate(
-              {
-                confirmPassword: [
-                  required({ message: "Vui lòng xác nhận lại mật khẩu" }),
-                ],
-              },
-              form
-            );
-
-            return errObj.confirmPassword;
-          }
-        },
-        confirm("newPassword", "Mật khẩu nhập lại chưa chính xác"),
-      ],
-      birthday: [
-        regex("date", "thời gian phải đúng format DD/MM/YYYY (15/02/2023)"),
-      ],
+      username: [required({ message: 'Vui lòng nhập họ tên' })],
+      email: [required({ message: 'Vui lòng nhập email' }), regex('email')],
+      bio: [required({ message: 'Vui lòng giới thiệu về bản thân' })],
     },
     {
-      initialValue: initialForm,
-
-      dependencies: {
-        currentPassword: ["newPassword"],
-        newPassword: ["confirmPassword"],
-        confirmPassword: ["confirmPassword"],
+      initialValue: {
+        username: user?.username,
+        email: user?.email,
+        bio: user?.bio,
       },
     }
   );
@@ -132,80 +50,38 @@ const ProfilePage = () => {
   //======service======
   const { loading, fetchData: updateService } = useQuery({
     enabled: false,
-    queryFn: ({ params }) => userService.updateInfo(...params),
+    queryFn: ({ params }) => userService.updateUserInfo(...params),
     limitDuration: 1000,
   });
-
-  const { fetchData: changePasswordService, loading: loadingPassword } =
-    useQuery({
-      enabled: false,
-      queryFn: ({ params }) => userService.changePassword(...params),
-      limitDuration: 1000,
-    });
-
-  const { fetchData: uploadService, loading: loadingUpload } = useQuery({
-    enabled: false,
-    queryFn: ({ params }) => fileService.uploadFile(...params),
-  });
-  // ======
 
   const onSubmit = async (e) => {
     e.preventDefault();
     clearWaititngQueue();
 
     //=== upload image ===
-    let avatar;
-    if (fileRef?.current) {
-      const res = await uploadService(fileRef?.current);
-      if (res.success) {
-        avatar = res.link;
-        fileRef.current = null; //tắt trạng thái có hình mới
-      }
-    }
-
-    const checkSubmit = object.isEqual(
-      user,
-      form,
-      "name",
-      "phone",
-      "birthday",
-      "gender"
-    );
+    const checkSubmit = object.isEqual(form, {
+      username: user?.username,
+      email: user?.email,
+      bio: user?.bio,
+    })
     if (validateForm()) {
-      if (!form.currentPassword?.trim() && checkSubmit && !avatar) {
-        return toast.warn("Nhập thông tin mới để cập nhật");
+      if (checkSubmit && !fileRef.current) {
+        return toast.warn("Vui lòng nhập thông tin mới để cập nhật")
       }
 
-      if (!checkSubmit || avatar) {
-        updateService({ ...form, avatar: avatar || form?.avatar })
-          .then((res) => {
-            dispatch(setUserAction(res?.data));
-            setInitialForm({ ...form, ...res?.data });
-            toast.success("Bạn đã cập nhật thông tin thành công");
-          })
-          .catch(handleError);
-      }
-
-      if (form.currentPassword?.trim()) {
-        changePasswordService({
-          currentPassword: form.currentPassword,
-          newPassword: form.newPassword,
-        })
-          .then((res) => {
-            if (getRemember()?.checked) {
-              setRemember({ ...getRemember(), password: form.newPassword });
-            }
-            setForm({
-              ...form,
-              currentPassword: "",
-              newPassword: "",
-              confirmPassword: "",
-            });
-            toast.success(res.message);
-          })
-          .catch(handleError);
+      if (!checkSubmit || fileRef.current) {
+        try {
+          const res = await updateService({ ...form, image: fileRef.current })
+          if (res) {
+            toast.success("Cập nhật thông tin thành công")
+            fileRef.current = null
+          }
+        } catch (error) {
+          handleError(error)
+        }
       }
     }
+
   };
   return (
     <>
@@ -227,16 +103,16 @@ const ProfilePage = () => {
                       className={cn(
                         "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 spin-avatar z-40 transition-all",
                         {
-                          visible: loadingUpload,
-                          invisible: !loadingUpload,
+                          visible: loading,
+                          invisible: !loading,
                         }
                       )}
                       size="large"
                     />
                     <img
-                      src={previewLink || form.avatar}
+                      src={previewLink || user?.image}
                       className={cn("transition-all", {
-                        "grayscale-[50%]": loadingUpload,
+                        "grayscale-[50%]": loading,
                       })}
                     />
                     <i className="icon flex items-center justify-center !bg-[rgba(255,255,255,0.6)] !bg-opacity-80">
@@ -262,20 +138,10 @@ const ProfilePage = () => {
               id="accountFirstName"
               placeholder="Full Name *"
               label="Full Name *"
-              {...register("name")}
+              {...register("username")}
             />
           </div>
-          <div className="col-md-6">
-            {/* Email */}
-            <Field
-              className="form-control form-control-sm"
-              id="accountEmail"
-              type="number"
-              placeholder="Phone Number *"
-              label="Phone Number *"
-              {...register("phone")}
-            />
-          </div>
+
           <div className="col-md-6">
             {/* Email */}
             <Field
@@ -284,77 +150,24 @@ const ProfilePage = () => {
               id="accountEmail"
               placeholder="Email Address *"
               label="Email Address *"
-              {...register("username")}
-            />
-          </div>
-          <div className="col-12 col-md-12">
-            {/* Password */}
-            <Field
-              className="form-control form-control-sm"
-              id="accountPassword"
-              type="password"
-              autoComplete="new-password"
-              placeholder="Current Password"
-              label="Current Password"
-              {...register("currentPassword")}
-            />
-          </div>
-          <div className="col-12 col-md-6">
-            <Field
-              className="form-control form-control-sm"
-              id="AccountNewPassword"
-              type="password"
-              autoComplete="new-password"
-              placeholder="New Password"
-              label="New Password"
-              {...register("newPassword")}
-            />
-          </div>
-          <div className="col-12 col-md-6">
-            <Field
-              className="form-control form-control-sm"
-              id="AccountNewPassword"
-              type="password"
-              autoComplete="new-password"
-              placeholder="Confirm Password"
-              label="Confirm Password"
-              {...register("confirmPassword")}
-            />
-          </div>
-          <div className="col-12 col-lg-6">
-            <Field
-              className="form-control form-control-sm"
-              label="Date of Birth"
-              type="date"
-              {...register("birthday")}
-              renderInput={(props) => <DateField {...props} />}
+              {...register("email")}
             />
           </div>
           <div className="col-12 col-lg-6">
             {/* Gender */}
             <Field
-              label="Gender"
-              {...register("gender")}
-              genderActive={user?.gender || genderList?.[0]}
+              label="Giới thiệu bản thân *"
+              className="form-control form-control-sm"
+              {...register("bio")}
               renderInput={({ _onChange, ...props }) => (
-                <Radio.Group
-                  defaultValue={form?.gender || genderList[0]}
-                  onSetFilter={(value) => {
-                    _onChange({ target: { value } });
-                  }}
-                >
-                  <div className="btn-group-toggle" data-toggle="buttons">
-                    <Radio.Gender gender="male">Male</Radio.Gender>
-                    <Radio.Gender gender="female">Female</Radio.Gender>
-                  </div>
-                </Radio.Group>
+                <textarea {...props} onChange={_onChange} />
               )}
             />
           </div>
           <div className="col-12">
             {/* Button */}
             <Button
-              loading={loading || loadingPassword || loadingUpload}
+              loading={loading}
               className="mt-6"
             >
               Save Changes

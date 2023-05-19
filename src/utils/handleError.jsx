@@ -10,10 +10,14 @@ const handleError = (error, antd, key) => {
   );
   clearWaititngQueue();
   // toast.dismiss();
+  const messageError =
+    error?.response?.data?.message === "request entity too large"
+      ? "Vui lòng chọn ảnh có kích thước nhỏ để upload"
+      : error?.response?.data?.message;
   if (antd) {
     return message.error({
       key,
-      content: error?.response?.data?.message,
+      content: messageError,
     });
   }
   // if (error?.response?.data?.message === "Username or Password incorrect!") {
@@ -30,7 +34,8 @@ const handleError = (error, antd, key) => {
   //     }
   //   );
   // }
-  toast.error(t(error?.response?.data?.message), {
+
+  toast.error(messageError, {
     style: {
       fontSize: 14,
     },

@@ -11,8 +11,8 @@ import { toast } from "react-toastify";
 const Signup = () => {
   const { formRef, register, validate, form } = useForm(
     {
-      name: [required({ message: "Vui lòng cho điền họ và tên" })],
-      username: [
+      username: [required({ message: "Vui lòng cho điền họ và tên" })],
+      email: [
         required({ message: "Vui lòng nhập địa chỉ email" }),
         regex("email", "Vui lòng nhập địa chỉ email đúng"),
       ],
@@ -35,24 +35,22 @@ const Signup = () => {
   const { loading, fetchData: registerService } = useQuery({
     enabled: false,
     limitDuration: 1000,
-    queryFn: () =>
-      userService.register({
-        ...form,
-        redirect: window.location.origin + window.location.pathname,
-      }),
+    queryFn: ({ params }) => userService.register(...params),
   });
   const onRegister = async (e) => {
     e.preventDefault();
     clearWaititngQueue();
     if (validate()) {
       try {
-        const res = await registerService();
-        if (res.success) {
-          toast.success(res.message, {
+        const res = await registerService(form);
+        console.log("res :>> ", res);
+        if (res) {
+          toast.success("Bạn đã đăng kí tài khoản thành công", {
             autoClose: 2000,
           });
         }
       } catch (error) {
+        console.log("error :>> ", error);
         handleError(error);
       }
     }
@@ -75,7 +73,7 @@ const Signup = () => {
                   id="registerFirstName"
                   type="text"
                   placeholder="Họ và tên *"
-                  {...register("name")}
+                  {...register("username")}
                 />
               </div>
               <div className="col-12">
@@ -85,7 +83,7 @@ const Signup = () => {
                   id="registerEmail"
                   type="text"
                   placeholder="Địa chỉ email *"
-                  {...register("username")}
+                  {...register("email")}
                 />
               </div>
               <div className="col-12">

@@ -6,7 +6,7 @@ export function interceptorsRequest(api) {
     (config) => {
       const token = getToken();
       if (token) {
-        config.headers.Authorization = `Bearer ${token.accessToken}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     },

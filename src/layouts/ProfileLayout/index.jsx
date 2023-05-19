@@ -2,32 +2,27 @@ import { PATH } from "@/config";
 import store from "@/stores";
 import { logoutAction } from "@/stores/auth/authReducer";
 import { cn } from "@/utils";
-import handleError from "@/utils/handleError";
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ProfileNav = [
   {
-    nav: "Theo dõi đơn hàng",
-    to: PATH.profile.order,
-  },
-  {
     nav: "Thông tin cá nhân",
     to: PATH.profile.index,
     end: true,
   },
   {
-    nav: " Sản phẩm yêu thích",
-    to: PATH.profile.wishList,
+    nav: "Tất cả bài viết",
+    to: PATH.allBlogs,
   },
   {
-    nav: "Số địa chỉ",
-    to: PATH.profile.address,
+    nav: "Tác giả",
+    to: PATH.authors,
   },
   {
-    nav: " Sổ thanh toán",
-    to: PATH.profile.payment,
+    nav: "Tạo bài viết",
+    to: PATH.blogCreate,
   },
   {
     nav: "Đăng xuất",

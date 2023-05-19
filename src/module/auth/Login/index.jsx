@@ -31,7 +31,7 @@ const Login = () => {
   const { open, onOpenModal, onCloseModal } = useOpenModal();
   const { form, validate, formRef, register } = useForm(
     {
-      username: [
+      email: [
         required({ message: "Vui lòng nhập địa chỉ email" }),
         regex("email", "Email chưa chính xác"),
       ],
@@ -58,7 +58,9 @@ const Login = () => {
             toast.success(
               <p>
                 Chúc mừng{" "}
-                <span className="text-[#34d399] font-bold">{user?.name}</span>{" "}
+                <span className="text-[#34d399] font-bold">
+                  {user?.username}
+                </span>{" "}
                 đã đăng nhập thành công!
               </p>,
               {
@@ -85,17 +87,21 @@ const Login = () => {
       dispatch(
         loginByCodeAction({
           code,
-          onSuccess: (user) =>
-            toast.success(
+          onSuccess: (user) => {
+            console.log("user :>> ", user);
+            return toast.success(
               <p>
                 Chúc mừng{" "}
-                <span className="text-[#34d399] font-bold">{user?.name}</span>{" "}
+                <span className="text-[#34d399] font-bold">
+                  {user?.username}
+                </span>{" "}
                 đã đăng nhập thành công!
               </p>,
               {
                 position: "top-center",
               }
-            ),
+            );
+          },
         })
       );
     }
@@ -129,7 +135,7 @@ const Login = () => {
                     className="form-control form-control-sm"
                     id="loginEmail"
                     placeholder="Email Address *"
-                    {...register("username")}
+                    {...register("email")}
                   />
                 </div>
                 <div className="col-12">
@@ -162,56 +168,10 @@ const Login = () => {
                     </div>
                   </div>
                 </div>
-                <div className="col-12 col-md-auto">
-                  {/* Link */}
-                  <div className="form-group select-none">
-                    <span
-                      className="font-size-sm text-reset cursor-pointer"
-                      data-toggle="modal"
-                      onClick={onOpenModal}
-                    >
-                      Forgot Password?
-                    </span>
-                  </div>
-                </div>
+
                 <div className="col-12">
                   {/* Button */}
                   <Button loading={_loading}>Đăng nhập</Button>
-                </div>
-                <div className="col-12">
-                  <p className="font-size-sm text-muted mt-5 mb-2 font-light">
-                    Tài khoản demo:
-                    <b className="text-black">
-                      <span
-                        className="cursor-pointer underline underline-offset-1"
-                        title="email"
-                        onClick={_copyToClipBoard}
-                      >
-                        demo@spacedev.com
-                      </span>{" "}
-                      /{" "}
-                      <span
-                        className="cursor-pointer underline underline-offset-1"
-                        title="password"
-                        onClick={_copyToClipBoard}
-                      >
-                        Spacedev@123
-                      </span>
-                    </b>
-                  </p>
-                  <p className="font-size-sm text-muted mt-5 mb-2 font-light text-justify">
-                    Chúng tôi cung cấp cho bạn tài khoản demo vì mục đích học
-                    tập, để đảm bảo những người khác có thể sử dụng chung tài
-                    khoản chúng tôi sẽ hạn chế rất nhiều quyền trên tài khoản
-                    này ví dụ:
-                    <br />
-                    - Không thay đổi thông tin cá nhân, mật khẩu <br />
-                    - không reset password,... <br />
-                    <br />
-                    Để có thể sử dụng toàn bộ chức năng trên website, vui lòng
-                    tiến hành <b className="text-black">đăng ký</b> bằng tài
-                    khoản email có thật
-                  </p>
                 </div>
               </div>
             </form>

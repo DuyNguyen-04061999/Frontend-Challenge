@@ -18,7 +18,7 @@ const store = configureStore({
   reducer,
   middleware: (gDM) =>
     gDM({
-      serializableCheck: false,//tắt lỗi a non-serialize
+      serializableCheck: false, //tắt lỗi a non-serialize
     }).concat(sagaMiddleware),
   devTools: import.meta.env.VITE_ENV === "development",
 });
@@ -26,5 +26,4 @@ const store = configureStore({
 sagaMiddleware.run(rootSaga);
 
 store.dispatch(getUserAction());
-store.dispatch(getCartAction());
 export default store;

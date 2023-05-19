@@ -13,7 +13,7 @@ export const PATH = {
 
     order: PROFILE + "/don-hang",
     orderDetail: PROFILE + "/don-hang/:id",
-    
+
     wishList: PROFILE + "/san-pham-yeu-thich",
 
     address: PROFILE + "/so-dia-chi",
@@ -29,4 +29,12 @@ export const PATH = {
   contact: "lien-he",
   auth: "/signin",
   resetPassword: "/reset-password",
+
+  //
+
+  authors: "/authors",
+  blogCreate: "/blog-writting",
+  blogEdit: "/blog-edit/:slug",
+  allBlogs: "/all-blogs",
+  blogDetail: "/all-blogs/:slug",
 };

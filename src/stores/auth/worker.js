@@ -16,11 +16,12 @@ export function* loginWorker({ payload: { onSuccess, ...form } } = {}) {
   try {
     yield put(onSetLoadingAuth({ kind: "login", loading: true }));
     const res = yield call(authService.login, form);
-    setToken(res?.data);
-    const user = yield call(userService.getProfile);
-    yield put(setUserAction(user?.data));
-    onSuccess?.(user?.data);
-    yield put(loginSuccessAction()); //getCart
+    setToken(res?.user?.token);
+    const { user } = yield call(userService.getUser);
+    if (user) {
+      yield put(setUserAction(user));
+      onSuccess?.(user);
+    }
   } catch (error) {
     handleError(error);
   } finally {
@@ -41,9 +42,10 @@ export function* setUserWorker({ payload }) {
 export function* getUserWorker() {
   if (getToken()) {
     try {
-      const user = yield call(userService.getProfile);
-      setUser(user?.data);
-      yield put(onSetUser(user?.data));
+      const user = yield call(userService.getUser);
+      console.log("user :>> ", user);
+      setUser(user?.user); //localStorage
+      yield put(onSetUser(user?.user));
     } catch (error) {
       handleError(error);
     }

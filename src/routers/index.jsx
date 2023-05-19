@@ -7,25 +7,14 @@ import { delayFallback } from "@/utils";
 
 import { lazy } from "react";
 import profile from "./profile";
+import AuthorsPage from "@/pages/AuthorsPage";
+import BlogWrittingPage from "@/pages/BlogWrittingPage";
+import AllBlogsPage from "@/pages/all-blog-page";
+import BlogDetail from "@/pages/blogDetail";
 const Home = lazy(() => delayFallback(import("@/pages")));
 const Page404 = lazy(() => delayFallback(import("@/pages/404")));
-const ProductPage = lazy(() => delayFallback(import("@/pages/product")));
-const ProductDetailPage = lazy(() =>
-  delayFallback(import("@/pages/product/[slug]"))
-);
 const AuthPage = lazy(() => delayFallback(import("@/pages/AuthPage")));
-const ContactPage = lazy(() => delayFallback(import("@/pages/ContactPage")));
-const FaqPage = lazy(() => delayFallback(import("@/pages/FaqPage")));
-const ResetPasswordPage = lazy(() =>
-  delayFallback(import("@/pages/ResetPasswordPage"))
-);
-const ViewCartPage = lazy(() => delayFallback(import("@/pages/ViewCartPage")));
 
-const ShippingPage = lazy(() => delayFallback(import("@/pages/ShippingPage")));
-const CheckoutPage = lazy(() => delayFallback(import("@/pages/CheckoutPage")));
-const OrderCompletedPage = lazy(() =>
-  delayFallback(import("@/pages/OrderCompletedPage"), 1500)
-);
 export const routers = [
   {
     element: <MainLayout />,
@@ -39,16 +28,24 @@ export const routers = [
         children: [
           profile,
           {
-            element: <ViewCartPage />,
-            path: PATH.viewCart,
+            element: <AuthorsPage />,
+            path: PATH.authors,
           },
           {
-            element: <CheckoutPage />,
-            path: PATH.checkout,
+            element: <BlogWrittingPage />,
+            path: PATH.blogCreate,
           },
           {
-            element: <OrderCompletedPage />,
-            path: PATH.orderCompleted,
+            element: <BlogWrittingPage />,
+            path: PATH.blogEdit,
+          },
+          {
+            element: <AllBlogsPage />,
+            path: PATH.allBlogs,
+          },
+          {
+            element: <BlogDetail />,
+            path: PATH.blogDetail,
           },
         ],
       },
@@ -59,35 +56,7 @@ export const routers = [
             element: <AuthPage />,
             path: PATH.auth,
           },
-          {
-            element: <ResetPasswordPage />,
-            path: PATH.resetPassword,
-          },
         ],
-      },
-      {
-        element: <ProductPage />,
-        path: PATH.products,
-      },
-      {
-        element: <ProductPage />,
-        path: PATH.category,
-      },
-      {
-        element: <ProductDetailPage />,
-        path: PATH.productDetail,
-      },
-      {
-        element: <ShippingPage />,
-        path: PATH.shipping,
-      },
-      {
-        element: <FaqPage />,
-        path: PATH.faq,
-      },
-      {
-        element: <ContactPage />,
-        path: PATH.contact,
       },
       {
         element: <Page404 />,
