@@ -43,7 +43,6 @@ export function* getUserWorker() {
   if (getToken()) {
     try {
       const user = yield call(userService.getUser);
-      console.log("user :>> ", user);
       setUser(user?.user); //localStorage
       yield put(onSetUser(user?.user));
     } catch (error) {

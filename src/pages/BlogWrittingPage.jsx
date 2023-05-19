@@ -25,7 +25,6 @@ const BlogWrittingPage = () => {
     enabled: !!slug,
     queryFn: () => articleService.getArticleBySlug(slug),
   });
-  console.log("data :>> ", data);
   const { formRef, register, form, validate, reset } = useForm(
     {
       title: [required({ message: "Vui lòng ghi tiêu đề bài viết" })],
@@ -37,11 +36,11 @@ const BlogWrittingPage = () => {
     {
       initialValue: slug
         ? {
-            title: data?.article?.title,
-            tagList: data?.article?.tagList[0],
-            description: data?.article?.description,
-            body: data?.article?.body,
-          }
+          title: data?.article?.title,
+          tagList: data?.article?.tagList[0],
+          description: data?.article?.description,
+          body: data?.article?.body,
+        }
         : {},
     }
   );

@@ -8,7 +8,6 @@ const AuthorsPage = () => {
     queryFn: () => userService.getAllUser(),
     limitDuration: 1000,
   });
-  console.log("data :>> ", data);
   return (
     <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 p-10">
       {/* {data.length > 0 && data?.map((e) => <Author key={e?.id} {...e} />)} */}
